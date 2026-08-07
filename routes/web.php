@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\WaitlistController;
+use App\Http\Controllers\WebManifestController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Honeypot\ProtectAgainstSpam;
 
 Route::get('/', [WaitlistController::class, 'show'])->name('coming-soon');
 
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+Route::get('/site.webmanifest', WebManifestController::class)->name('manifest');
 
 Route::post('/waitlist', [WaitlistController::class, 'store'])
     ->middleware([ProtectAgainstSpam::class, 'throttle:waitlist'])

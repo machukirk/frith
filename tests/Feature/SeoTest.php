@@ -147,11 +147,16 @@ class SeoTest extends TestCase
     }
 
     #[Test]
-    public function the_web_manifest_is_valid_and_its_icons_exist(): void
+    public function the_web_manifest_is_served_with_the_right_content_type(): void
     {
-        $manifest = json_decode(file_get_contents(public_path('site.webmanifest')), true);
+        // Cloudways' nginx has no mime type for .webmanifest and serves a
+        // static one as application/octet-stream, hence the route.
+        $response = $this->get(route('manifest'))
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/manifest+json');
 
-        $this->assertSame(JSON_ERROR_NONE, json_last_error());
+        $manifest = $response->json();
+
         $this->assertSame('Frith', $manifest['short_name']);
         $this->assertSame('#F8F4EE', $manifest['theme_color']);
 
@@ -159,7 +164,29 @@ class SeoTest extends TestCase
         $this->assertContains('maskable', $purposes, 'Android crops icons to a shape; a maskable one is needed');
 
         foreach ($manifest['icons'] as $icon) {
-            $this->assertFileExists(public_path(ltrim($icon['src'], '/')));
+            $path = public_path(ltrim(parse_url($icon['src'], PHP_URL_PATH), '/'));
+            $this->assertFileExists($path);
+        }
+    }
+
+    #[Test]
+    public function the_canonical_sitemap_and_structured_data_all_agree_on_the_homepage_url(): void
+    {
+        // Three different spellings of the same page is how a crawler ends up
+        // deciding for itself which one is canonical.
+        $home = route('coming-soon');
+        $html = $this->get($home)->assertOk()->getContent();
+
+        $this->assertStringContainsString('<link rel="canonical" href="'.$home.'"', $html);
+        $this->assertStringContainsString('property="og:url" content="'.$home.'"', $html);
+        $this->assertStringContainsString('<loc>'.$home.'</loc>', $this->get('/sitemap.xml')->getContent());
+
+        preg_match('#<script type="application/ld\+json">(.*?)</script>#s', $html, $m);
+        $graph = json_decode($m[1], true)['@graph'];
+        foreach ($graph as $node) {
+            if (in_array($node['@type'], ['WebSite', 'WebPage'], true)) {
+                $this->assertSame($home, $node['url']);
+            }
         }
     }
 
@@ -168,7 +195,7 @@ class SeoTest extends TestCase
     {
         $html = $this->get(route('coming-soon'))->assertOk()->getContent();
 
-        preg_match_all('#<link rel="(?:icon|apple-touch-icon|manifest)"[^>]*href="([^"]+)"#', $html, $m);
+        preg_match_all('#<link rel="(?:icon|apple-touch-icon)"[^>]*href="([^"]+)"#', $html, $m);
         $this->assertNotEmpty($m[1]);
 
         foreach ($m[1] as $href) {

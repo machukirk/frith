@@ -73,7 +73,7 @@
     <link rel="icon" href="{{ asset('brand/icon/frith-icon-32.png') }}" sizes="32x32" type="image/png">
     <link rel="icon" href="{{ asset('brand/icon/frith-icon-16.png') }}" sizes="16x16" type="image/png">
     <link rel="apple-touch-icon" href="{{ asset('brand/icon/frith-icon-180.png') }}" sizes="180x180">
-    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+    <link rel="manifest" href="{{ route('manifest') }}">
 
     {{-- Poppins is self-hosted and render-blocking on first paint, so the two
          weights above the fold are preloaded. crossorigin is required on font

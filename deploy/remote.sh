@@ -17,6 +17,16 @@ if [ ! -f .env ]; then
     exit 1
 fi
 
+step "Normalising permissions"
+# Whatever uploaded this may have carried a developer machine's private
+# permissions with it, and nginx runs as www-data. Done here rather than with
+# rsync --chmod, which macOS's openrsync does not support.
+find . -type d ! -path "./storage/*" -exec chmod 755 {} +
+find . -type f ! -path "./storage/*" -exec chmod 644 {} +
+chmod -R 775 storage bootstrap/cache
+chmod 600 .env
+chmod +x artisan deploy/*.sh
+
 step "Installing PHP dependencies"
 composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 

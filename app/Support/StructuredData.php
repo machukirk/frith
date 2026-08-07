@@ -19,7 +19,9 @@ class StructuredData
 {
     public static function comingSoon(): array
     {
-        $base = rtrim(config('app.url'), '/');
+        // Same value the canonical tag and the sitemap use, so nothing disagrees.
+        $home = route('coming-soon');
+        $base = rtrim($home, '/');
         $copy = PageContent::for('coming-soon');
 
         $organisationId = $base.'/#organisation';
@@ -35,7 +37,7 @@ class StructuredData
                     '@id' => $organisationId,
                     'name' => 'Frith',
                     'legalName' => config('frith.company.name'),
-                    'url' => $base.'/',
+                    'url' => $home,
                     'email' => config('frith.company.contact_email'),
                     'logo' => ['@id' => $logoId],
                     'image' => ['@id' => $logoId],
@@ -73,7 +75,7 @@ class StructuredData
                 [
                     '@type' => 'WebSite',
                     '@id' => $websiteId,
-                    'url' => $base.'/',
+                    'url' => $home,
                     'name' => 'Frith',
                     'description' => $copy['meta']['description'] ?? null,
                     'publisher' => ['@id' => $organisationId],
@@ -83,7 +85,7 @@ class StructuredData
                 [
                     '@type' => 'WebPage',
                     '@id' => $base.'/#webpage',
-                    'url' => $base.'/',
+                    'url' => $home,
                     'name' => $copy['meta']['title'] ?? 'Frith',
                     'description' => $copy['meta']['description'] ?? null,
                     'isPartOf' => ['@id' => $websiteId],
