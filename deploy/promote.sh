@@ -53,6 +53,14 @@ php artisan view:cache
 [ -L public/storage ] || php artisan storage:link
 php artisan queue:restart
 
+step "Clearing the Varnish cache"
+# Cloudways puts Varnish in front of nginx. It holds the previous bytes until
+# told otherwise, so without this a deploy goes out and visitors keep getting
+# the old stylesheet — with the old one's Content-Type into the bargain.
+curl -fsS -o /dev/null -X BAN -H "Host: frith.community" http://127.0.0.1/ \
+    && echo "  banned" \
+    || echo "  BAN was refused — clear the cache from the Cloudways panel"
+
 step "Preflight, live"
 php artisan frith:preflight
 
