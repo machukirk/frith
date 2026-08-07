@@ -3,13 +3,31 @@
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\WaitlistController;
 use App\Http\Controllers\WebManifestController;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Spatie\Honeypot\ProtectAgainstSpam;
 
 Route::get('/', [WaitlistController::class, 'show'])->name('coming-soon');
 
-Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
-Route::get('/site.webmanifest', WebManifestController::class)->name('manifest');
+/*
+ * The sitemap and manifest are public, identical for every visitor, and have no
+ * form on them. Left in the web group they start a session and set cookies,
+ * and Varnish will not cache a response carrying Set-Cookie — so they opt out.
+ */
+Route::withoutMiddleware([
+    EncryptCookies::class,
+    AddQueuedCookiesToResponse::class,
+    StartSession::class,
+    ShareErrorsFromSession::class,
+    PreventRequestForgery::class,
+])->group(function () {
+    Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+    Route::get('/site.webmanifest', WebManifestController::class)->name('manifest');
+});
 
 Route::post('/waitlist', [WaitlistController::class, 'store'])
     ->middleware([ProtectAgainstSpam::class, 'throttle:waitlist'])

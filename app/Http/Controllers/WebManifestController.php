@@ -54,6 +54,9 @@ class WebManifestController extends Controller
                     'purpose' => 'maskable',
                 ],
             ],
-        ], 200, ['Content-Type' => 'application/manifest+json'], JSON_UNESCAPED_SLASHES);
+        ], 200, [
+            'Content-Type' => 'application/manifest+json',
+            'Cache-Control' => 'public, max-age=86400',
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 }
