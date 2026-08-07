@@ -56,16 +56,43 @@ at exhausted and often neurodivergent parents fails the accessibility bar the br
 as a release blocker. A tripped honeypot returns the ordinary success page
 (`App\Support\Honeypot\SilentSuccessResponder`) so bots get no signal to tune against.
 
-## Editing the copy
+## The admin panel
 
-All page text lives in `config/frith.php` under `coming_soon`. That block is shaped to
-map onto CMS fields later — nothing in the Blade templates is hard-coded prose.
+Filament, at `/admin`. Two sections: **Website content** and **Waiting list**.
 
-After editing on production, clear the config cache:
+Create an account:
 
 ```bash
-php artisan config:clear && php artisan config:cache
+php artisan frith:admin
 ```
+
+Two roles, and the split is deliberate. An **owner** sees everything. A **content
+editor** can change every word and picture on the site but cannot see the waiting list
+at all — the section does not appear in their navigation and the route returns 403.
+Whoever looks after the words has no reason to hold the email addresses of families who
+signed up. New accounts default to editor.
+
+### How the content works
+
+Page copy lives in two places and the layering matters:
+
+- `config/frith.php` is the floor — the words the page falls back to.
+- The `pages` table holds what an editor has actually written, as structured JSON.
+
+`App\Support\PageContent` merges the second over the first and caches the result. If the
+table is empty, a key has never been filled in, or a deploy adds a field before anyone
+opens the panel, the page still renders sensible words instead of blanks. Lists (the
+cards, the bullet points) are replaced outright rather than merged element by element —
+otherwise deleting the third card would silently put the default third card back.
+
+The cache clears whenever a page is saved, so an edit shows up immediately.
+
+The consent line under the sign-up form is **not** editable in the panel, and the panel
+says so. It is stored word for word against every signup as the record of what was
+agreed, so changing it needs a matching version bump in `config/frith.php`.
+
+Seed the initial content on a fresh install with `php artisan db:seed`. It uses
+`firstOrCreate`, so re-running it can never overwrite an editor's work.
 
 ## Brand
 
@@ -109,7 +136,8 @@ Document root must point at `public/`. Beyond a normal Laravel deploy:
 - **SPF, DKIM and DMARC on frith.community** before any volume. Gmail and Outlook
   require authenticated bulk mail, and a waiting list is the worst place to discover a
   deliverability problem.
-- `php artisan config:cache route:cache view:cache` and `npm run build` on deploy.
+- `php artisan config:cache route:cache view:cache` and `npm run build` on deploy, plus
+  `php artisan storage:link` once so uploaded images resolve.
 - Trusted proxies are set to `*` in `bootstrap/app.php` so the client IP behind
   Cloudways' load balancer is the real one — rate limiting and consent evidence both
   depend on it.
@@ -118,6 +146,10 @@ Document root must point at `public/`. Beyond a normal Laravel deploy:
 
 `waitlist_signups` holds email, consent evidence (wording, version, timestamp, IP, user
 agent) and the confirm/unsubscribe state. No other personal data is collected here.
+
+The waiting list is owner-only in the panel, read-only, and deletable — deletion is how
+an erasure request gets honoured. The CSV export carries the consent wording and version
+alongside each address, so the file is evidence on its own rather than a bare list.
 
 Two things to decide before launch: a retention period for `consent_ip` and
 `consent_user_agent` (they're evidence, not analytics — twelve months is a common

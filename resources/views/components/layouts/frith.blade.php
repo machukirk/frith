@@ -1,21 +1,23 @@
 @props(['title' => null, 'description' => null])
 
+@php $meta = \App\Support\PageContent::get('coming-soon', 'meta', []); @endphp
+
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ $title ?? config('frith.coming_soon.meta.title') }}</title>
-    <meta name="description" content="{{ $description ?? config('frith.coming_soon.meta.description') }}">
+    <title>{{ $title ?? ($meta['title'] ?? config('frith.coming_soon.meta.title')) }}</title>
+    <meta name="description" content="{{ $description ?? ($meta['description'] ?? config('frith.coming_soon.meta.description')) }}">
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Frith">
-    <meta property="og:title" content="{{ $title ?? config('frith.coming_soon.meta.title') }}">
-    <meta property="og:description" content="{{ $description ?? config('frith.coming_soon.meta.description') }}">
+    <meta property="og:title" content="{{ $title ?? ($meta['title'] ?? config('frith.coming_soon.meta.title')) }}">
+    <meta property="og:description" content="{{ $description ?? ($meta['description'] ?? config('frith.coming_soon.meta.description')) }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="{{ asset('brand/img/frith-hero-hillside.png') }}">
-    <meta property="og:image:alt" content="{{ config('frith.coming_soon.hero_image_alt') }}">
+    <meta property="og:image:alt" content="{{ \App\Support\PageContent::get('coming-soon', 'hero_image_alt') }}">
     <meta name="twitter:card" content="summary_large_image">
 
     <link rel="icon" href="{{ asset('brand/logo/frith-logo-horizontal-fullcolour.svg') }}" type="image/svg+xml">
@@ -42,7 +44,7 @@
         {{ $slot }}
 
         <footer class="site-footer gutter">
-            <p>&copy; {{ date('Y') }} {{ config('frith.company.name') }} &middot; {{ config('frith.company.location') }}</p>
+            <p>&copy; {{ date('Y') }} {{ config('frith.company.name') }}</p>
             <p class="site-footer__links">
                 <a href="mailto:{{ config('frith.company.contact_email') }}">{{ config('frith.company.contact_email') }}</a>
                 <a href="#privacy">Privacy</a>

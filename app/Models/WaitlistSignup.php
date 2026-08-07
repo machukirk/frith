@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\WaitlistSignupFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -79,7 +80,8 @@ class WaitlistSignup extends Model
     }
 
     /** Everyone we may legitimately email when Frith launches. */
-    protected function scopeMailable(Builder $query): void
+    #[Scope]
+    protected function mailable(Builder $query): void
     {
         $query->whereNotNull('confirmed_at')->whereNull('unsubscribed_at');
     }

@@ -10,8 +10,12 @@ return [
 
     'company' => [
         'name' => 'Frith Community Ltd',
-        'location' => 'Kent',
         'contact_email' => 'hello@frith.community',
+
+        // Worth setting before the launch broadcast goes out. A registered
+        // postal address in the footer of bulk mail is expected by the big
+        // inbox providers and helps the message not look like spam.
+        'postal_address' => null,
     ],
 
     /*
@@ -83,6 +87,9 @@ return [
             'button' => 'Tell me when Frith launches',
         ],
 
+        // Null means use the artwork shipped in public/brand/img. Uploading a
+        // replacement in the admin panel stores a path here.
+        'hero_image' => null,
         'hero_image_alt' => 'A parent and child sitting on a hillside, watching the sun set over open countryside',
 
         'cards' => [

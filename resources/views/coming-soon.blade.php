@@ -1,5 +1,7 @@
 @php
-    $copy = config('frith.coming_soon');
+    // Edited in the admin panel, falling back to config/frith.php for anything
+    // that has never been filled in. See App\Support\PageContent.
+    $copy = \App\Support\PageContent::for('coming-soon');
     $status = session('waitlist.status');
 @endphp
 
@@ -92,7 +94,7 @@
             <div class="hero__figure">
                 <div class="hero__photo-mask">
                     <img class="hero__photo"
-                         src="{{ asset('brand/img/frith-hero-hillside.png') }}"
+                         src="{{ $copy['hero_image'] ? \Illuminate\Support\Facades\Storage::url($copy['hero_image']) : asset('brand/img/frith-hero-hillside.png') }}"
                          alt="{{ $copy['hero_image_alt'] }}"
                          width="519" height="340">
                 </div>
@@ -104,7 +106,7 @@
         <section class="cards" aria-label="What Frith does">
             @foreach ($copy['cards'] as $card)
                 <div class="card">
-                    <x-icon :name="$card['icon']" class="card__icon" />
+                    <x-frith.icon :name="$card['icon']" class="card__icon" />
                     <h2 class="card__heading">{{ $card['heading'] }}</h2>
                     <p class="card__body">{{ $card['body'] }}</p>
                 </div>

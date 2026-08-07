@@ -17,11 +17,6 @@ return new class extends Migration
 
             $table->string('email')->unique();
 
-            // Not asked for on the coming soon form yet. Frith's value is local
-            // density, so knowing where the list clusters is what tells us
-            // whether a UK-wide launch will actually match anyone.
-            $table->string('postcode_outcode', 4)->nullable();
-
             $table->string('source')->default('coming-soon');
 
             // Consent evidence. UK GDPR asks us to show what was agreed and when,

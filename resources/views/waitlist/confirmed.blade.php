@@ -1,4 +1,4 @@
-@php $copy = config('frith.coming_soon.confirmed'); @endphp
+@php $copy = \App\Support\PageContent::get('coming-soon', 'confirmed'); @endphp
 
 <x-layouts.frith title="You’re on the Frith waiting list">
 

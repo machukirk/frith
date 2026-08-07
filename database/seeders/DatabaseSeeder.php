@@ -2,24 +2,15 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // No user seeding. Admin accounts are created deliberately with
+        // `php artisan frith:admin`, so a deploy can never quietly stand up an
+        // account that can read the waiting list.
+        $this->call(PageSeeder::class);
     }
 }

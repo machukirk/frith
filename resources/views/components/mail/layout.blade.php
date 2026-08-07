@@ -64,7 +64,7 @@
                                 &nbsp;·&nbsp;
                                 <a href="mailto:{{ config('frith.company.contact_email') }}" style="color:{{ $euc }};">{{ config('frith.company.contact_email') }}</a>
                                 &nbsp;·&nbsp;
-                                {{ config('frith.company.name') }}, {{ config('frith.company.location') }}
+                                {{ config('frith.company.name') }}@if (config('frith.company.postal_address')), {{ config('frith.company.postal_address') }}@endif
                             </p>
                         </td>
                     </tr>

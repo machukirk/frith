@@ -1,4 +1,4 @@
-@php $copy = config('frith.coming_soon.unsubscribed'); @endphp
+@php $copy = \App\Support\PageContent::get('coming-soon', 'unsubscribed'); @endphp
 
 <x-layouts.frith title="You’re off the Frith waiting list">
 
