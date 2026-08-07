@@ -35,6 +35,15 @@ step "Copying the release into place"
 # the vhost.
 rsync -a --delete "$STAGE/" "$LIVE/"
 
+step "Normalising permissions"
+# nginx runs as www-data and has to be able to read the tree. Anything that
+# arrived from a developer machine may carry private permissions with it.
+find "$LIVE" -type d ! -path "*/storage/*" -exec chmod 755 {} +
+find "$LIVE" -type f ! -path "*/storage/*" -exec chmod 644 {} +
+chmod -R 775 "$LIVE/storage" "$LIVE/bootstrap/cache"
+chmod 600 "$LIVE/.env"
+chmod +x "$LIVE/artisan" "$LIVE/deploy/"*.sh
+
 step "Rebuilding caches in the live directory"
 cd "$LIVE"
 php artisan optimize:clear

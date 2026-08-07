@@ -33,6 +33,7 @@ cd /home/master/applications/<app>/public_html
 APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://frith.community      # the real domain, https, no trailing slash
+ASSET_URL=https://frith.community    # see note below
 APP_TIMEZONE=Europe/London
 
 DB_DATABASE=...                       # from the Cloudways panel
@@ -46,6 +47,11 @@ RESEND_API_KEY=...
 MAIL_FROM_ADDRESS="hello@frith.community"
 MAIL_FROM_NAME="Frith"
 ```
+
+`ASSET_URL` is not optional here. Behind Cloudways' Varnish and nginx the
+forwarded port leaks into generated URLs, and stylesheets come out as
+`https://frith.community:443/build/...`. Pinning it produces clean absolute URLs
+whatever the proxy reports.
 
 `APP_URL` matters more than it looks. Confirmation emails are built by the queue
 worker, which has no incoming request to read the domain from, so it reads this.

@@ -39,7 +39,10 @@ npm run build
 step "Uploading to ~/$REMOTE_APP"
 # vendor/ is excluded and installed on the server, so the platform's own PHP
 # decides what gets built. public/build IS shipped, because the server can't.
-rsync -az --delete \
+# --chmod matters: without it rsync -a carries the developer machine's own
+# permissions across, and a 600 stylesheet is one nginx cannot read. The result
+# is a live page that renders with no CSS at all.
+rsync -az --delete --chmod=D755,F644 \
     -e "ssh -i $SSH_KEY -o BatchMode=yes" \
     --exclude '.git' \
     --exclude '.ddev' \
