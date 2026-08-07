@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreWaitlistSignupRequest;
+use App\Jobs\SyncSignupToMailerLite;
 use App\Mail\AlreadyOnTheList;
 use App\Mail\ConfirmWaitlistSignup;
 use App\Models\WaitlistSignup;
@@ -81,6 +82,9 @@ class WaitlistController extends Controller
                 'confirmed_at' => now(),
                 'unsubscribed_at' => null,
             ])->save();
+
+            // Only now, once they've proved the address is theirs.
+            SyncSignupToMailerLite::dispatch($signup);
         }
 
         return view('waitlist.confirmed');
@@ -90,6 +94,8 @@ class WaitlistController extends Controller
     {
         if (! $signup->hasUnsubscribed()) {
             $signup->forceFill(['unsubscribed_at' => now()])->save();
+
+            SyncSignupToMailerLite::dispatch($signup, subscribed: false);
         }
 
         return view('waitlist.unsubscribed', [
@@ -111,6 +117,8 @@ class WaitlistController extends Controller
             'unsubscribed_at' => null,
             'confirmed_at' => $signup->confirmed_at ?? now(),
         ])->save();
+
+        SyncSignupToMailerLite::dispatch($signup);
 
         return redirect()
             ->route('coming-soon')

@@ -142,6 +142,23 @@ Document root must point at `public/`. Beyond a normal Laravel deploy:
   Cloudways' load balancer is the real one — rate limiting and consent evidence both
   depend on it.
 
+## MailerLite
+
+The waiting list is mirrored into MailerLite, which is where the launch email
+gets written and sent from. Set `MAILERLITE_API_KEY` and `MAILERLITE_GROUP_ID`;
+leave them empty and the sync quietly does nothing.
+
+**This database stays the source of truth.** MailerLite is a mirror. A signup that
+can't reach MailerLite still succeeds — the job retries, and
+`php artisan frith:mailerlite-backfill` catches up any drift. If MailerLite is ever
+swapped for something else, one class changes.
+
+Only **confirmed** addresses are ever pushed. An unconfirmed signup hasn't proved the
+address belongs to whoever typed it, and unverified addresses must never reach the
+thing that does the actual sending. Unsubscribes are marked, not deleted — a deleted
+subscriber can be re-added by a later import; an unsubscribed one is a standing
+instruction not to.
+
 ## Data protection
 
 `waitlist_signups` holds email, consent evidence (wording, version, timestamp, IP, user

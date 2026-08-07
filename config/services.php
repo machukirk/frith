@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'mailerlite' => [
+        // The waiting list is mirrored here so the launch email has an audience
+        // to send to. Leave the key empty and the sync quietly does nothing —
+        // signups still work, they just don't leave the database.
+        'key' => env('MAILERLITE_API_KEY'),
+        'group_id' => env('MAILERLITE_GROUP_ID'),
+    ],
+
 ];
