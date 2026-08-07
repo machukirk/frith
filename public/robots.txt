@@ -1,2 +1,12 @@
+# frith.community
+
 User-agent: *
-Disallow:
+Allow: /
+
+# The admin panel, and the pages people reach from a link in an email. Neither
+# has anything to offer a search result, and the waitlist URLs carry a
+# signature that should not end up in an index.
+Disallow: /admin
+Disallow: /waitlist/
+
+Sitemap: https://frith.community/sitemap.xml

@@ -1,6 +1,6 @@
 @php $copy = \App\Support\PageContent::get('coming-soon', 'unsubscribed'); @endphp
 
-<x-layouts.frith title="You’re off the Frith waiting list">
+<x-layouts.frith title="You’re off the Frith waiting list" :noindex="true">
 
     <main class="site-main gutter slim" id="main">
         <div class="slim__inner">
