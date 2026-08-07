@@ -32,5 +32,9 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <!-- No live MX lookups in the suite. -->
+        <env name="FRITH_VALIDATE_EMAIL_DNS" value="false"/>
+        <!-- Honeypot is exercised by its own test, which turns it back on. -->
+        <env name="HONEYPOT_ENABLED" value="false"/>
     </php>
 </phpunit>

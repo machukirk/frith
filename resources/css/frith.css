@@ -1,0 +1,633 @@
+/* ==========================================================================
+   Frith — design tokens
+   Transcribed from Brand Guidelines v1.1 §10. Primitives are the ramps and are
+   never referenced from a component; components use the semantic layer only, so
+   a brand colour changes in exactly one place.
+   ========================================================================== */
+
+:root {
+    /* ---- Primitives: brand ramps ---- */
+    --frith-coral-50:  #FFF4F1;
+    --frith-coral-100: #FFD4C9;
+    --frith-coral-200: #FFB19E;
+    --frith-coral-300: #F58F78;
+    --frith-coral-400: #E56A4E; /* brand */
+    --frith-coral-500: #CD573C;
+    --frith-coral-600: #B3432A; /* text-safe */
+    --frith-coral-700: #992F17;
+    --frith-coral-800: #7E1A00;
+    --frith-coral-900: #5F0F00;
+
+    --frith-euc-50:  #F3F8F7;
+    --frith-euc-100: #D6DFDD;
+    --frith-euc-200: #B8C7C4;
+    --frith-euc-300: #9BAFAA;
+    --frith-euc-400: #7F9791;
+    --frith-euc-500: #627E78;
+    --frith-euc-600: #46665F;
+    --frith-euc-700: #274B44; /* brand */
+    --frith-euc-800: #153731;
+    --frith-euc-900: #03221D;
+
+    --frith-linen-50:  #F8F4EE; /* brand */
+    --frith-linen-100: #F0ECE6;
+    --frith-linen-200: #DCD8D3;
+    --frith-linen-700: #5D5A56;
+
+    --frith-ink-600: #6A7588;
+    --frith-ink-700: #4F5B70;
+    --frith-ink-900: #1B2940; /* brand */
+
+    --frith-teal-100: #DFF1EF;
+    --frith-teal-600: #1E8A84;
+    --frith-teal-700: #006964;
+
+    --frith-violet-100: #EDEAFF;
+    --frith-violet-500: #8573C7;
+    --frith-violet-700: #5D4C97;
+
+    --frith-mustard-100: #FCEACF;
+    --frith-mustard-400: #D8A038;
+    --frith-mustard-700: #785300;
+
+    /* ---- Semantic: use these in components ---- */
+    --bg-page: var(--frith-linen-50);
+    --bg-surface: #FFFFFF;
+    --bg-surface-sunken: var(--frith-linen-100);
+    --bg-inverse: var(--frith-euc-700);
+
+    --border-default: var(--frith-linen-200);
+    --border-input: var(--frith-ink-600); /* 3:1 on white */
+
+    --text-primary: var(--frith-ink-900);   /* 13.3:1 */
+    --text-secondary: var(--frith-ink-700); /*  6.3:1 */
+    --text-accent: var(--frith-coral-600);  /*  5.1:1 — never coral-400 */
+    --text-on-inverse: var(--frith-linen-50);
+
+    --action-primary: var(--frith-euc-700);
+    --action-primary-hover: var(--frith-euc-800);
+    --action-primary-active: var(--frith-euc-900);
+    --action-accent: var(--frith-coral-400);
+    --action-accent-text: var(--frith-ink-900); /* 4.5:1 — never #FFF */
+
+    --focus-ring: var(--frith-violet-500);
+    --state-success: var(--frith-teal-700);
+    --state-info: var(--frith-violet-700);
+    --state-warning: var(--frith-mustard-700);
+    --state-error: var(--frith-coral-700);
+
+    --radius-tag: 4px;
+    --radius-input: 10px;
+    --radius-card: 16px;
+    --radius-panel: 20px;
+    --radius-pill: 999px;
+
+    --font-ui: "Poppins", -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-display: "Optima", "Optima nova", "URW Classico", Candara, "Gill Sans", "Gill Sans MT", "Trebuchet MS", sans-serif;
+
+    --target-min: 48px;
+
+    /* 4px base grid */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-12: 48px;
+    --space-16: 64px;
+    --space-24: 96px;
+}
+
+/* ==========================================================================
+   Poppins — self-hosted WOFF2, weights 400/500/600, latin + latin-ext only.
+   Guidelines §04: no substitution needed, so no third-party font request and
+   nothing to block the first paint.
+   ========================================================================== */
+
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/fonts/poppins-400-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/fonts/poppins-400-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('/fonts/poppins-500-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('/fonts/poppins-500-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('/fonts/poppins-600-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('/fonts/poppins-600-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+a { color: var(--action-primary); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--text-accent); }
+::selection { background: var(--frith-coral-100); color: var(--text-primary); }
+img { max-width: 100%; }
+
+/* §08: never remove the outline, never rely on colour change alone. The offset
+   is painted in the page background so the ring reads on every ground. */
+:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--bg-page), 0 0 0 6px var(--focus-ring);
+    border-radius: var(--radius-input);
+}
+
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    padding: var(--space-3) var(--space-4);
+    border-radius: 0 0 var(--radius-input) 0;
+    z-index: 10;
+}
+.skip-link:focus-visible { left: 0; }
+
+.visually-hidden {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* §08: transitions 150–250ms, opacity and small translations only. */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
+.page {
+    container-type: inline-size;
+    width: 100%;
+    /* Everything inside sizes off container query units, so capping the
+       container caps the whole layout — including the gutters and the hero,
+       which bleeds to the container edge rather than the viewport's. */
+    max-width: 1440px;
+    margin-inline: auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.gutter { padding-inline: clamp(22px, 5cqi, 88px); }
+
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding-block: clamp(20px, 3cqi, 34px);
+}
+
+/* §08: every target at least 48×48, above the 44px floor, because tired hands.
+   The logo link's own height is set by the artwork, so pad it out to meet it. */
+.site-header__home {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+}
+.site-header__logo { display: block; width: clamp(116px, 13cqi, 158px); height: auto; }
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: var(--frith-mustard-100);
+    color: var(--frith-mustard-700);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 9px 16px;
+    border-radius: var(--radius-pill);
+}
+.status-pill::before {
+    content: "";
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--frith-mustard-700);
+    flex: none;
+}
+
+.site-main { flex: 1; padding-bottom: clamp(48px, 6cqi, 88px); }
+
+/* ---- Hero ---- */
+
+.hero {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(32px, 5cqi, 64px);
+    align-items: center;
+    padding-block: clamp(28px, 5cqi, 68px) clamp(40px, 6cqi, 76px);
+}
+
+.hero__copy {
+    container-type: inline-size;
+    flex: 1 1 380px;
+    min-width: 0;
+    max-width: 780px;
+}
+
+.eyebrow {
+    margin: 0 0 clamp(14px, 3.7cqi, 22px) 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-accent);
+}
+
+/* Display tier: Optima, brand statements at 32px and up only (§04). */
+.hero__title {
+    margin: 0 0 clamp(16px, 4.3cqi, 26px) 0;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 9cqi, 3.75rem);
+    line-height: 1.08;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    color: var(--text-primary);
+    text-wrap: pretty;
+}
+.hero__title .full-stop { color: var(--text-accent); }
+
+.hero__standfirst {
+    margin: 0 0 clamp(24px, 5.7cqi, 34px) 0;
+    font-size: clamp(1.0625rem, 3.3cqi, 1.25rem);
+    line-height: 1.62;
+    color: var(--text-secondary);
+    max-width: 27em;
+    text-wrap: pretty;
+}
+
+/* The hero framing device (§05). Two nested boxes, and the nesting matters:
+   the inner values mix percentages of width and height, so they stay
+   concentric only while the reference box is square. */
+.hero__figure {
+    flex: 1 1 385px;
+    min-width: 0;
+    position: relative;
+    aspect-ratio: 529 / 407;
+    overflow: hidden;
+    margin-right: calc(-1 * clamp(22px, 5cqi, 88px));
+}
+.hero__photo-mask {
+    position: absolute;
+    left: 1.89%;
+    top: 16.46%;
+    width: 98.11%;
+    height: 83.54%;
+    border-radius: var(--radius-pill) 0 0 var(--radius-pill);
+    overflow: hidden;
+}
+.hero__photo { display: block; width: 100%; height: 100%; object-fit: cover; }
+.hero__brush {
+    position: absolute;
+    left: 2.17%;
+    top: 3.69%;
+    width: 61.53%;
+    height: 95.58%;
+    display: block;
+    pointer-events: none;
+}
+.hero__sun {
+    position: absolute;
+    left: 68.9%;
+    top: 13.39%;
+    width: 6.99%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: var(--action-accent);
+    pointer-events: none;
+}
+
+/* ---- Signup form ---- */
+
+.signup { max-width: 30em; }
+
+.signup__label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.signup__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.signup__input {
+    flex: 1 1 220px;
+    min-width: 0;
+    min-height: 52px;
+    background: var(--bg-surface);
+    border: 1.5px solid var(--border-input);
+    border-radius: var(--radius-input);
+    padding: 14px 16px;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+.signup__input::placeholder { color: var(--frith-ink-600); }
+.signup__input:focus-visible { border-color: var(--action-primary); }
+.signup__input[aria-invalid="true"] { border-color: var(--state-error); border-width: 2px; }
+
+/* §03: primary action is Eucalyptus, Linen on it at 8.81:1. States move along
+   the ramp, never to a new hue. */
+.btn {
+    flex: 0 0 auto;
+    min-height: 52px;
+    background: var(--action-primary);
+    color: var(--text-on-inverse);
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 15px 28px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: background-color 180ms ease;
+}
+.btn:hover { background: var(--action-primary-hover); }
+.btn:active { background: var(--action-primary-active); }
+
+.signup__help {
+    margin: 10px 0 0 0;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+}
+
+/* §03: errors use Coral 700–800, never Coral 400 — so an error never looks like
+   a brand accent. Icon + text + border, never colour alone (§08). */
+.alert {
+    margin: 12px 0 0 0;
+    display: flex;
+    gap: 9px;
+    align-items: flex-start;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    padding: 12px 15px;
+    border-radius: var(--radius-tag) var(--radius-input) var(--radius-input) var(--radius-tag);
+}
+.alert__mark { font-weight: 700; flex: none; }
+.alert--error {
+    background: var(--frith-coral-100);
+    border-left: 3px solid var(--frith-coral-700);
+    color: var(--frith-coral-900);
+}
+
+.notice {
+    max-width: 34em;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-left: 3px solid var(--state-success);
+    border-radius: var(--radius-tag) var(--radius-card) var(--radius-card) var(--radius-tag);
+    padding: 22px 26px;
+}
+.notice__heading {
+    margin: 0 0 var(--space-2) 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.notice__mark { color: var(--state-success); flex: none; }
+.notice__body { margin: 0; font-size: 1rem; line-height: 1.6; color: var(--text-secondary); }
+.notice__body + .notice__body { margin-top: var(--space-3); }
+
+/* ---- Cards ---- */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(248px, 1fr));
+    gap: clamp(14px, 2cqi, 20px);
+}
+
+.card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-card);
+    padding: clamp(22px, 2.6cqi, 30px);
+}
+.card__icon { display: block; margin-bottom: var(--space-4); }
+.card__heading {
+    margin: 0 0 var(--space-2) 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text-primary);
+}
+.card__body { margin: 0; font-size: 1rem; line-height: 1.6; color: var(--text-secondary); }
+
+/* ---- Status band: the one dark anchor block on the page (§03, 25% eucalyptus) ---- */
+
+.status-band {
+    margin-top: clamp(20px, 2.6cqi, 30px);
+    background: var(--bg-inverse);
+    border-radius: var(--radius-panel);
+    padding: clamp(28px, 4cqi, 52px) clamp(24px, 4cqi, 56px);
+}
+.status-band__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: clamp(24px, 4cqi, 52px);
+    align-items: start;
+}
+.status-band__heading {
+    margin: 0 0 14px 0;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.6cqi, 2.5rem);
+    line-height: 1.16;
+    font-weight: 400;
+    color: var(--text-on-inverse);
+}
+.status-band__standfirst {
+    margin: 0 0 26px 0;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--frith-euc-100);
+    max-width: 30em;
+}
+.status-band__lockup { width: clamp(258px, 29cqi, 300px); }
+.status-band__logo { display: block; width: 100%; height: auto; }
+/* Coral 200 on Eucalyptus 700 = 5.53:1. Never Coral 300 below 24px (§02). */
+.status-band__tagline {
+    margin: 3px 0 0 41.2%;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    line-height: 1.25;
+    white-space: nowrap;
+    color: var(--frith-coral-200);
+}
+.status-band__points {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+.status-band__points li {
+    display: flex;
+    gap: 13px;
+    align-items: flex-start;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-on-inverse);
+}
+.status-band__points li::before {
+    content: "";
+    flex: none;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--action-accent);
+    margin-top: 8px;
+}
+.status-band__points strong { font-weight: 600; }
+
+/* ---- Note ---- */
+
+.note {
+    margin-top: clamp(20px, 2.6cqi, 30px);
+    background: var(--frith-violet-100);
+    border-radius: var(--radius-card);
+    padding: clamp(20px, 2.6cqi, 28px) clamp(22px, 3cqi, 32px);
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+.note__mark {
+    flex: none;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--frith-violet-500);
+    color: var(--frith-violet-100);
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 24px;
+    text-align: center;
+}
+.note__body { margin: 0; font-size: 1rem; line-height: 1.65; color: #2D1C57; max-width: 60em; }
+
+/* ---- Footer ---- */
+
+.site-footer {
+    border-top: 1px solid var(--border-default);
+    padding-block: clamp(24px, 3cqi, 36px) clamp(32px, 4cqi, 44px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+.site-footer p { margin: 0; }
+.site-footer__links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; }
+/* Same 48px rule. These are the smallest targets on the page and the ones most
+   likely to be tapped by someone who is tired and in a hurry. */
+.site-footer__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+}
+
+/* ---- Standalone confirm / unsubscribe pages ---- */
+
+.slim {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding-block: clamp(40px, 8cqi, 96px);
+}
+.slim__inner { max-width: 34em; }
+.slim__heading {
+    margin: 0 0 var(--space-4) 0;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 6cqi, 2.5rem);
+    line-height: 1.16;
+    font-weight: 400;
+    color: var(--text-primary);
+}
+.slim__body { margin: 0 0 var(--space-6) 0; font-size: 1.125rem; line-height: 1.65; color: var(--text-secondary); }
+
+/* Every target 48×48 minimum with 8px between them — above the 44px floor,
+   because tired hands (§08). */
+.btn--link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    text-decoration: none;
+}

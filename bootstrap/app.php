@@ -12,7 +12,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // One-click unsubscribe is a POST from Gmail or Outlook, which has no
+        // session and therefore no CSRF token. The signature on the URL is what
+        // authenticates it, so dropping the token check costs nothing.
+        $middleware->validateCsrfTokens(except: [
+            'waitlist/*/unsubscribe',
+        ]);
+
+        // Behind Cloudways' load balancer the client IP arrives in a forwarded
+        // header. Without this, rate limiting and consent evidence would record
+        // the proxy for every visitor.
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
