@@ -59,7 +59,7 @@ class RegistrationController extends Controller
             'step' => $step,
             'stepNumber' => RegistrationFlow::number($step),
             'totalSteps' => RegistrationFlow::total(),
-            'previous' => RegistrationFlow::previous($step),
+            'previous' => RegistrationFlow::backFromStep($step, $registration?->orderedSupportAreas() ?? []),
             'children' => $this->childRows($request, $registration),
         ]);
     }
@@ -85,18 +85,24 @@ class RegistrationController extends Controller
             $this->applyStep($request, $registration, $step, $data);
         }
 
+        // The detail questions deepen this answer rather than following it, so
+        // they come next and stay numbered as step five.
+        if ($step === RegistrationFlow::DETAIL_STEP) {
+            return redirect()->route('register.experiences');
+        }
+
         $next = RegistrationFlow::next($step);
 
         if ($next !== null) {
             return redirect()->route('register.step', $next);
         }
 
-        // End of section one. They are a Founder from here whatever they do next.
+        // The last screen. They have been a Founder since the first one.
         if (! $this->isShadow($request)) {
             $registration->forceFill(['completed_at' => $registration->completed_at ?? now()])->save();
         }
 
-        return redirect()->route('register.experiences');
+        return redirect()->route('register.done');
     }
 
     /**
@@ -206,6 +212,12 @@ class RegistrationController extends Controller
                 'interests' => $this->interestSelections($data),
                 'interests_other' => $data['interests_other'] ?? null,
                 'activity_supports' => $data['activity_supports'] ?? [],
+            ])->save(),
+
+            'finding' => $registration->forceFill([
+                'hopes' => $data['hopes'] ?? [],
+                'connection_styles' => $data['connection_styles'] ?? [],
+                'family_preferences' => $data['family_preferences'] ?? [],
             ])->save(),
 
             default => null,
@@ -320,6 +332,17 @@ class RegistrationController extends Controller
             ], [
                 'interests_other.max' => 'That is a little long for this box — could you shorten it a bit?',
             ]],
+
+            // The last screen, and optional the whole way down. Three
+            // questions, nothing required, nothing to complain about.
+            'finding' => [[
+                'hopes' => ['nullable', 'array'],
+                'hopes.*' => [Rule::in(Taxonomy::hopeSlugs())],
+                'connection_styles' => ['nullable', 'array'],
+                'connection_styles.*' => [Rule::in(Taxonomy::connectionStyleSlugs())],
+                'family_preferences' => ['nullable', 'array'],
+                'family_preferences.*' => [Rule::in(Taxonomy::familyPreferenceSlugs())],
+            ], []],
 
             default => [[], []],
         };

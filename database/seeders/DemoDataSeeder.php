@@ -40,6 +40,9 @@ class DemoDataSeeder extends Seeder
         $structures = Taxonomy::familyStructureSlugs();
         $interests = Taxonomy::interestSlugs();
         $activitySupports = Taxonomy::activitySupportSlugs();
+        $hopes = Taxonomy::hopeSlugs();
+        $connectionStyles = Taxonomy::connectionStyleSlugs();
+        $familyPreferences = Taxonomy::familyPreferenceSlugs();
 
         // Continue from wherever the real numbering got to, the same way the
         // controller does. Hard-coding 1..n collides with anything already there.
@@ -68,6 +71,15 @@ class DemoDataSeeder extends Seeder
                     : null,
                 'activity_supports' => $finished && $i % 3 !== 2
                     ? collect($activitySupports)->shuffle()->take(rand(1, 3))->values()->all()
+                    : null,
+                'hopes' => $finished && $i % 4 !== 3
+                    ? collect($hopes)->shuffle()->take(rand(2, 4))->values()->all()
+                    : null,
+                'connection_styles' => $finished && $i % 4 !== 3
+                    ? collect($connectionStyles)->shuffle()->take(rand(1, 3))->values()->all()
+                    : null,
+                'family_preferences' => $finished && $i % 4 !== 3
+                    ? collect($familyPreferences)->shuffle()->take(rand(1, 3))->values()->all()
                     : null,
                 // The unfinished ones stopped somewhere in the middle, which is
                 // the case the panel most needs to make visible.

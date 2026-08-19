@@ -100,6 +100,31 @@ class RegistrationInfolist
                         ->formatStateUsing(fn (string $state) => Taxonomy::activitySupportLabel($state)),
                 ]),
 
+            Section::make('What they are looking for')
+                ->description('Finding your Frith — the last screen, and optional the whole way down.')
+                ->schema([
+                    TextEntry::make('hopes')
+                        ->label('Hoping to find')
+                        ->placeholder('Not answered')
+                        ->badge()
+                        ->color('gray')
+                        ->formatStateUsing(fn (string $state) => Taxonomy::hopeLabel($state)),
+
+                    TextEntry::make('connection_styles')
+                        ->label('How they would prefer to connect')
+                        ->placeholder('Not answered')
+                        ->badge()
+                        ->color('gray')
+                        ->formatStateUsing(fn (string $state) => Taxonomy::connectionStyleLabel($state)),
+
+                    TextEntry::make('family_preferences')
+                        ->label('Families they would like to meet')
+                        ->placeholder('Not answered')
+                        ->badge()
+                        ->color('gray')
+                        ->formatStateUsing(fn (string $state) => Taxonomy::familyPreferenceLabel($state)),
+                ]),
+
             Section::make('Progress')->schema([
                 TextEntry::make('progress')
                     ->label('How far they got')

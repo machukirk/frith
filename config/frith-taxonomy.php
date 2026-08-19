@@ -216,6 +216,41 @@ return [
     ],
 
     /*
+    | Finding your Frith. What they are hoping for, how they would rather go
+    | about it, and who they would like to meet — the three things that turn
+    | "here are families like yours" into an introduction somebody actually
+    | wants. All optional, like everything else on that screen.
+    */
+    'hopes' => [
+        'families-who-understand' => 'Families who understand our journey',
+        'parents-to-talk-to' => 'Parents to talk to who understand',
+        'friendships-for-my-child' => 'Friendships for my child',
+        'local-families' => 'Local families to meet',
+        'activity-ideas' => 'Ideas for activities and places to go',
+        'practical-advice' => 'Practical advice from other parents',
+        'similar-experience' => 'Someone who has been through a similar experience',
+        'belonging' => 'A sense of belonging and community',
+        'supporting-others' => 'Opportunities to support other families',
+    ],
+
+    'connection_styles' => [
+        'one-to-one' => 'One-to-one chats',
+        'small-local-groups' => 'Small local groups',
+        'family-meet-ups' => 'Family meet-ups and activities',
+        'online' => 'Online conversations',
+        'sharing-experiences' => 'Sharing experiences and advice',
+        'local-recommendations' => 'Finding local recommendations',
+    ],
+
+    'family_preferences' => [
+        'nearby' => 'Families nearby',
+        'similar-age' => 'Families with children a similar age',
+        'similar-interests' => 'Families with similar interests',
+        'similar-day-to-day' => 'Families facing similar day-to-day experiences',
+        'open-to-any' => 'I’m open to meeting any family who understands',
+    ],
+
+    /*
     | Who is part of your family. Multi-select: the data doc's wording is
     | "select all that apply", because families do not fit one box.
     */

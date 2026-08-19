@@ -99,6 +99,9 @@ class FormDefinition
             'family_structures' => [],
             'interests' => [],
             'activity_supports' => [],
+            'hopes' => [],
+            'connection_styles' => [],
+            'family_preferences' => [],
         ];
 
         foreach (config('frith-taxonomy.categories', []) as $categorySlug => $category) {
@@ -121,7 +124,7 @@ class FormDefinition
             ];
         }
 
-        foreach (['family_structures', 'activity_supports'] as $group) {
+        foreach (['family_structures', 'activity_supports', 'hopes', 'connection_styles', 'family_preferences'] as $group) {
             foreach (config("frith-taxonomy.{$group}", []) as $slug => $label) {
                 $options[$group][$slug] = [
                     'label' => $label,

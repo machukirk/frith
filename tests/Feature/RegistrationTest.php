@@ -207,22 +207,96 @@ class RegistrationTest extends TestCase
     {
         $this->openWith();
 
-        // Support is no longer the last screen, so it moves them on rather
-        // than finishing them.
+        // Answering step five leads straight into the detail questions for the
+        // areas they chose, rather than on to the last screen.
         $this->post(route('register.step.store', 'support'), [
             'support_areas' => ['learning-education', 'identity-belonging'],
-        ])->assertRedirect(route('register.step', 'interests'));
+        ])->assertRedirect(route('register.experiences'));
+
+        $this->get(route('register.experiences'))
+            ->assertRedirect(route('register.experiences.show', 'learning-education'));
 
         $this->assertNull(Registration::sole()->completed_at);
 
+        // Out the far side of them is interests, and interests is the end.
+        $this->post(route('register.experiences.store', 'identity-belonging'), ['action' => 'continue'])
+            ->assertRedirect(route('register.step', 'interests'));
+
         $this->post(route('register.step.store', 'interests'), [
             'interests' => ['outdoors-nature'],
-        ])->assertRedirect(route('register.experiences'));
+        ])->assertRedirect(route('register.step', 'finding'));
+
+        $this->assertNull(Registration::sole()->completed_at);
+
+        $this->post(route('register.step.store', 'finding'), ['hopes' => ['belonging']])
+            ->assertRedirect(route('register.done'));
 
         $registration = Registration::sole();
 
         $this->assertNotNull($registration->completed_at);
         $this->assertSame(['learning-education', 'identity-belonging'], $registration->support_areas);
+    }
+
+    #[Test]
+    public function the_detail_questions_never_make_the_form_look_longer(): void
+    {
+        // One screen per area chosen, so counting them would mean the form grew
+        // the more honest somebody was. The counter stays on five throughout.
+        $this->openWith();
+        $this->post(route('register.step.store', 'support'), [
+            'support_areas' => ['learning-education', 'health-wellbeing', 'identity-belonging'],
+        ]);
+
+        $total = RegistrationFlow::total();
+        $step = RegistrationFlow::number(RegistrationFlow::DETAIL_STEP);
+
+        foreach (['learning-education', 'health-wellbeing', 'identity-belonging'] as $i => $area) {
+            $this->get(route('register.experiences.show', $area))
+                ->assertOk()
+                ->assertSee("Step {$step} of {$total}")
+                ->assertSee('Area '.($i + 1).' of 3');
+        }
+
+        // And the screens after them carry straight on from five.
+        $this->get(route('register.step', 'interests'))
+            ->assertSee('Step '.RegistrationFlow::number('interests')." of {$total}");
+    }
+
+    #[Test]
+    public function back_walks_the_screens_in_the_order_they_were_shown(): void
+    {
+        $this->openWith();
+        $this->post(route('register.step.store', 'support'), [
+            'support_areas' => ['learning-education', 'identity-belonging'],
+        ]);
+
+        // Back from the first detail screen returns to step five itself...
+        $this->get(route('register.experiences.show', 'learning-education'))
+            ->assertSee(route('register.step', 'support'), false);
+
+        // ...and back from the second returns to the first, not to step five.
+        $this->get(route('register.experiences.show', 'identity-belonging'))
+            ->assertSee(route('register.experiences.show', 'learning-education'), false);
+
+        // Back from interests returns to the last detail screen, not past them.
+        $this->get(route('register.step', 'interests'))
+            ->assertSee(route('register.experiences.show', 'identity-belonging'), false);
+    }
+
+    #[Test]
+    public function choosing_no_areas_skips_the_detail_questions_entirely(): void
+    {
+        $this->openWith();
+
+        $this->post(route('register.step.store', 'support'), ['support_areas' => []])
+            ->assertRedirect(route('register.experiences'));
+
+        $this->get(route('register.experiences'))
+            ->assertRedirect(route('register.step', 'interests'));
+
+        // And Back from interests goes to step five, because nothing sat between.
+        $this->get(route('register.step', 'interests'))
+            ->assertSee(route('register.step', 'support'), false);
     }
 
     #[Test]
@@ -263,11 +337,10 @@ class RegistrationTest extends TestCase
 
         $this->post(route('register.step.store', 'interests'), [])
             ->assertSessionHasNoErrors()
-            ->assertRedirect(route('register.experiences'));
+            ->assertRedirect(route('register.step', 'finding'));
 
         $registration = Registration::sole();
 
-        $this->assertNotNull($registration->completed_at, 'answering nothing still finishes section one');
         $this->assertSame([], $registration->interests);
         $this->assertNull($registration->interests_other);
     }
@@ -422,6 +495,90 @@ class RegistrationTest extends TestCase
     }
 
     #[Test]
+    public function the_last_screen_asks_three_questions_and_requires_none_of_them(): void
+    {
+        $this->openWith();
+
+        $response = $this->get(route('register.step', 'finding'));
+
+        $response->assertOk()
+            ->assertSee('Finding your Frith')
+            ->assertSee('Help us understand the kind of support and friendships you’re looking for.', false)
+            ->assertSee('What are you hoping to find through Frith?')
+            ->assertSee('How would you prefer to connect?')
+            ->assertSee('What type of families would you like to connect with?')
+            ->assertSee('I’m open to meeting any family who understands', false);
+
+        $html = $response->getContent();
+
+        $this->assertSame(3, substr_count($html, 'choices--two-up'), 'all three lists are two-up');
+        $this->assertSame(9, substr_count($html, 'name="hopes[]"'));
+        $this->assertSame(6, substr_count($html, 'name="connection_styles[]"'));
+        $this->assertSame(5, substr_count($html, 'name="family_preferences[]"'));
+
+        // Answering none of it still finishes the form.
+        $this->post(route('register.step.store', 'finding'), [])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(route('register.done'));
+
+        $this->assertNotNull(Registration::sole()->completed_at);
+    }
+
+    #[Test]
+    public function all_three_finding_answers_are_saved(): void
+    {
+        $this->openWith();
+
+        $this->post(route('register.step.store', 'finding'), [
+            'hopes' => ['belonging', 'practical-advice'],
+            'connection_styles' => ['one-to-one'],
+            'family_preferences' => ['nearby', 'similar-age'],
+        ])->assertSessionHasNoErrors();
+
+        $registration = Registration::sole();
+
+        $this->assertSame(['belonging', 'practical-advice'], $registration->hopes);
+        $this->assertSame(['one-to-one'], $registration->connection_styles);
+        $this->assertSame(['nearby', 'similar-age'], $registration->family_preferences);
+    }
+
+    #[Test]
+    public function an_answer_that_is_not_offered_on_the_last_screen_is_rejected(): void
+    {
+        $this->openWith();
+
+        $this->post(route('register.step.store', 'finding'), ['hopes' => ['a-pony']])
+            ->assertSessionHasErrors('hopes.0');
+
+        $this->post(route('register.step.store', 'finding'), ['connection_styles' => ['carrier-pigeon']])
+            ->assertSessionHasErrors('connection_styles.0');
+
+        $this->post(route('register.step.store', 'finding'), ['family_preferences' => ['nope']])
+            ->assertSessionHasErrors('family_preferences.0');
+    }
+
+    #[Test]
+    public function coming_back_to_the_last_screen_shows_what_they_chose(): void
+    {
+        $this->openWith();
+
+        $this->post(route('register.step.store', 'finding'), [
+            'hopes' => ['belonging'],
+            'connection_styles' => ['online'],
+            'family_preferences' => ['open-to-any'],
+        ]);
+
+        $html = $this->get(route('register.step', 'finding'))->assertOk()->getContent();
+
+        foreach (['belonging', 'online', 'open-to-any'] as $slug) {
+            $this->assertMatchesRegularExpression('/value="'.$slug.'"[^>]*checked/', $html);
+        }
+
+        // Back from the last screen is the one before it, nothing clever.
+        $this->assertStringContainsString(route('register.step', 'interests'), $html);
+    }
+
+    #[Test]
     public function the_progress_bar_counts_every_screen_there_is(): void
     {
         $this->openWith();
@@ -429,7 +586,9 @@ class RegistrationTest extends TestCase
         $total = RegistrationFlow::total();
 
         $this->get(route('register.step', 'you'))->assertSee("Step 1 of {$total}");
-        $this->get(route('register.step', 'interests'))->assertSee("Step {$total} of {$total}");
+        // And the screens after them carry straight on from five.
+        $this->get(route('register.step', 'interests'))
+            ->assertSee('Step '.RegistrationFlow::number('interests')." of {$total}");
     }
 
     #[Test]
@@ -468,7 +627,7 @@ class RegistrationTest extends TestCase
         $this->post(route('register.experiences.store', 'learning-education'), [
             'action' => 'continue',
             'items' => ['school-attendance', 'education-options'],
-        ])->assertRedirect(route('register.done'));
+        ])->assertRedirect(route('register.step', 'interests'));
 
         $experiences = Registration::sole()->experiences;
 
@@ -498,19 +657,24 @@ class RegistrationTest extends TestCase
     }
 
     #[Test]
-    public function skipping_the_rest_goes_straight_to_the_end(): void
+    public function skipping_the_rest_goes_on_to_the_last_screen(): void
     {
-        // The source spreadsheet asks for this explicitly, to limit form fatigue.
+        // The source spreadsheet asks for this explicitly, to limit form
+        // fatigue. It skips the detail questions, not the rest of the form.
         $this->openWith();
         $this->post(route('register.step.store', 'support'), [
             'support_areas' => ['learning-education', 'identity-belonging'],
         ]);
 
         $this->post(route('register.experiences.store', 'learning-education'), ['action' => 'skip-all'])
-            ->assertRedirect(route('register.done'));
+            ->assertRedirect(route('register.step', 'interests'));
+
+        $this->post(route('register.step.store', 'interests'), []);
+        $this->post(route('register.step.store', 'finding'), [])->assertRedirect(route('register.done'));
 
         $this->get(route('register.done'))->assertOk()->assertSee('Frith Founder');
         $this->assertNotNull(Registration::sole()->completed_at);
+        $this->assertCount(0, Registration::sole()->experiences);
     }
 
     #[Test]

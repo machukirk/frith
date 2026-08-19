@@ -19,7 +19,7 @@ return [
 
     'founders-registration' => [
         'name' => 'Frith Founders registration',
-        'description' => 'The six-screen registration, plus the optional detail questions.',
+        'description' => 'The seven-screen registration, plus the optional detail questions.',
 
         'steps' => [
             'you' => [
@@ -88,6 +88,17 @@ return [
                     'activity_supports' => [
                         'label' => 'Are there things that help you enjoy activities?',
                     ],
+                ],
+            ],
+
+            'finding' => [
+                'heading' => 'Finding your Frith',
+                'standfirst' => 'Help us understand the kind of support and friendships you’re looking for.',
+                'is_private' => false,
+                'fields' => [
+                    'hopes' => ['label' => 'What are you hoping to find through Frith?'],
+                    'connection_styles' => ['label' => 'How would you prefer to connect?'],
+                    'family_preferences' => ['label' => 'What type of families would you like to connect with?'],
                 ],
             ],
         ],

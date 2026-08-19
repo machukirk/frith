@@ -45,6 +45,7 @@ class ExportRegistrationsAction
             'Founder number', 'Name', 'Email', 'Postcode area',
             'Family', 'Children (born)', 'Support areas', 'Detailed experiences',
             'Interests', 'Interests in their own words', 'What helps them enjoy activities',
+            'Hoping to find', 'How they would prefer to connect', 'Families they would like to meet',
             'Progress', 'Registered', 'Consent wording', 'Consent version', 'Consented at',
         ]);
 
@@ -69,6 +70,12 @@ class ExportRegistrationsAction
                         $r->interests_other,
                         collect($r->activity_supports ?? [])
                             ->map(fn ($s) => Taxonomy::activitySupportLabel($s))->implode('; '),
+                        collect($r->hopes ?? [])
+                            ->map(fn ($s) => Taxonomy::hopeLabel($s))->implode('; '),
+                        collect($r->connection_styles ?? [])
+                            ->map(fn ($s) => Taxonomy::connectionStyleLabel($s))->implode('; '),
+                        collect($r->family_preferences ?? [])
+                            ->map(fn ($s) => Taxonomy::familyPreferenceLabel($s))->implode('; '),
                         $r->isComplete()
                             ? 'Complete'
                             : 'Step '.min($r->furthest_step, RegistrationFlow::total()).' of '.RegistrationFlow::total(),

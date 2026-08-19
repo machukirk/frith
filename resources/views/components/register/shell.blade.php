@@ -10,6 +10,8 @@
     'standfirst' => null,
     'step' => null,
     'total' => null,
+    {{-- A URL, not a step slug: what comes before a screen is not always the
+         entry before it in the flow. See App\Support\RegistrationFlow. --}}
     'previous' => null,
     'private' => false,
     'title' => null,
@@ -52,7 +54,7 @@
 
             @if ($previous)
                 <p class="wizard__back">
-                    <a href="{{ route('register.step', $previous) }}">&larr; Back</a>
+                    <a href="{{ $previous }}">&larr; Back</a>
                 </p>
             @endif
 

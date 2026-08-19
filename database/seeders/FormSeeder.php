@@ -59,8 +59,9 @@ class FormSeeder extends Seeder
 
         $this->seedSupportAreas($form);
         $this->seedInterests($form);
-        $this->seedFlatGroup($form, 'family_structures');
-        $this->seedFlatGroup($form, 'activity_supports');
+        foreach (['family_structures', 'activity_supports', 'hopes', 'connection_styles', 'family_preferences'] as $group) {
+            $this->seedFlatGroup($form, $group);
+        }
     }
 
     private function seedSupportAreas(Form $form): void

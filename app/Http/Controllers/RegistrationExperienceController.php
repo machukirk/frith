@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Registration;
+use App\Support\RegistrationFlow;
 use App\Support\Taxonomy;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,11 +12,15 @@ use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 /**
- * Section two: the more detailed statements, one screen per area they chose.
+ * The detail questions: one screen per area of family life they chose.
+ *
+ * They sit inside step five rather than after it. Counting them would mean the
+ * form grew the more areas somebody was honest about, so the progress counter
+ * stays on five throughout and a smaller line says which area this is.
  *
  * The source spreadsheet is emphatic about this — "give users the ability to
  * SKIP this section to speed up registration / limit form-filling fatigue" —
- * so every screen can be skipped, the whole section can be skipped, and none
+ * so every screen can be skipped, all of them can be skipped at once, and none
  * of it changes whether they are registered. They already are.
  */
 class RegistrationExperienceController extends Controller
@@ -35,8 +40,10 @@ class RegistrationExperienceController extends Controller
 
         $areas = $registration->orderedSupportAreas();
 
+        // Nothing chosen means nothing to ask about, so straight on to the
+        // last screen rather than a dead end.
         return $areas === []
-            ? redirect()->route('register.done')
+            ? redirect()->route('register.step', 'interests')
             : redirect()->route('register.experiences.show', $areas[0]);
     }
 
@@ -67,7 +74,10 @@ class RegistrationExperienceController extends Controller
                 ->all(),
             'position' => $position + 1,
             'total' => count($areas),
-            'previous' => $areas[$position - 1] ?? null,
+            // Frozen on step five however many areas there are.
+            'stepNumber' => RegistrationFlow::number(RegistrationFlow::DETAIL_STEP),
+            'totalSteps' => RegistrationFlow::total(),
+            'previous' => RegistrationFlow::backFromArea($category, $areas),
         ]);
     }
 
@@ -85,9 +95,10 @@ class RegistrationExperienceController extends Controller
             return redirect()->route('register.experiences');
         }
 
-        // "Skip the rest" leaves everything already answered untouched.
+        // "Skip the rest" leaves everything already answered untouched, and
+        // still goes on to the last screen rather than out of the form.
         if ($request->input('action') === 'skip-all') {
-            return redirect()->route('register.done');
+            return redirect()->route('register.step', 'interests');
         }
 
         $data = Validator::make($request->all(), [
@@ -103,7 +114,7 @@ class RegistrationExperienceController extends Controller
         $next = $areas[$position + 1] ?? null;
 
         return $next === null
-            ? redirect()->route('register.done')
+            ? redirect()->route('register.step', 'interests')
             : redirect()->route('register.experiences.show', $next);
     }
 

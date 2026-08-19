@@ -32,6 +32,9 @@ class FormOption extends Model
         'family_structures' => 'Who is part of your family',
         'interests' => 'Interests & activities',
         'activity_supports' => 'What helps them enjoy activities',
+        'hopes' => 'What they are hoping to find',
+        'connection_styles' => 'How they would prefer to connect',
+        'family_preferences' => 'Who they would like to connect with',
     ];
 
     /** Short forms, for the table column that has no room for the long ones. */
@@ -40,6 +43,9 @@ class FormOption extends Model
         'family_structures' => 'Family',
         'interests' => 'Interests',
         'activity_supports' => 'What helps',
+        'hopes' => 'Hoping to find',
+        'connection_styles' => 'How to connect',
+        'family_preferences' => 'Who to meet',
     ];
 
     protected $guarded = [];

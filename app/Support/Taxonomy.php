@@ -123,6 +123,67 @@ class Taxonomy
     }
 
     /**
+     * The three Finding your Frith questions.
+     *
+     * Plain slug => label lists, kept as separate groups rather than one so an
+     * editor can reword one question's answers without touching the others.
+     *
+     * @return array<string, string>
+     */
+    public static function hopes(): array
+    {
+        return self::liveLabels('hopes');
+    }
+
+    /** @return array<int, string> */
+    public static function hopeSlugs(): array
+    {
+        return array_keys(self::hopes());
+    }
+
+    /** Includes archived, for the same reason as categoryLabel(). */
+    public static function hopeLabel(string $slug): string
+    {
+        return self::label('hopes', $slug);
+    }
+
+    /** @return array<string, string> */
+    public static function connectionStyles(): array
+    {
+        return self::liveLabels('connection_styles');
+    }
+
+    /** @return array<int, string> */
+    public static function connectionStyleSlugs(): array
+    {
+        return array_keys(self::connectionStyles());
+    }
+
+    /** Includes archived, for the same reason as categoryLabel(). */
+    public static function connectionStyleLabel(string $slug): string
+    {
+        return self::label('connection_styles', $slug);
+    }
+
+    /** @return array<string, string> */
+    public static function familyPreferences(): array
+    {
+        return self::liveLabels('family_preferences');
+    }
+
+    /** @return array<int, string> */
+    public static function familyPreferenceSlugs(): array
+    {
+        return array_keys(self::familyPreferences());
+    }
+
+    /** Includes archived, for the same reason as categoryLabel(). */
+    public static function familyPreferenceLabel(string $slug): string
+    {
+        return self::label('family_preferences', $slug);
+    }
+
+    /**
      * Taxonomy order rather than submission order, so a family's interests
      * always read the same way round wherever they are shown.
      *

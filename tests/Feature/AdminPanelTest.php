@@ -188,10 +188,16 @@ class AdminPanelTest extends TestCase
             'interests' => ['games-technology-building', 'water'],
             'interests_other' => 'Steam trains, mostly.',
             'activity_supports' => ['smaller-groups', 'clear-routines'],
+            'hopes' => ['belonging'],
+            'connection_styles' => ['one-to-one'],
+            'family_preferences' => ['similar-age'],
         ]);
 
         $html = $this->renderInfolist($registration);
 
+        $this->assertStringContainsString('A sense of belonging and community', $html);
+        $this->assertStringContainsString('One-to-one chats', $html);
+        $this->assertStringContainsString('Families with children a similar age', $html);
         $this->assertStringContainsString('Games, Technology &amp; Building', $html);
         $this->assertStringContainsString('Water Activities', $html);
         $this->assertStringContainsString('Steam trains, mostly.', $html);
@@ -236,6 +242,8 @@ class AdminPanelTest extends TestCase
             'interests' => ['quiet-sensory', 'animals'],
             'interests_other' => 'Steam trains',
             'activity_supports' => ['smaller-groups'],
+            'hopes' => ['practical-advice'],
+            'family_preferences' => ['open-to-any'],
         ]);
 
         $this->actingAs($this->owner());
@@ -247,6 +255,8 @@ class AdminPanelTest extends TestCase
 
         $this->assertStringContainsString('Quiet & Sensory-Friendly Activities', $csv);
         $this->assertStringContainsString('Smaller groups', $csv);
+        $this->assertStringContainsString('Practical advice from other parents', $csv);
+        $this->assertStringContainsString('I’m open to meeting any family who understands', $csv);
         $this->assertStringContainsString('Steam trains', $csv);
         $this->assertStringNotContainsString('quiet-sensory', $csv);
 
