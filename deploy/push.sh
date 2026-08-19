@@ -3,7 +3,7 @@
 # Push Frith to Cloudways. Run from your machine, in the project root:
 #
 #   ./deploy/push.sh                 # deploy to the live directory
-#   ./deploy/push.sh --to-staging    # upload to ~/frith-release instead, changing nothing public
+#   ./deploy/push.sh --to-staging    # stage it instead, changing nothing public
 #
 # CSS is built here, not on the server: Cloudways is on Node 18 and Vite needs
 # 20 or newer. The built files ship with the code.
@@ -18,7 +18,9 @@ SSH_KEY="${FRITH_SSH_KEY:-$HOME/.ssh/id_rsa}"
 REMOTE_APP="public_html"
 
 if [ "${1:-}" = "--to-staging" ]; then
-    REMOTE_APP="frith-release"
+    # Has to match the path promote.sh promotes from, or staging a release and
+    # promoting it would quietly move two different things.
+    REMOTE_APP="private_html/frith-release"
 fi
 
 SSH=(ssh -i "$SSH_KEY" -o BatchMode=yes)
