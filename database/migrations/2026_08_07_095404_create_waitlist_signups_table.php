@@ -23,7 +23,7 @@ return new class extends Migration
             // so the wording is snapshotted here rather than looked up later.
             $table->string('consent_version');
             $table->text('consent_text');
-            $table->timestamp('consented_at');
+            $table->timestamp('consented_at')->useCurrent();
             $table->string('consent_ip', 45)->nullable();
             $table->text('consent_user_agent')->nullable();
 

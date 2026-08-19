@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('source')->default('coming-soon');
             $table->string('consent_version');
             $table->text('consent_text');
-            $table->timestamp('consented_at');
+            $table->timestamp('consented_at')->useCurrent();
             $table->string('consent_ip', 45)->nullable();
             $table->text('consent_user_agent')->nullable();
             $table->timestamp('confirmation_sent_at')->nullable();

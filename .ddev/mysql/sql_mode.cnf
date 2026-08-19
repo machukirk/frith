@@ -1,0 +1,5 @@
+# Match the sql_mode Cloudways runs, so a migration that production rejects
+# fails here instead. A stock local MariaDB is missing NO_ZERO_DATE, which is
+# how a NOT NULL timestamp with no default got as far as the server.
+[mysqld]
+sql_mode = ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION

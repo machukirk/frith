@@ -41,7 +41,10 @@ return new class extends Migration
             // --- Consent evidence, same shape as the waiting list ---
             $table->string('consent_version');
             $table->text('consent_text');
-            $table->timestamp('consented_at');
+            // useCurrent, not a bare NOT NULL: under NO_ZERO_DATE — which
+            // production runs and a stock local MariaDB does not — a NOT NULL
+            // timestamp with no default is rejected outright at CREATE TABLE.
+            $table->timestamp('consented_at')->useCurrent();
             $table->string('consent_ip', 45)->nullable();
             $table->text('consent_user_agent')->nullable();
 
