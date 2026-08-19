@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\RegistrationEmailController;
 use App\Http\Controllers\RegistrationExperienceController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\WebManifestController;
@@ -47,6 +48,24 @@ Route::prefix('join')->name('register.')->group(function () {
         ->name('experiences.store');
 
     Route::get('/done', [RegistrationExperienceController::class, 'done'])->name('done');
+
+    /*
+     * The links in the Founder email. Signed rather than session-based: the
+     * link is the proof, and somebody guessing a URL gets a 403.
+     */
+    Route::middleware('signed')->group(function () {
+        Route::get('/verify/{registration}', [RegistrationEmailController::class, 'verify'])->name('verify');
+
+        // GET for the link in the body, POST for RFC 8058 one-click, which is
+        // what Gmail and Outlook call from their own unsubscribe control.
+        Route::match(['get', 'post'], '/unsubscribe/{registration}', [RegistrationEmailController::class, 'unsubscribe'])
+            ->name('unsubscribe');
+
+        Route::post('/resubscribe/{registration}', [RegistrationEmailController::class, 'resubscribe'])
+            ->name('resubscribe');
+    });
+
+    Route::view('/confirmed', 'register.verified-done')->name('verified.done');
 
     Route::get('/{step}', [RegistrationController::class, 'show'])->name('step');
     Route::post('/{step}', [RegistrationController::class, 'store'])

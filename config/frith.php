@@ -45,6 +45,11 @@ return [
     */
 
     'registration' => [
+        // How long after registering the Founder email goes out. Long enough
+        // that somebody who finishes the form gets it afterwards rather than
+        // mid-way, short enough that somebody who stops still hears from us.
+        'welcome_delay_minutes' => 10,
+
         // Live MX lookup on the submitted address. Catches gmail.con and
         // similar. Off in tests so the suite doesn't depend on the network.
         'validate_email_dns' => env('FRITH_VALIDATE_EMAIL_DNS', true),

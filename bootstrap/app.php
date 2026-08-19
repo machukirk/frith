@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // session and therefore no CSRF token. The signature on the URL is what
         // authenticates it, so dropping the token check costs nothing.
         $middleware->validateCsrfTokens(except: [
-            'waitlist/*/unsubscribe',
+            'join/unsubscribe/*',
         ]);
 
         // Behind Cloudways' load balancer the client IP arrives in a forwarded

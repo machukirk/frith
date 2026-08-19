@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\FounderWelcome;
 use App\Models\Registration;
 use App\Support\RegistrationFlow;
 use App\Support\Taxonomy;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -133,6 +135,7 @@ class RegistrationController extends Controller
         $registration->save();
 
         $this->assignFounderNumber($registration);
+        $this->sendWelcome($registration);
         $registration->recordProgress(2);
 
         $request->session()->put(self::SESSION_ID, $registration->id);
@@ -153,6 +156,28 @@ class RegistrationController extends Controller
         $next = (int) Registration::query()->max('founder_number') + 1;
 
         $registration->forceFill(['founder_number' => $next])->save();
+    }
+
+    /**
+     * The Founder email, sent once.
+     *
+     * Delayed rather than immediate: somebody still filling in the form does
+     * not need their phone buzzing at them, and by the time it lands they have
+     * usually either finished or stopped — so one message reads correctly for
+     * both. The timestamp is written first, so a retry cannot send it twice.
+     */
+    private function sendWelcome(Registration $registration): void
+    {
+        if ($registration->verification_sent_at !== null) {
+            return;
+        }
+
+        $registration->forceFill(['verification_sent_at' => now()])->save();
+
+        Mail::to($registration->email)->later(
+            now()->addMinutes((int) config('frith.registration.welcome_delay_minutes')),
+            new FounderWelcome($registration),
+        );
     }
 
     /** @param array<string, mixed> $data */
