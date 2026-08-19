@@ -107,13 +107,25 @@ class AdminPanelTest extends TestCase
     }
 
     #[Test]
-    public function the_follow_up_screens_are_visible_to_whoever_edits_the_form(): void
+    public function a_screen_that_is_only_a_list_of_choices_has_no_empty_fields_panel(): void
     {
-        // They are not rows in form_steps — there is one per area somebody
-        // picks — so without this an editor has no way of knowing the screens
-        // between step five and step six exist at all.
+        // Who is in your family and which areas of family life are nothing but
+        // their options, which live on the Options tab. An empty "Fields on
+        // this screen" panel only sends somebody looking for something that
+        // was never going to be in it.
         $this->seed(FormSeeder::class);
         $form = Form::query()->where('slug', Taxonomy::FORM)->sole();
+
+        foreach (['family', 'support'] as $key) {
+            $this->assertSame(
+                0,
+                $form->steps()->where('key', $key)->sole()->fields()->count(),
+                "the {$key} screen should have no fields of its own",
+            );
+        }
+
+        // The screens that do have fields still show them.
+        $this->assertGreaterThan(0, $form->steps()->where('key', 'you')->sole()->fields()->count());
 
         $this->actingAs($this->editor());
 
@@ -121,24 +133,13 @@ class AdminPanelTest extends TestCase
             ->assertOk()
             ->html();
 
-        $this->assertStringContainsString('The follow-up screens', $html);
-        $this->assertStringContainsString('One screen per area somebody picks', $html);
+        // One panel per screen that has fields, and not one more.
+        $withFields = $form->steps()->has('fields')->count();
 
-        // Every area is listed, with its own wording and how much is on it.
-        foreach (Taxonomy::categories() as $slug => $area) {
-            $this->assertStringContainsString(e($area['label']), $html, "{$slug} is missing");
-            $this->assertStringContainsString(e($area['description']), $html);
-        }
-
-        $this->assertStringContainsString('8 statements', $html);
-        $this->assertStringContainsString('Their wording lives on the Options tab', $html);
-
-        // And that tab has to be reachable by clicking, or the note above is a
-        // pointer to somewhere nobody can get to.
-        $this->assertStringContainsString(
-            ManageFormOptions::getUrl(['record' => $form]),
-            $html,
-            'the Options tab is not linked from the wording page',
+        $this->assertSame(
+            $withFields,
+            substr_count($html, 'Fields on this screen'),
+            'an empty fields panel is being rendered',
         );
     }
 
@@ -160,71 +161,26 @@ class AdminPanelTest extends TestCase
     }
 
     #[Test]
-    public function an_archived_area_is_shown_as_one_nobody_sees(): void
+    public function an_archived_option_still_shows_in_its_block_marked_as_off_the_form(): void
     {
+        // Archiving is not deleting. It has to stay visible to whoever is
+        // looking after the lists, or the only way to find one again is to
+        // remember it existed.
         $this->seed(FormSeeder::class);
         $form = Form::query()->where('slug', Taxonomy::FORM)->sole();
 
-        $form->options()->where('group', 'support_areas')->whereNull('parent_id')
-            ->where('slug', 'learning-education')->update(['archived_at' => now()]);
+        $archived = $form->optionsIn('interests')->where('slug', 'water')->sole();
+        $archived->forceFill(['archived_at' => now()])->save();
 
         $this->actingAs($this->editor());
 
-        Livewire::test(EditForm::class, ['record' => $form->getRouteKey()])
-            ->assertSee('Archived — nobody is offered this');
-    }
-
-    #[Test]
-    public function the_options_are_grouped_by_list_in_the_order_the_form_asks_them(): void
-    {
-        // A hundred and sixteen rows in one table, ordered by a position that
-        // only means anything within its own list — so every list's first
-        // option came out together, then every list's second. Grouped, each
-        // list is one block, and the block says where in the form it is shown.
-        $this->seed(FormSeeder::class);
-        $form = Form::query()->where('slug', Taxonomy::FORM)->sole();
-
-        $this->actingAs($this->owner());
-
-        $expected = collect();
-
-        // Step 3, then the step 5 areas, then one block per follow-up screen...
-        $expected = $expected->concat($form->optionsIn('family_structures')->orderBy('position')->get());
-
-        $areas = $form->optionsIn('support_areas')->orderBy('position')->get();
-        $expected = $expected->concat($areas);
-
-        foreach ($areas as $area) {
-            $expected = $expected->concat($area->children()->orderBy('position')->get());
-        }
-
-        // ...then the rest, in the order somebody meets them.
-        foreach (['interests', 'activity_supports', 'hopes', 'connection_styles', 'family_preferences'] as $group) {
-            $expected = $expected->concat($form->optionsIn($group)->orderBy('position')->get());
-        }
-
-        $this->assertCount(116, $expected, 'every option should be accounted for');
-
         Livewire::test(ManageFormOptions::class, ['record' => $form->getRouteKey()])
             ->assertOk()
-            ->assertCanSeeTableRecords($expected, inOrder: true);
-    }
+            ->assertCanSeeTableRecords([$archived]);
 
-    #[Test]
-    public function each_block_says_where_in_the_form_it_is_shown(): void
-    {
-        $this->seed(FormSeeder::class);
-        $form = Form::query()->where('slug', Taxonomy::FORM)->sole();
-
-        $interest = $form->optionsIn('interests')->first();
-        $statement = $form->optionsIn('support_areas')->first()->children()->first();
-
-        $this->assertSame('Interests & activities', $interest->listTitle());
-        $this->assertSame('Step 6 — Interests & activities', $interest->listDescription());
-
-        // A statement groups under its own area, not with the other sixty-two.
-        $this->assertSame('Learning & Education', $statement->listTitle());
-        $this->assertSame('Shown on the follow-up screen for this area', $statement->listDescription());
+        $this->assertTrue($archived->refresh()->isArchived());
+        $this->assertArrayNotHasKey('water', Taxonomy::interests(), 'it should stop being offered');
+        $this->assertSame('Water Activities', Taxonomy::interestLabel('water'), 'and still resolve for anybody who chose it');
     }
 
     #[Test]

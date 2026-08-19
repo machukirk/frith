@@ -2,17 +2,13 @@
 
 namespace App\Filament\Resources\Forms\Schemas;
 
-use App\Models\Form as FormModel;
-use App\Models\FormOption;
-use App\Support\RegistrationFlow;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Callout;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 
@@ -21,11 +17,6 @@ use Filament\Support\Icons\Heroicon;
  *
  * The key of each screen and field is shown but not editable — it is what ties
  * the wording to the code that validates and saves it.
- *
- * The follow-up screens are listed too, even though they are not rows in this
- * table. There is one per area of family life somebody picks, so they cannot be
- * numbered steps — but an editor who never sees them here has no way of knowing
- * the screens exist, let alone where to change their wording.
  */
 class FormContentSchema
 {
@@ -72,8 +63,14 @@ class FormContentSchema
                         ->label('Show the "only used for matching" note')
                         ->helperText('Use this on any screen that asks for something we never show on a profile.'),
 
+                    // Only the screens that have their own labelled inputs. The
+                    // ones that are nothing but a list of choices — who is in
+                    // your family, which areas of family life — are edited on
+                    // the Options tab, and an empty panel here only invites
+                    // somebody to go looking for something that is not in it.
                     Section::make('Fields on this screen')
                         ->collapsed()
+                        ->visible(fn (Get $get): bool => filled($get('fields')))
                         ->schema([
                             Repeater::make('fields')
                                 ->relationship()
@@ -93,81 +90,6 @@ class FormContentSchema
                                 ]),
                         ]),
                 ]),
-
-            Section::make('The follow-up screens')
-                ->columnSpanFull()
-                ->description('The screens between step '
-                    .RegistrationFlow::number(RegistrationFlow::DETAIL_STEP).' and step '
-                    .RegistrationFlow::number('interests').'.')
-                ->collapsed()
-                ->schema([
-                    Callout::make('One screen per area somebody picks')
-                        ->description('After step '.RegistrationFlow::number(RegistrationFlow::DETAIL_STEP)
-                            .', everyone is asked for more detail about the areas of family life they chose — one screen'
-                            .' each, so somebody who picks three areas sees three of them. That is why they are not in'
-                            .' the list above: there is no fixed number of them. The counter stays on step '
-                            .RegistrationFlow::number(RegistrationFlow::DETAIL_STEP)
-                            .' throughout, so the form never looks longer for the people who tell us most.')
-                        ->icon(Heroicon::OutlinedQuestionMarkCircle)
-                        ->color('info')
-                        ->columnSpanFull(),
-
-                    Grid::make(2)->schema(fn (FormModel $record) => static::followUpScreens($record)),
-
-                    Callout::make('Their wording lives on the Options tab')
-                        ->description('Each screen’s heading is the area’s own name, and the line underneath is its'
-                            .' description — the same wording people read on step '
-                            .RegistrationFlow::number(RegistrationFlow::DETAIL_STEP)
-                            .'. Change it once under Options and both update together, with nothing anybody has already'
-                            .' chosen lost along the way.')
-                        ->icon(Heroicon::OutlinedListBullet)
-                        ->color('warning')
-                        ->columnSpanFull(),
-                ]),
-
         ]);
-    }
-
-    /**
-     * One read-only entry per follow-up screen.
-     *
-     * Read-only on purpose. These are the same rows the choice cards on step
-     * five are built from, and the Options tab is where the safeguards live —
-     * how many families chose a thing, and archive rather than delete. A second
-     * way in without those is how an option thirty families picked disappears.
-     *
-     * @return array<int, Placeholder>
-     */
-    private static function followUpScreens(FormModel $form): array
-    {
-        $areas = $form->optionsIn('support_areas')->with('children')->orderBy('position')->get();
-
-        if ($areas->isEmpty()) {
-            return [
-                Placeholder::make('no_follow_up_screens')
-                    ->label('')
-                    ->content('No areas of family life yet, so nobody sees a follow-up screen.')
-                    ->columnSpanFull(),
-            ];
-        }
-
-        return $areas
-            ->map(fn (FormOption $area) => Placeholder::make('follow_up_'.$area->slug)
-                ->label($area->label)
-                ->content(static::followUpSummary($area)))
-            ->all();
-    }
-
-    private static function followUpSummary(FormOption $area): string
-    {
-        $live = $area->children->reject(fn (FormOption $item) => $item->isArchived())->count();
-
-        $parts = array_filter([
-            $area->description,
-            $live.' '.str('statement')->plural($live),
-            $area->isArchived() ? 'Archived — nobody is offered this' : null,
-        ]);
-
-        return implode(' · ', $parts);
     }
 }
