@@ -68,7 +68,7 @@ class FormDefinitionTest extends TestCase
     private function startRegistration(): void
     {
         $this->post(route('register.step.store', 'you'), [
-            'first_name' => 'Sam', 'last_name' => 'Okafor', 'email' => 'sam@example.com',
+            'first_name' => 'Sam', 'email' => 'sam@example.com',
         ]);
     }
 

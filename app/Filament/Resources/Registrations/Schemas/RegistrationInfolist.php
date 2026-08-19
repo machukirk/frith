@@ -30,7 +30,7 @@ class RegistrationInfolist
                     ->color('warning'),
                 TextEntry::make('name')
                     ->label('Name')
-                    ->state(fn (Registration $r) => $r->fullName()),
+                    ->state(fn (Registration $r) => $r->displayName()),
                 TextEntry::make('email')->copyable(),
                 TextEntry::make('postcode_outcode')->label('Postcode area')->placeholder('—'),
             ])->columns(4),

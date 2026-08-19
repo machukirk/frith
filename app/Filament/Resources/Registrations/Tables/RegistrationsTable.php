@@ -27,8 +27,8 @@ class RegistrationsTable
 
                 TextColumn::make('first_name')
                     ->label('Name')
-                    ->formatStateUsing(fn (Registration $r) => $r->fullName())
-                    ->searchable(['first_name', 'last_name'])
+                    ->formatStateUsing(fn (Registration $r) => $r->displayName())
+                    ->searchable()
                     ->weight('medium'),
 
                 TextColumn::make('email')->searchable()->copyable()->toggleable(),

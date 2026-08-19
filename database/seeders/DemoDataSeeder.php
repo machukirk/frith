@@ -21,13 +21,11 @@ class DemoDataSeeder extends Seeder
 {
     /** Spread across a few outcodes so the "busiest area" figure means something. */
     private const FAMILIES = [
-        ['Priya', 'Raman', 'SS9', true], ['Dan', 'Whitfield', 'SS0', true],
-        ['Aoife', 'Kelly', 'M21', true], ['Marcus', 'Bell', 'SS9', true],
-        ['Nadia', 'Hassan', 'BS7', true], ['Tom', 'Ashworth', 'SS9', true],
-        ['Grace', 'Owusu', 'LS6', true], ['Ellie', 'Fraser', 'SS0', true],
-        ['Rhys', 'Morgan', 'CF14', true], ['Joanne', 'Petrie', 'EH11', true],
-        ['Sam', 'Okonkwo', 'SS9', false], ['Beth', 'Cartwright', 'NE6', false],
-        ['Iwona', 'Nowak', 'SS0', false],
+        ['Priya', 'SS9', true], ['Dan', 'SS0', true], ['Aoife', 'M21', true],
+        ['Marcus', 'SS9', true], ['Nadia', 'BS7', true], ['Tom', 'SS9', true],
+        ['Grace', 'LS6', true], ['Ellie', 'SS0', true], ['Rhys', 'CF14', true],
+        ['Joanne', 'EH11', true], ['Sam', 'SS9', false], ['Beth', 'NE6', false],
+        ['Iwona', 'SS0', false],
     ];
 
     public function run(): void
@@ -45,8 +43,8 @@ class DemoDataSeeder extends Seeder
         // controller does. Hard-coding 1..n collides with anything already there.
         $nextFounderNumber = (int) Registration::query()->max('founder_number');
 
-        foreach (self::FAMILIES as $i => [$first, $last, $outcode, $finished]) {
-            $email = strtolower("{$first}.{$last}@example.com");
+        foreach (self::FAMILIES as $i => [$first, $outcode, $finished]) {
+            $email = strtolower($first).'.'.($i + 1).'@example.com';
 
             if (Registration::query()->where('email', $email)->exists()) {
                 continue;
@@ -58,7 +56,6 @@ class DemoDataSeeder extends Seeder
             $registration = Registration::query()->create([
                 'email' => $email,
                 'first_name' => $first,
-                'last_name' => $last,
                 'postcode_outcode' => $outcode,
                 'family_structures' => collect($structures)->shuffle()->take(rand(1, 2))->values()->all(),
                 'support_areas' => $finished ? $areas : null,

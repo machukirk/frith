@@ -10,12 +10,14 @@
         @csrf
         <x-honeypot />
 
-        <div class="field-row">
-            <x-register.field name="first_name" :label="$c->label('first_name', 'First name')" :help="$c->help('first_name')"
-                              :value="old('first_name', $registration?->first_name)" autocomplete="given-name" required />
-            <x-register.field name="last_name" :label="$c->label('last_name', 'Last name')" :help="$c->help('last_name')"
-                              :value="old('last_name', $registration?->last_name)" autocomplete="family-name" required />
-        </div>
+        <x-register.field
+            name="first_name"
+            :label="$c->label('first_name', 'Your name')"
+            :help="$c->help('first_name')"
+            :value="old('first_name', $registration?->first_name)"
+            autocomplete="given-name"
+            required
+        />
 
         <x-register.field
             name="email"

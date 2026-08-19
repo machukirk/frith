@@ -41,7 +41,7 @@ class ExportRegistrationsAction
         $out = fopen('php://output', 'w');
 
         fputcsv($out, [
-            'Founder number', 'First name', 'Last name', 'Email', 'Postcode area',
+            'Founder number', 'Name', 'Email', 'Postcode area',
             'Family', 'Children (born)', 'Support areas', 'Detailed experiences',
             'Progress', 'Registered', 'Consent wording', 'Consent version', 'Consented at',
         ]);
@@ -54,7 +54,6 @@ class ExportRegistrationsAction
                     fputcsv($out, [
                         $r->founder_number,
                         $r->first_name,
-                        $r->last_name,
                         $r->email,
                         $r->postcode_outcode,
                         collect($r->family_structures ?? [])

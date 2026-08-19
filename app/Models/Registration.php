@@ -81,9 +81,9 @@ class Registration extends Model
         return $this->completed_at !== null;
     }
 
-    public function fullName(): string
+    public function displayName(): string
     {
-        return trim("{$this->first_name} {$this->last_name}");
+        return trim((string) $this->first_name);
     }
 
     /**

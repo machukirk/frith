@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Registration;
 use App\Support\Taxonomy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -17,11 +18,37 @@ class RegistrationTest extends TestCase
     {
         $this->post(route('register.step.store', 'you'), array_merge([
             'first_name' => 'Sam',
-            'last_name' => 'Okafor',
             'email' => 'sam@example.com',
         ], $overrides));
 
         return Registration::query()->latest('id')->first();
+    }
+
+    #[Test]
+    public function a_last_name_is_never_asked_for_or_stored(): void
+    {
+        // Decided against collecting it. The column is gone, so anything sent
+        // for it has nowhere to land — this guards against it creeping back in
+        // via a copied form or a stray fill().
+        $this->get(route('register.step', 'you'))
+            ->assertOk()
+            ->assertDontSee('name="last_name"', false)
+            ->assertDontSee('Last name');
+
+        $this->post(route('register.step.store', 'you'), [
+            'first_name' => 'Sam',
+            'last_name' => 'Okafor',
+            'email' => 'sam@example.com',
+        ])->assertSessionHasNoErrors();
+
+        $registration = Registration::sole();
+
+        $this->assertSame('Sam', $registration->first_name);
+        $this->assertFalse(
+            Schema::hasColumn('registrations', 'last_name'),
+            'the last_name column should have been dropped',
+        );
+        $this->assertArrayNotHasKey('last_name', $registration->getAttributes());
     }
 
     #[Test]
@@ -40,7 +67,6 @@ class RegistrationTest extends TestCase
         // registered whatever happens next.
         $this->post(route('register.step.store', 'you'), [
             'first_name' => 'Sam',
-            'last_name' => 'Okafor',
             'email' => '  SAM@Example.com ',
         ])->assertRedirect(route('register.step', 'location'));
 
@@ -300,7 +326,6 @@ class RegistrationTest extends TestCase
         $existing = Registration::query()->create([
             'email' => 'priya@example.com',
             'first_name' => 'Priya',
-            'last_name' => 'Raman',
             'postcode_outcode' => 'M1',
             'founder_number' => 1,
             'email_verified_at' => now(),
@@ -311,7 +336,6 @@ class RegistrationTest extends TestCase
 
         $this->post(route('register.step.store', 'you'), [
             'first_name' => 'Impostor',
-            'last_name' => 'Smith',
             'email' => 'priya@example.com',
         ])->assertRedirect(route('register.step', 'location'));
 

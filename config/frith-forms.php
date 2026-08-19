@@ -24,11 +24,13 @@ return [
         'steps' => [
             'you' => [
                 'heading' => 'What should we call you?',
-                'standfirst' => 'Your first name is what other families will see. Your last name stays private.',
+                'standfirst' => 'Just a first name or a nickname — whatever you would like other families to call you.',
                 'is_private' => false,
                 'fields' => [
-                    'first_name' => ['label' => 'First name'],
-                    'last_name' => ['label' => 'Last name'],
+                    'first_name' => [
+                        'label' => 'Your name',
+                        'help' => 'This is what other families see. A first name or a nickname is fine.',
+                    ],
                     'email' => [
                         'label' => 'Your email',
                         'help' => 'So we can tell you the moment Frith opens. One email, and you can leave any time.',

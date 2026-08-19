@@ -128,10 +128,7 @@ class RegistrationController extends Controller
             'consent_user_agent' => substr((string) $request->userAgent(), 0, 1000),
         ]);
 
-        $registration->fill([
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-        ]);
+        $registration->fill(['first_name' => $data['first_name']]);
 
         $registration->save();
 
@@ -217,11 +214,9 @@ class RegistrationController extends Controller
         return match ($step) {
             'you' => [[
                 'first_name' => ['required', 'string', 'max:80'],
-                'last_name' => ['required', 'string', 'max:80'],
                 'email' => ['required', 'string', $emailFormat, 'max:254'],
             ], [
-                'first_name.required' => 'We need something to call you. A first name is fine.',
-                'last_name.required' => 'And a last name, so other families know who they are talking to.',
+                'first_name.required' => 'We need something to call you. A first name or a nickname is fine.',
                 'email.required' => 'We need an email address so we can tell you when Frith opens.',
                 'email.email' => 'That email does not look right. It should look like name@example.com.',
             ]],
