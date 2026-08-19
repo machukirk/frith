@@ -177,8 +177,10 @@ class FormDefinitionTest extends TestCase
 
         $experience = Registration::sole()->experiences->sole();
 
-        $this->assertSame('My child hides parts of themselves to fit in (masking)', $experience->label());
-        $this->assertSame('Identity & Belonging', $experience->categoryLabel());
+        // Read from the taxonomy rather than repeated here, so rewording a
+        // label is one edit rather than two.
+        $this->assertSame(config('frith-taxonomy.categories.identity-belonging.items.masking'), $experience->label());
+        $this->assertSame(config('frith-taxonomy.categories.identity-belonging.label'), $experience->categoryLabel());
     }
 
     #[Test]
