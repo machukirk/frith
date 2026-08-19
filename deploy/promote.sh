@@ -33,7 +33,17 @@ step "Copying the release into place"
 # Contents are replaced rather than the directory being moved: public_html is
 # provisioned by Cloudways with its own ownership, and recreating it can break
 # the vhost.
-rsync -a --delete "$STAGE/" "$LIVE/"
+#
+# The excludes matter as much as the copy. --delete against a staged release
+# that was uploaded without these would take the live copies with it: an image
+# uploaded in the admin panel, everyone's session, and the .env itself.
+rsync -a --delete \
+    --exclude '.env' \
+    --exclude 'storage/app/public/' \
+    --exclude 'storage/logs/' \
+    --exclude 'storage/framework/' \
+    --exclude 'public/storage' \
+    "$STAGE/" "$LIVE/"
 
 step "Normalising permissions"
 # nginx runs as www-data and has to be able to read the tree. Anything that
