@@ -75,11 +75,11 @@
     <link rel="apple-touch-icon" href="{{ asset('brand/icon/frith-icon-180.png') }}" sizes="180x180">
     <link rel="manifest" href="{{ route('manifest') }}">
 
-    {{-- Poppins is self-hosted and render-blocking on first paint, so the two
+    {{-- Livvic is self-hosted and render-blocking on first paint, so the two
          weights above the fold are preloaded. crossorigin is required on font
          preloads even same-origin, or the browser fetches them twice. --}}
-    <link rel="preload" href="{{ asset('fonts/poppins-400-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ asset('fonts/poppins-600-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('fonts/livvic-400-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('fonts/livvic-600-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
 
     @vite('resources/css/frith.css')
 
