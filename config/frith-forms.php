@@ -33,7 +33,9 @@ return [
                     ],
                     'email' => [
                         'label' => 'Your email',
-                        'help' => 'So we can tell you the moment Frith opens. One email, and you can leave any time.',
+                        // Deliberately short: the consent line sits directly
+                        // below and says what happens to it.
+                        'help' => 'Where we will write to you.',
                     ],
                 ],
             ],

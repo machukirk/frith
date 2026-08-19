@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Registration;
-use App\Models\WaitlistSignup;
 use Database\Seeders\DemoDataSeeder;
 use Illuminate\Console\Command;
 
@@ -31,9 +30,7 @@ class DemoData extends Command
             $registrations = Registration::query()->where('email', 'like', '%@example.com')->get();
             $registrations->each->delete();
 
-            $signups = WaitlistSignup::query()->where('email', 'like', '%@example.com')->delete();
-
-            $this->info("  Removed {$registrations->count()} demo registration(s) and {$signups} demo signup(s).");
+            $this->info("  Removed {$registrations->count()} demo registration(s).");
 
             return self::SUCCESS;
         }

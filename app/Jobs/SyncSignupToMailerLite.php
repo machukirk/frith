@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\WaitlistSignup;
+use App\Models\Registration;
 use App\Services\MailerLite;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -24,7 +24,7 @@ class SyncSignupToMailerLite implements ShouldQueue
     public array $backoff = [60, 300, 900, 3600];
 
     public function __construct(
-        public WaitlistSignup $signup,
+        public Registration $registration,
         public bool $subscribed = true,
     ) {}
 
@@ -36,12 +36,12 @@ class SyncSignupToMailerLite implements ShouldQueue
 
         // Re-read rather than trusting the flag: by the time this runs the
         // person may have confirmed and then changed their mind.
-        $this->signup->refresh();
+        $this->registration->refresh();
 
         try {
-            $this->subscribed && ! $this->signup->hasUnsubscribed()
-                ? $mailerLite->subscribe($this->signup)
-                : $mailerLite->unsubscribe($this->signup);
+            $this->subscribed && $this->registration->unsubscribed_at === null
+                ? $mailerLite->subscribe($this->registration)
+                : $mailerLite->unsubscribe($this->registration);
         } catch (\Throwable $e) {
             report($e);
 

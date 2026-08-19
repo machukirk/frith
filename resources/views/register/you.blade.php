@@ -31,6 +31,11 @@
             required
         />
 
+        {{-- Shown, not just recorded. What gets stored against this
+             registration is the sentence below, so it has to be a sentence
+             they actually read before they press the button. --}}
+        <p class="consent">{{ config('frith.consent.text') }}</p>
+
         <button class="btn" type="submit">Continue</button>
     </form>
 </x-register.shell>

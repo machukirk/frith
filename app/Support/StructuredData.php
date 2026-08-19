@@ -92,16 +92,17 @@ class StructuredData
                     'about' => ['@id' => $organisationId],
                     'primaryImageOfPage' => ['@id' => $base.'/#hero'],
                     'inLanguage' => 'en-GB',
-                    // The page is a single sign-up form, so the only meaningful
-                    // action on it is joining the waiting list.
+                    // The only meaningful action on the page is registering.
                     'potentialAction' => [
-                        '@type' => 'SubscribeAction',
-                        'name' => 'Join the Frith waiting list',
+                        '@type' => 'RegisterAction',
+                        'name' => 'Become a Frith Founder',
                         'target' => [
                             '@type' => 'EntryPoint',
-                            'urlTemplate' => route('waitlist.store'),
-                            'httpMethod' => 'POST',
-                            'contentType' => 'application/x-www-form-urlencoded',
+                            'urlTemplate' => route('register.start'),
+                            'actionPlatform' => [
+                                'https://schema.org/DesktopWebPlatform',
+                                'https://schema.org/MobileWebPlatform',
+                            ],
                         ],
                     ],
                 ],

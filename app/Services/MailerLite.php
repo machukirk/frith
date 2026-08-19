@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\WaitlistSignup;
+use App\Models\Registration;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Http;
  * this is unconfigured or MailerLite is down, signups carry on working — that
  * is the whole reason the list lives here first.
  *
- * Only confirmed addresses are ever sent. An unconfirmed signup has not proved
- * the address belongs to them, and pushing those would put unverified addresses
+ * Only verified addresses are ever sent. Registering does not prove the address
+ * belongs to whoever typed it, and pushing those would put unverified addresses
  * into the thing that does the actual sending.
  */
 class MailerLite
@@ -28,20 +28,23 @@ class MailerLite
         return filled(config('services.mailerlite.key'));
     }
 
-    public function subscribe(WaitlistSignup $signup): void
+    public function subscribe(Registration $registration): void
     {
-        if (! $signup->isConfirmed() || $signup->hasUnsubscribed()) {
+        // Verified addresses only. A registration is not proof the address
+        // belongs to whoever typed it, and unverified addresses must never
+        // reach the thing that does the sending.
+        if ($registration->email_verified_at === null || $registration->unsubscribed_at !== null) {
             return;
         }
 
-        $this->upsert($signup->email, 'active');
+        $this->upsert($registration->email, 'active');
     }
 
-    public function unsubscribe(WaitlistSignup $signup): void
+    public function unsubscribe(Registration $registration): void
     {
         // Marked rather than deleted. A deleted subscriber can be re-added by a
         // later import; an unsubscribed one is a standing instruction not to.
-        $this->upsert($signup->email, 'unsubscribed');
+        $this->upsert($registration->email, 'unsubscribed');
     }
 
     private function upsert(string $email, string $status): void

@@ -959,3 +959,17 @@ select.field__input {
     line-height: 1.55;
     color: var(--text-secondary);
 }
+
+/* ---- Consent ---- */
+
+/* Sits directly above the button that acts on it, because consent nobody read
+   is not consent. Full contrast rather than the usual small print grey. */
+.consent {
+    margin: 0 0 var(--space-6) 0;
+    padding: 14px 16px;
+    background: var(--bg-surface-sunken);
+    border-radius: var(--radius-input);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}

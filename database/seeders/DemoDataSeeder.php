@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Registration;
-use App\Models\WaitlistSignup;
 use App\Support\Taxonomy;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\App;
@@ -94,19 +93,6 @@ class DemoDataSeeder extends Seeder
                     }
                 }
             }
-        }
-
-        // A few on the old waiting list too, so that section is not empty.
-        foreach (['hana.begum', 'olu.adeyemi', 'kirsty.lennox'] as $n => $handle) {
-            WaitlistSignup::query()->firstOrCreate(['email' => "{$handle}@example.com"], [
-                'source' => 'coming-soon',
-                'consent_version' => config('frith.consent.version'),
-                'consent_text' => config('frith.consent.text'),
-                'consented_at' => now()->subDays(25 + $n),
-                'consent_ip' => '203.0.113.'.rand(2, 250),
-                'confirmation_sent_at' => now()->subDays(25 + $n),
-                'confirmed_at' => $n < 2 ? now()->subDays(25 + $n) : null,
-            ]);
         }
 
         $this->command->info('  Demo data added. Remove it with: ddev artisan frith:demo --clear');

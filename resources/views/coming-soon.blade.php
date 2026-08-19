@@ -2,7 +2,6 @@
     // Edited in the admin panel, falling back to config/frith.php for anything
     // that has never been filled in. See App\Support\PageContent.
     $copy = \App\Support\PageContent::for('coming-soon');
-    $status = session('waitlist.status');
 @endphp
 
 <x-layouts.frith>
@@ -30,9 +29,9 @@
                      not type — and so the wizard owns all of the validation. --}}
                 <div class="hero__cta">
                     <a class="btn btn--hero" href="{{ route('register.start') }}">
-                        {{ $copy['form']['button'] }}
+                        {{ $copy['cta']['button'] }}
                     </a>
-                    <p class="hero__cta-note">{{ $copy['founders_note'] ?? '' }}</p>
+                    <p class="hero__cta-note">{{ $copy['cta']['note'] ?? '' }}</p>
                 </div>
 
             </div>

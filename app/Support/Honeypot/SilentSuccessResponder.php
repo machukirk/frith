@@ -15,16 +15,14 @@ use Spatie\Honeypot\SpamResponder\SpamResponder;
  * accessibility tool that submits faster than a human could — they get a normal
  * outcome instead of the blank page the package ships by default.
  *
- * The trade is that a false positive is silent: they think they signed up and
- * no email arrives. The success copy tells people to write to us if nothing
- * turns up, which is the recovery path.
+ * The trade is that a false positive sends a real person back to the first
+ * screen with nothing to explain it. The timing check is a full second, which
+ * no human types faster than, so it should stay rare.
  */
 class SilentSuccessResponder implements SpamResponder
 {
     public function respond(Request $request, Closure $next)
     {
-        return redirect()
-            ->route('coming-soon')
-            ->with('waitlist.status', 'pending-confirmation');
+        return redirect()->route('register.start');
     }
 }

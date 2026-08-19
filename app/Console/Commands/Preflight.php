@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Page;
+use App\Models\Registration;
 use App\Models\User;
-use App\Models\WaitlistSignup;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -151,7 +151,7 @@ class Preflight extends Command
         }
 
         // A worker that isn't running looks exactly like everything being fine,
-        // right up until someone checks why nobody has confirmed.
+        // right up until someone checks why no mail has gone out.
         $pending = DB::table('jobs')->count();
         $stuck = DB::table('jobs')->where('created_at', '<', now()->subMinutes(10)->getTimestamp())->count();
         $failed = DB::table('failed_jobs')->count();
@@ -196,15 +196,15 @@ class Preflight extends Command
         }
 
         $owners = User::query()->where('role', 'owner')->count();
-        $signups = WaitlistSignup::query()->count();
+        $registrations = Registration::query()->count();
 
         $owners > 0
             ? $this->ok("{$owners} owner account(s)")
-            : $this->note('No owner account', 'Nobody can see the waiting list. Run: php artisan frith:admin');
+            : $this->note('No owner account', 'Nobody can see the Founders. Run: php artisan frith:admin');
 
-        if ($signups > 0) {
-            $confirmed = WaitlistSignup::query()->mailable()->count();
-            $this->ok("{$signups} signup(s), {$confirmed} confirmed");
+        if ($registrations > 0) {
+            $complete = Registration::query()->completed()->count();
+            $this->ok("{$registrations} Founder(s), {$complete} finished section one");
         }
     }
 

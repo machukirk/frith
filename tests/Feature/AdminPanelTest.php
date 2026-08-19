@@ -5,12 +5,12 @@ namespace Tests\Feature;
 use App\Enums\UserRole;
 use App\Filament\Resources\Pages\Pages\EditPage;
 use App\Filament\Resources\Pages\Pages\ListPages;
-use App\Filament\Resources\WaitlistSignups\Pages\ListWaitlistSignups;
-use App\Filament\Resources\WaitlistSignups\Tables\ExportWaitlistAction;
-use App\Filament\Resources\WaitlistSignups\WaitlistSignupResource;
+use App\Filament\Resources\Registrations\Pages\ListRegistrations;
+use App\Filament\Resources\Registrations\RegistrationResource;
+use App\Filament\Resources\Registrations\Tables\ExportRegistrationsAction;
 use App\Models\Page;
+use App\Models\Registration;
 use App\Models\User;
-use App\Models\WaitlistSignup;
 use App\Support\PageContent;
 use Database\Seeders\PageSeeder;
 use Filament\Actions\Testing\TestAction;
@@ -40,14 +40,14 @@ class AdminPanelTest extends TestCase
     }
 
     #[Test]
-    public function an_editor_can_reach_the_content_but_not_the_waiting_list(): void
+    public function an_editor_can_reach_the_content_but_not_the_founders(): void
     {
         // The whole point of the two roles: whoever looks after the words has
-        // no business seeing the email addresses of families who signed up.
+        // no business seeing what families told us about their lives.
         $this->actingAs($this->editor());
 
         Livewire::test(ListPages::class)->assertOk();
-        Livewire::test(ListWaitlistSignups::class)->assertForbidden();
+        Livewire::test(ListRegistrations::class)->assertForbidden();
     }
 
     #[Test]
@@ -56,17 +56,17 @@ class AdminPanelTest extends TestCase
         $this->actingAs($this->owner());
 
         Livewire::test(ListPages::class)->assertOk();
-        Livewire::test(ListWaitlistSignups::class)->assertOk();
+        Livewire::test(ListRegistrations::class)->assertOk();
     }
 
     #[Test]
-    public function the_waiting_list_is_hidden_from_an_editors_navigation(): void
+    public function the_founders_are_hidden_from_an_editors_navigation(): void
     {
         $this->actingAs($this->editor());
-        $this->assertFalse(WaitlistSignupResource::canViewAny());
+        $this->assertFalse(RegistrationResource::canViewAny());
 
         $this->actingAs($this->owner());
-        $this->assertTrue(WaitlistSignupResource::canViewAny());
+        $this->assertTrue(RegistrationResource::canViewAny());
     }
 
     #[Test]
@@ -148,7 +148,7 @@ class AdminPanelTest extends TestCase
         $copy = PageContent::for('coming-soon');
 
         $this->assertSame('Only this key is set', $copy['eyebrow']);
-        $this->assertSame(config('frith.coming_soon.form.button'), $copy['form']['button']);
+        $this->assertSame(config('frith.coming_soon.cta.button'), $copy['cta']['button']);
         $this->assertCount(3, $copy['cards']);
     }
 
@@ -159,32 +159,32 @@ class AdminPanelTest extends TestCase
 
         $this->get(route('coming-soon'))
             ->assertOk()
-            ->assertSee(config('frith.coming_soon.form.button'));
+            ->assertSee(config('frith.coming_soon.cta.button'));
     }
 
     #[Test]
-    public function an_owner_can_delete_a_signup_to_honour_an_erasure_request(): void
+    public function an_owner_can_delete_a_registration_to_honour_an_erasure_request(): void
     {
-        $signup = WaitlistSignup::factory()->confirmed()->create();
+        $registration = Registration::factory()->create();
 
         $this->actingAs($this->owner());
 
-        Livewire::test(ListWaitlistSignups::class)
-            ->callAction(TestAction::make('delete')->table($signup));
+        Livewire::test(ListRegistrations::class)
+            ->callAction(TestAction::make('delete')->table($registration));
 
-        $this->assertDatabaseCount('waitlist_signups', 0);
+        $this->assertDatabaseCount('registrations', 0);
     }
 
     #[Test]
     public function the_csv_export_carries_the_consent_record_with_the_addresses(): void
     {
-        // A file of email addresses with no provenance is not much use if
+        // A file of personal data with no provenance is not much use if
         // somebody later asks what these people agreed to.
-        WaitlistSignup::factory()->confirmed()->create(['email' => 'sam@example.com']);
+        Registration::factory()->create(['email' => 'sam@example.com']);
 
         $this->actingAs($this->owner());
 
-        Livewire::test(ListWaitlistSignups::class)
+        Livewire::test(ListRegistrations::class)
             ->callAction(TestAction::make('export')->table())
             ->assertFileDownloaded();
 
@@ -200,7 +200,7 @@ class AdminPanelTest extends TestCase
     private function captureExport(): string
     {
         ob_start();
-        ExportWaitlistAction::response()->sendContent();
+        ExportRegistrationsAction::response()->sendContent();
 
         return (string) ob_get_clean();
     }

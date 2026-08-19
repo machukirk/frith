@@ -72,40 +72,25 @@ class PageForm
                     ]),
                 ]),
 
-                Tabs\Tab::make('Sign-up form')->schema([
-                    Callout::make('The line under the form is not editable here')
-                        ->description('What people agree to when they sign up is stored, word for word and with a version number, against every signup as the record of consent. Changing it needs a developer to version the change at the same time.')
-                        ->icon(Heroicon::OutlinedLockClosed)
-                        ->color('warning')
+                Tabs\Tab::make('Call to action')->schema([
+                    Callout::make('This button opens the registration')
+                        ->description('It takes people to the five-screen Founders form. The wording on that form is edited under Forms, not here.')
+                        ->icon(Heroicon::OutlinedCursorArrowRays)
+                        ->color('info')
                         ->columnSpanFull(),
 
                     Section::make()->schema([
-                        TextInput::make('content.form.label')->label('Field label')->maxLength(60),
-                        TextInput::make('content.form.placeholder')->label('Greyed-out example text')->maxLength(60),
-                        TextInput::make('content.form.button')->label('Button')->maxLength(60),
-                    ])->columns(3),
+                        TextInput::make('content.cta.button')
+                            ->label('Button')
+                            ->maxLength(40)
+                            ->helperText('Keep it short — it should not wrap on a phone.'),
 
-                    Section::make('After someone signs up')
-                        ->description('Shown on the page once they have submitted the form.')
-                        ->schema([
-                            TextInput::make('content.success.heading')->label('Heading')->maxLength(80),
-                            Textarea::make('content.success.body')->label('Message')->rows(3),
-                            Textarea::make('content.success.footnote')->label('If nothing arrives')->rows(2),
-                        ]),
-
-                    Section::make('After they confirm their email')
-                        ->description('The page they land on from the link in the email.')
-                        ->schema([
-                            TextInput::make('content.confirmed.heading')->label('Heading')->maxLength(80),
-                            Textarea::make('content.confirmed.body')->label('Message')->rows(3),
-                        ]),
-
-                    Section::make('If someone unsubscribes')
-                        ->collapsed()
-                        ->schema([
-                            TextInput::make('content.unsubscribed.heading')->label('Heading')->maxLength(80),
-                            Textarea::make('content.unsubscribed.body')->label('Message')->rows(3),
-                        ]),
+                        Textarea::make('content.cta.note')
+                            ->label('Line underneath the button')
+                            ->rows(2)
+                            ->maxLength(300)
+                            ->helperText('Where the offer goes: what a Founder gets, and how long it takes.'),
+                    ]),
                 ]),
 
                 Tabs\Tab::make('Three cards')->schema([

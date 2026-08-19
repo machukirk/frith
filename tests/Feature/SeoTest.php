@@ -3,10 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\Page;
-use App\Models\WaitlistSignup;
+use App\Models\Registration;
 use Database\Seeders\PageSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\URL;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -103,20 +102,14 @@ class SeoTest extends TestCase
     }
 
     #[Test]
-    public function the_pages_reached_from_an_email_are_not_indexed(): void
+    public function the_registration_screens_are_not_indexed(): void
     {
-        // They have nothing to offer a search result, and their URLs carry a
-        // signature that should never end up in an index.
-        $signup = WaitlistSignup::factory()->create();
-
-        $this->get(URL::temporarySignedRoute('waitlist.confirm', now()->addDays(14), ['signup' => $signup->public_id]))
+        // A half-finished form is nothing anybody should land on from a search
+        // result, and the screens carry no structured data either.
+        $this->get(route('register.step', 'you'))
             ->assertOk()
             ->assertSee('content="noindex, nofollow"', false)
             ->assertDontSee('application/ld+json', false);
-
-        $this->get(URL::signedRoute('waitlist.unsubscribe', ['signup' => $signup->public_id]))
-            ->assertOk()
-            ->assertSee('content="noindex, nofollow"', false);
     }
 
     #[Test]
@@ -143,7 +136,10 @@ class SeoTest extends TestCase
 
         $this->assertStringContainsString('Sitemap: https://frith.community/sitemap.xml', $robots);
         $this->assertStringContainsString('Disallow: /admin', $robots);
-        $this->assertStringContainsString('Disallow: /waitlist/', $robots);
+
+        // The registration steps stay crawlable on purpose: they carry a
+        // noindex tag, and a crawler has to fetch a page to see that.
+        $this->assertStringNotContainsString('Disallow: /join', $robots);
     }
 
     #[Test]

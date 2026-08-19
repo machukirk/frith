@@ -57,7 +57,7 @@ class RegistrationTest extends TestCase
         $this->get(route('coming-soon'))
             ->assertOk()
             ->assertSee(route('register.start'), false)
-            ->assertSee(config('frith.coming_soon.form.button'));
+            ->assertSee(config('frith.coming_soon.cta.button'));
     }
 
     #[Test]

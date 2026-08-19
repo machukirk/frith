@@ -31,26 +31,22 @@ return [
     */
 
     'consent' => [
-        'version' => '2026-08-07.v1',
-        'text' => 'One email, when we launch. Nothing else, and you can leave at any time.',
+        // v1 described an email list. Registration collects considerably more
+        // than an address, so the wording had to say so — and it is now shown
+        // on the screen that takes the email, rather than only recorded.
+        'version' => '2026-08-19.v2',
+        'text' => 'We’ll keep what you tell us so we can introduce you to families like yours, and email you when Frith opens. Nothing else, no ads, and you can ask us to delete it all at any time.',
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Waitlist behaviour
+    | Registration
     |--------------------------------------------------------------------------
     */
 
-    'waitlist' => [
-        // How long a confirmation link stays valid.
-        'confirmation_link_days' => 14,
-
-        // Don't re-send a confirmation more than once per this many minutes,
-        // so the endpoint can't be used to mailbomb someone else's address.
-        'resend_cooldown_minutes' => 15,
-
-        // Live MX lookup on the submitted address. Off in tests so the suite
-        // doesn't depend on the network.
+    'registration' => [
+        // Live MX lookup on the submitted address. Catches gmail.con and
+        // similar. Off in tests so the suite doesn't depend on the network.
         'validate_email_dns' => env('FRITH_VALIDATE_EMAIL_DNS', true),
     ],
 
@@ -81,14 +77,10 @@ return [
 
         'standfirst' => 'Frith connects parents and carers of children with SEND to other families nearby. People who already know what an EHCP is.',
 
-        'form' => [
-            'label' => 'Your email',
-            'placeholder' => 'you@example.com',
+        'cta' => [
             'button' => 'Join Frith',
+            'note' => 'Register now and Frith’s premium features stay free for your family, for good. Takes about two minutes.',
         ],
-
-        // Shown under the button on the homepage.
-        'founders_note' => 'Register now and Frith’s premium features stay free for your family, for good. Takes about two minutes.',
 
         // Null means use the artwork shipped in public/brand/img. Uploading a
         // replacement in the admin panel stores a path here.
@@ -138,21 +130,5 @@ return [
         ],
 
         'note' => 'Frith is built for families navigating SEND first, because that is where the isolation is sharpest. It is being built for every family in time. If you are waiting on an assessment, or have no diagnosis at all, you are as welcome as anyone here.',
-
-        'success' => [
-            'heading' => 'Check your email.',
-            'body' => 'We’ve sent a link to confirm it’s really you. Once you’ve clicked it you’re on the list, and we’ll email you when Frith launches.',
-            'footnote' => 'Nothing arrived within a few minutes? Have a look in your spam folder, or write to us and a person will sort it out.',
-        ],
-
-        'confirmed' => [
-            'heading' => 'You’re on the list.',
-            'body' => 'That’s everything — there’s nothing else to do. We’ll email you once, when Frith launches. If you’d rather talk to a person before then, write to us any time.',
-        ],
-
-        'unsubscribed' => [
-            'heading' => 'You’re off the list.',
-            'body' => 'We won’t email you about the launch. Nothing you did was wrong, and you’re welcome back whenever you like.',
-        ],
     ],
 ];

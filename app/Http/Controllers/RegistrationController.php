@@ -209,7 +209,7 @@ class RegistrationController extends Controller
     /** @return array{0: array<string, mixed>, 1: array<string, string>} */
     private function rulesFor(string $step): array
     {
-        $emailFormat = config('frith.waitlist.validate_email_dns') ? 'email:rfc,dns' : 'email:rfc';
+        $emailFormat = config('frith.registration.validate_email_dns') ? 'email:rfc,dns' : 'email:rfc';
 
         return match ($step) {
             'you' => [[

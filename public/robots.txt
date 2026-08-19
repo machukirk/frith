@@ -3,10 +3,9 @@
 User-agent: *
 Allow: /
 
-# The admin panel, and the pages people reach from a link in an email. Neither
-# has anything to offer a search result, and the waitlist URLs carry a
-# signature that should not end up in an index.
+# The admin panel has nothing to offer a search result. The registration steps
+# are left crawlable on purpose: they carry a noindex tag, and a crawler has to
+# be able to fetch a page to see that it says noindex.
 Disallow: /admin
-Disallow: /waitlist/
 
 Sitemap: https://frith.community/sitemap.xml

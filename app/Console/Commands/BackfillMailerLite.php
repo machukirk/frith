@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\SyncSignupToMailerLite;
-use App\Models\WaitlistSignup;
+use App\Models\Registration;
 use App\Services\MailerLite;
 use Illuminate\Console\Command;
 
@@ -20,7 +20,7 @@ class BackfillMailerLite extends Command
 {
     protected $signature = 'frith:mailerlite-backfill {--dry-run : Show what would be sent without sending it}';
 
-    protected $description = 'Sync every confirmed signup to MailerLite';
+    protected $description = 'Sync every verified registration to MailerLite';
 
     public function handle(MailerLite $mailerLite): int
     {
@@ -32,10 +32,11 @@ class BackfillMailerLite extends Command
 
         $dryRun = (bool) $this->option('dry-run');
 
-        $subscribe = WaitlistSignup::query()->mailable();
-        $unsubscribe = WaitlistSignup::query()->whereNotNull('unsubscribed_at');
+        // Verified only — the same rule the service applies.
+        $subscribe = Registration::query()->whereNotNull('email_verified_at')->whereNull('unsubscribed_at');
+        $unsubscribe = Registration::query()->whereNotNull('unsubscribed_at');
 
-        $this->line("  Confirmed and subscribed: {$subscribe->count()}");
+        $this->line("  Verified and subscribed: {$subscribe->count()}");
         $this->line("  Unsubscribed: {$unsubscribe->count()}");
 
         if ($dryRun) {
@@ -50,15 +51,15 @@ class BackfillMailerLite extends Command
         // Queued rather than sent inline: a few thousand synchronous API calls
         // would sit here for a long time and lose everything if it were killed.
         $subscribe->chunkById(200, function ($rows) use (&$queued) {
-            foreach ($rows as $signup) {
-                SyncSignupToMailerLite::dispatch($signup);
+            foreach ($rows as $registration) {
+                SyncSignupToMailerLite::dispatch($registration);
                 $queued++;
             }
         });
 
         $unsubscribe->chunkById(200, function ($rows) use (&$queued) {
-            foreach ($rows as $signup) {
-                SyncSignupToMailerLite::dispatch($signup, subscribed: false);
+            foreach ($rows as $registration) {
+                SyncSignupToMailerLite::dispatch($registration, subscribed: false);
                 $queued++;
             }
         });
