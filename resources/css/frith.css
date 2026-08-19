@@ -288,6 +288,13 @@ img { max-width: 100%; }
     flex: 1 1 380px;
     min-width: 0;
     max-width: 780px;
+
+    /* The button sits centred between the standfirst above it and the note
+       below, so both gaps come from here rather than being set twice and
+       drifting apart. Declared on the container, not used by it: cqi resolves
+       against .hero__copy for the descendants that use it, so both sides
+       always land on the same pixel. */
+    --hero-cta-gap: clamp(24px, 5.7cqi, 34px);
 }
 
 .eyebrow {
@@ -313,7 +320,7 @@ img { max-width: 100%; }
 .hero__title .full-stop { color: var(--text-accent); }
 
 .hero__standfirst {
-    margin: 0 0 clamp(24px, 5.7cqi, 34px) 0;
+    margin: 0 0 var(--hero-cta-gap) 0;
     font-size: clamp(1.0625rem, 3.3cqi, 1.25rem);
     line-height: 1.62;
     color: var(--text-secondary);
@@ -954,7 +961,7 @@ select.field__input {
 .btn--hero:hover { color: var(--text-on-inverse); }
 
 .hero__cta-note {
-    margin: var(--space-4) 0 0 0;
+    margin: var(--hero-cta-gap) 0 0 0;
     font-size: 0.9375rem;
     line-height: 1.55;
     color: var(--text-secondary);
