@@ -83,7 +83,10 @@
     --radius-pill: 999px;
 
     --font-ui: "Livvic", -apple-system, "Segoe UI", Roboto, sans-serif;
-    --font-display: "Optima", "Optima nova", "URW Classico", Candara, "Gill Sans", "Gill Sans MT", "Trebuchet MS", sans-serif;
+    /* Kept as its own token even though both now resolve to Livvic: the
+       headings are set at a different weight and tracking, and pointing them
+       somewhere else later should be one line rather than a search. */
+    --font-display: "Livvic", -apple-system, "Segoe UI", Roboto, sans-serif;
 
     --target-min: 48px;
 
