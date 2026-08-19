@@ -84,7 +84,7 @@ return [
         'form' => [
             'label' => 'Your email',
             'placeholder' => 'you@example.com',
-            'button' => 'Become a Frith Founder',
+            'button' => 'Join Frith',
         ],
 
         // Shown under the button on the homepage.
