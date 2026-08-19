@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Forms\Schemas;
 
+use App\Models\Form as FormModel;
+use App\Support\RegistrationFlow;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -10,12 +13,18 @@ use Filament\Schemas\Components\Callout;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\HtmlString;
 
 /**
  * One screen per section, in the order a visitor meets them.
  *
  * The key of each screen and field is shown but not editable — it is what ties
  * the wording to the code that validates and saves it.
+ *
+ * The follow-up screens are listed too, even though they are not rows in this
+ * table. There is one per area of family life somebody picks, so they cannot be
+ * numbered steps — but an editor who never sees them here has no way of knowing
+ * the screens exist, let alone where to change their wording.
  */
 class FormContentSchema
 {
@@ -81,6 +90,39 @@ class FormContentSchema
                                     TextInput::make('placeholder')->label('Greyed-out example')->maxLength(80),
                                 ]),
                         ]),
+                ]),
+
+            Section::make('The follow-up screens')
+                ->description('What somebody sees between step '
+                    .RegistrationFlow::number(RegistrationFlow::DETAIL_STEP).' and step '
+                    .RegistrationFlow::number('interests').'.')
+                ->collapsed()
+                ->schema([
+                    Callout::make('One screen per area they picked')
+                        ->description('After step '.RegistrationFlow::number(RegistrationFlow::DETAIL_STEP)
+                            .', everyone is asked for more detail about the areas of family life they chose — one screen each, so'
+                            .' somebody who picks three areas sees three of them. The counter stays on step '
+                            .RegistrationFlow::number(RegistrationFlow::DETAIL_STEP)
+                            .' throughout, because the form should not look longer for the people who tell us most.')
+                        ->icon(Heroicon::OutlinedQuestionMarkCircle)
+                        ->color('info')
+                        ->columnSpanFull(),
+
+                    Placeholder::make('follow_up_screens')
+                        ->label('')
+                        ->columnSpanFull()
+                        ->content(fn (FormModel $record) => new HtmlString(
+                            view('filament.form.follow-up-screens', ['form' => $record])->render(),
+                        )),
+
+                    Callout::make('Change this wording on the Options tab')
+                        ->description('Each screen’s heading is the area’s own name and the line underneath is its description,'
+                            .' so they are edited under Options along with the statements on them. That way one change updates'
+                            .' the screen and the choice on step '.RegistrationFlow::number(RegistrationFlow::DETAIL_STEP)
+                            .' together, and nothing anybody has already chosen is lost.')
+                        ->icon(Heroicon::OutlinedPencilSquare)
+                        ->color('warning')
+                        ->columnSpanFull(),
                 ]),
         ]);
     }

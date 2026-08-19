@@ -8,6 +8,23 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# The database holds content that real people are editing, so nothing here
+# writes to it unless asked. Seeding is opt-in even though every seeder is
+# firstOrCreate: "it cannot overwrite anything" is a claim about today's code,
+# and the middle of a deploy is the wrong place to be relying on that.
+#
+#   --no-db   run no migrations either
+#   --seed    add any pages, screens or options new in this release
+RUN_MIGRATIONS=1
+RUN_SEED=0
+
+for arg in "$@"; do
+    case "$arg" in
+        --no-db) RUN_MIGRATIONS=0 ;;
+        --seed) RUN_SEED=1 ;;
+    esac
+done
+
 [ -f artisan ] || { echo "Not an application root — no artisan here." >&2; exit 1; }
 
 step() { printf '\n\033[1m  %s\033[0m\n' "$1"; }
@@ -30,12 +47,31 @@ chmod +x artisan deploy/*.sh
 step "Installing PHP dependencies"
 composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-step "Migrating"
-php artisan migrate --force
+if [ "$RUN_MIGRATIONS" = 1 ]; then
+    step "Migrating"
+    php artisan migrate --force
+else
+    step "Leaving the database alone (--no-db)"
+    # A silent skip is worse than no skip. If the code that just landed expects
+    # a column that is not there, say so here rather than in a 500 later.
+    pending=$(php artisan migrate:status 2>/dev/null | grep -c "Pending" || true)
+    if [ "${pending:-0}" -gt 0 ]; then
+        echo "  ! $pending migration(s) pending and NOT run."
+        echo "    This release expects a schema the database does not have."
+        echo "    Run when the coast is clear:  php artisan migrate --force"
+    else
+        echo "  Nothing was pending, so nothing was missed."
+    fi
+fi
 
-step "Seeding page content if absent"
-# firstOrCreate — cannot overwrite what an editor has written.
-php artisan db:seed --force
+if [ "$RUN_SEED" = 1 ]; then
+    step "Seeding"
+    php artisan db:seed --force
+else
+    step "Not seeding"
+    echo "  Content is left exactly as the editors left it."
+    echo "  Pass --seed to add pages, screens or options new in this release."
+fi
 
 step "Linking storage"
 [ -L public/storage ] || php artisan storage:link

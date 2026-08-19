@@ -29,6 +29,27 @@ step "Backing up the current live directory"
 tar -czf "$BACKUP" -C "$HOME" public_html
 echo "  $BACKUP"
 
+step "Backing up the database"
+# The file backup above no longer covers everything worth keeping: the page
+# copy, the form wording and every option are rows now, and people edit them
+# between deploys. Read-only — this writes a file, never the database.
+env_value() { grep -E "^$1=" "$LIVE/.env" | head -1 | cut -d= -f2- | tr -d '"'"'"'\r'; }
+
+DB_DUMP="$HOME/private_html/db-backup-$(date +%Y%m%d-%H%M%S).sql.gz"
+
+if MYSQL_PWD="$(env_value DB_PASSWORD)" mysqldump \
+        --host="$(env_value DB_HOST)" \
+        --user="$(env_value DB_USERNAME)" \
+        --single-transaction --quick --no-tablespaces \
+        "$(env_value DB_DATABASE)" 2>/dev/null | gzip > "$DB_DUMP"; then
+    echo "  $DB_DUMP  ($(du -h "$DB_DUMP" | cut -f1))"
+else
+    rm -f "$DB_DUMP"
+    echo "  ! Could not dump the database. Promoting anyway — this release does"
+    echo "    not migrate — but take one from the Cloudways panel before any"
+    echo "    deploy that does."
+fi
+
 step "Copying the release into place"
 # Contents are replaced rather than the directory being moved: public_html is
 # provisioned by Cloudways with its own ownership, and recreating it can break
@@ -74,4 +95,10 @@ curl -fsS -o /dev/null -X BAN -H "Host: frith.community" http://127.0.0.1/ \
 step "Preflight, live"
 php artisan frith:preflight
 
-printf '\n\033[32mLive.\033[0m Roll back with: tar -xzf %s -C %s\n' "$BACKUP" "$HOME"
+printf '\n\033[32mLive.\033[0m\n'
+printf '  Files:    tar -xzf %s -C %s\n' "$BACKUP" "$HOME"
+# Guarded: with set -e a bare failing test as the last statement would make an
+# otherwise successful promote exit non-zero.
+if [ -f "$DB_DUMP" ]; then
+    printf '  Database: gunzip -c %s | mysql -u USER -p DATABASE\n' "$DB_DUMP"
+fi

@@ -3,16 +3,20 @@
 namespace Tests\Feature;
 
 use App\Enums\UserRole;
+use App\Filament\Resources\Forms\Pages\EditForm;
 use App\Filament\Resources\Pages\Pages\EditPage;
 use App\Filament\Resources\Pages\Pages\ListPages;
 use App\Filament\Resources\Registrations\Pages\ListRegistrations;
 use App\Filament\Resources\Registrations\RegistrationResource;
 use App\Filament\Resources\Registrations\Schemas\RegistrationInfolist;
 use App\Filament\Resources\Registrations\Tables\ExportRegistrationsAction;
+use App\Models\Form;
 use App\Models\Page;
 use App\Models\Registration;
 use App\Models\User;
 use App\Support\PageContent;
+use App\Support\Taxonomy;
+use Database\Seeders\FormSeeder;
 use Database\Seeders\PageSeeder;
 use Filament\Actions\Testing\TestAction;
 use Filament\Schemas\Schema;
@@ -99,6 +103,49 @@ class AdminPanelTest extends TestCase
             ->assertSee('For every family navigating SEND')
             ->assertSee('A new paragraph, written in the admin panel.')
             ->assertDontSee('A community for families with SEND');
+    }
+
+    #[Test]
+    public function the_follow_up_screens_are_visible_to_whoever_edits_the_form(): void
+    {
+        // They are not rows in form_steps — there is one per area somebody
+        // picks — so without this an editor has no way of knowing the screens
+        // between step five and step six exist at all.
+        $this->seed(FormSeeder::class);
+        $form = Form::query()->where('slug', Taxonomy::FORM)->sole();
+
+        $this->actingAs($this->editor());
+
+        $html = Livewire::test(EditForm::class, ['record' => $form->getRouteKey()])
+            ->assertOk()
+            ->html();
+
+        $this->assertStringContainsString('The follow-up screens', $html);
+        $this->assertStringContainsString('One screen per area they picked', $html);
+
+        // Every area is listed, with its own wording and how much is on it.
+        foreach (Taxonomy::categories() as $slug => $area) {
+            $this->assertStringContainsString(e($area['label']), $html, "{$slug} is missing");
+            $this->assertStringContainsString(e($area['description']), $html);
+        }
+
+        $this->assertStringContainsString('8 statements', $html);
+        $this->assertStringContainsString('Change this wording on the Options tab', $html);
+    }
+
+    #[Test]
+    public function an_archived_area_is_shown_as_one_nobody_sees(): void
+    {
+        $this->seed(FormSeeder::class);
+        $form = Form::query()->where('slug', Taxonomy::FORM)->sole();
+
+        $form->options()->where('group', 'support_areas')->whereNull('parent_id')
+            ->where('slug', 'learning-education')->update(['archived_at' => now()]);
+
+        $this->actingAs($this->editor());
+
+        Livewire::test(EditForm::class, ['record' => $form->getRouteKey()])
+            ->assertSee('Archived — nobody is offered this');
     }
 
     #[Test]
