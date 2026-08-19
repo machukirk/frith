@@ -1,10 +1,13 @@
-@php $chosen = old('support_areas', $registration?->support_areas ?? []); @endphp
+@php
+    $c = \App\Support\StepContent::for('support');
+    $chosen = old('support_areas', $registration?->support_areas ?? []);
+@endphp
 
 <x-register.shell
-    heading="Which areas of family life would you like the most support with?"
-    standfirst="Choose as many as fit. This is how we find you families who understand, so there are no wrong answers."
+    :heading="$c->heading()"
+    :standfirst="$c->standfirst()"
+    :private="$c->isPrivate()"
     :step="$stepNumber" :total="$totalSteps" :previous="$previous"
-    :private="true"
 >
     <form method="POST" action="{{ route('register.step.store', $step) }}">
         @csrf

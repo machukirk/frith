@@ -1,4 +1,5 @@
 @php
+    $c = \App\Support\StepContent::for('children');
     $months = [
         1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
         5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
@@ -8,8 +9,9 @@
 @endphp
 
 <x-register.shell
-    heading="How many children, and how old are they?"
-    standfirst="Month and year is all we ask. It keeps their age right without us holding a date of birth."
+    :heading="$c->heading()"
+    :standfirst="$c->standfirst()"
+    :private="$c->isPrivate()"
     :step="$stepNumber" :total="$totalSteps" :previous="$previous"
 >
     <form method="POST" action="{{ route('register.step.store', $step) }}">
@@ -22,7 +24,7 @@
 
                     <div class="child__fields">
                         <div class="field">
-                            <label class="field__label" for="child-{{ $i }}-month">Born</label>
+                            <label class="field__label" for="child-{{ $i }}-month">{{ $c->label('children', 'Born') }}</label>
                             <select class="field__input" id="child-{{ $i }}-month" name="children[{{ $i }}][birth_month]">
                                 <option value="">Month</option>
                                 @foreach ($months as $number => $name)

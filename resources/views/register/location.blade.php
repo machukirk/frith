@@ -1,6 +1,9 @@
+@php $c = \App\Support\StepContent::for('location'); @endphp
+
 <x-register.shell
-    heading="Where are you based?"
-    standfirst="Just the first part of your postcode — the bit before the space."
+    :heading="$c->heading()"
+    :standfirst="$c->standfirst()"
+    :private="$c->isPrivate()"
     :step="$stepNumber" :total="$totalSteps" :previous="$previous"
 >
     <form method="POST" action="{{ route('register.step.store', $step) }}" novalidate>
@@ -8,13 +11,13 @@
 
         <x-register.field
             name="postcode_outcode"
-            label="First part of your postcode"
+            :label="$c->label('postcode_outcode', 'First part of your postcode')"
+            :help="$c->help('postcode_outcode')"
+            :placeholder="$c->placeholder('postcode_outcode')"
             :value="old('postcode_outcode', $registration?->postcode_outcode)"
-            placeholder="SS9"
             autocomplete="postal-code"
             required
             class="field__input--short"
-            help="We use this to find families near you. It is never shown on your profile, and we never ask for the rest of it."
         />
 
         <button class="btn" type="submit">Continue</button>

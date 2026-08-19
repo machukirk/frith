@@ -11,6 +11,6 @@ class DatabaseSeeder extends Seeder
         // No user seeding. Admin accounts are created deliberately with
         // `php artisan frith:admin`, so a deploy can never quietly stand up an
         // account that can read the waiting list.
-        $this->call(PageSeeder::class);
+        $this->call([PageSeeder::class, FormSeeder::class]);
     }
 }
