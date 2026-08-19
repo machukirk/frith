@@ -640,7 +640,7 @@ img { max-width: 100%; }
    ========================================================================== */
 
 .wizard {
-    max-width: 34em;
+    max-width: 42em;
     margin-inline: auto;
     padding-block: clamp(24px, 4cqi, 56px);
 }
@@ -689,6 +689,7 @@ img { max-width: 100%; }
 
 .wizard__heading {
     margin: 0 0 var(--space-3) 0;
+    max-width: 20em;
     font-family: var(--font-display);
     font-size: clamp(1.75rem, 5cqi, 2.25rem);
     line-height: 1.18;
@@ -702,6 +703,9 @@ img { max-width: 100%; }
     font-size: 1.0625rem;
     line-height: 1.6;
     color: var(--text-secondary);
+    /* The panel is wider than prose wants to be. Guidelines §04 cap body copy
+       at about 66 characters, so the sentence stops before the panel does. */
+    max-width: 34em;
     text-wrap: pretty;
 }
 
@@ -809,6 +813,16 @@ select.field__input {
     gap: var(--space-3);
 }
 .choices--compact { gap: var(--space-2); }
+
+/* Two per row once there is room for them, one when there isn't — no
+   breakpoint, so it behaves the same in a narrow column as on a phone.
+   Only for short labels: the detailed statements in section two are full
+   sentences and read better one to a line. */
+.choices--two-up {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16em, 1fr));
+    align-items: stretch;
+}
 
 /* The whole card is the label, so there is no small tickbox to aim at. */
 .choice {
@@ -923,7 +937,11 @@ select.field__input {
 
 /* ---- Homepage call to action ---- */
 
-.hero__cta { max-width: 30em; }
+.hero__cta {
+    max-width: 30em;
+    /* The cards come straight after this on a narrow screen. */
+    margin-bottom: var(--space-6);
+}
 
 .btn--hero {
     display: inline-flex;
@@ -936,7 +954,7 @@ select.field__input {
 .btn--hero:hover { color: var(--text-on-inverse); }
 
 .hero__cta-note {
-    margin: var(--space-3) 0 0 0;
+    margin: var(--space-4) 0 0 0;
     font-size: 0.9375rem;
     line-height: 1.55;
     color: var(--text-secondary);

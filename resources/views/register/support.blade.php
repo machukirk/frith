@@ -12,7 +12,7 @@
     <form method="POST" action="{{ route('register.step.store', $step) }}">
         @csrf
 
-        <fieldset class="choices">
+        <fieldset class="choices choices--two-up">
             <legend class="visually-hidden">Areas of family life. Choose as many as apply.</legend>
 
             @foreach (\App\Support\Taxonomy::categories() as $slug => $category)
