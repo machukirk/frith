@@ -46,6 +46,16 @@ class ManageFormOptions extends ManageRelatedRecords
         return 'Options';
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return 'Options';
+    }
+
+    public static function getNavigationIcon(): string
+    {
+        return 'heroicon-o-list-bullet';
+    }
+
     public function getHeading(): string
     {
         return $this->getOwnerRecord()->name;

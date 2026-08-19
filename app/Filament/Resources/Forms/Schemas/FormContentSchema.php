@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Forms\Schemas;
 
 use App\Models\Form as FormModel;
+use App\Models\FormOption;
 use App\Support\RegistrationFlow;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
@@ -10,10 +11,10 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Callout;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Illuminate\Support\HtmlString;
 
 /**
  * One screen per section, in the order a visitor meets them.
@@ -41,6 +42,7 @@ class FormContentSchema
             Repeater::make('steps')
                 ->relationship()
                 ->label('Screens')
+                ->columnSpanFull()
                 ->orderColumn('position')
                 ->reorderable(false)
                 ->addable(false)
@@ -93,37 +95,79 @@ class FormContentSchema
                 ]),
 
             Section::make('The follow-up screens')
-                ->description('What somebody sees between step '
+                ->columnSpanFull()
+                ->description('The screens between step '
                     .RegistrationFlow::number(RegistrationFlow::DETAIL_STEP).' and step '
                     .RegistrationFlow::number('interests').'.')
                 ->collapsed()
                 ->schema([
-                    Callout::make('One screen per area they picked')
+                    Callout::make('One screen per area somebody picks')
                         ->description('After step '.RegistrationFlow::number(RegistrationFlow::DETAIL_STEP)
-                            .', everyone is asked for more detail about the areas of family life they chose — one screen each, so'
-                            .' somebody who picks three areas sees three of them. The counter stays on step '
+                            .', everyone is asked for more detail about the areas of family life they chose — one screen'
+                            .' each, so somebody who picks three areas sees three of them. That is why they are not in'
+                            .' the list above: there is no fixed number of them. The counter stays on step '
                             .RegistrationFlow::number(RegistrationFlow::DETAIL_STEP)
-                            .' throughout, because the form should not look longer for the people who tell us most.')
+                            .' throughout, so the form never looks longer for the people who tell us most.')
                         ->icon(Heroicon::OutlinedQuestionMarkCircle)
                         ->color('info')
                         ->columnSpanFull(),
 
-                    Placeholder::make('follow_up_screens')
-                        ->label('')
-                        ->columnSpanFull()
-                        ->content(fn (FormModel $record) => new HtmlString(
-                            view('filament.form.follow-up-screens', ['form' => $record])->render(),
-                        )),
+                    Grid::make(2)->schema(fn (FormModel $record) => static::followUpScreens($record)),
 
-                    Callout::make('Change this wording on the Options tab')
-                        ->description('Each screen’s heading is the area’s own name and the line underneath is its description,'
-                            .' so they are edited under Options along with the statements on them. That way one change updates'
-                            .' the screen and the choice on step '.RegistrationFlow::number(RegistrationFlow::DETAIL_STEP)
-                            .' together, and nothing anybody has already chosen is lost.')
-                        ->icon(Heroicon::OutlinedPencilSquare)
+                    Callout::make('Their wording lives on the Options tab')
+                        ->description('Each screen’s heading is the area’s own name, and the line underneath is its'
+                            .' description — the same wording people read on step '
+                            .RegistrationFlow::number(RegistrationFlow::DETAIL_STEP)
+                            .'. Change it once under Options and both update together, with nothing anybody has already'
+                            .' chosen lost along the way.')
+                        ->icon(Heroicon::OutlinedListBullet)
                         ->color('warning')
                         ->columnSpanFull(),
                 ]),
+
         ]);
+    }
+
+    /**
+     * One read-only entry per follow-up screen.
+     *
+     * Read-only on purpose. These are the same rows the choice cards on step
+     * five are built from, and the Options tab is where the safeguards live —
+     * how many families chose a thing, and archive rather than delete. A second
+     * way in without those is how an option thirty families picked disappears.
+     *
+     * @return array<int, Placeholder>
+     */
+    private static function followUpScreens(FormModel $form): array
+    {
+        $areas = $form->optionsIn('support_areas')->with('children')->orderBy('position')->get();
+
+        if ($areas->isEmpty()) {
+            return [
+                Placeholder::make('no_follow_up_screens')
+                    ->label('')
+                    ->content('No areas of family life yet, so nobody sees a follow-up screen.')
+                    ->columnSpanFull(),
+            ];
+        }
+
+        return $areas
+            ->map(fn (FormOption $area) => Placeholder::make('follow_up_'.$area->slug)
+                ->label($area->label)
+                ->content(static::followUpSummary($area)))
+            ->all();
+    }
+
+    private static function followUpSummary(FormOption $area): string
+    {
+        $live = $area->children->reject(fn (FormOption $item) => $item->isArchived())->count();
+
+        $parts = array_filter([
+            $area->description,
+            $live.' '.str('statement')->plural($live),
+            $area->isArchived() ? 'Archived — nobody is offered this' : null,
+        ]);
+
+        return implode(' · ', $parts);
     }
 }

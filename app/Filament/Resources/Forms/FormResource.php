@@ -9,6 +9,8 @@ use App\Filament\Resources\Forms\Schemas\FormContentSchema;
 use App\Models\Form as FormModel;
 use BackedEnum;
 use Filament\Actions\EditAction;
+use Filament\Navigation\NavigationItem;
+use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -65,6 +67,22 @@ class FormResource extends Resource
             ])
             ->recordActions([EditAction::make()->label('Edit wording')])
             ->paginated(false);
+    }
+
+    /**
+     * The tabs down the side of a form.
+     *
+     * Without this the Options page has a route and no way to reach it — it
+     * was only ever openable by typing the URL, which nobody was going to do.
+     *
+     * @return array<NavigationItem>
+     */
+    public static function getRecordSubNavigation(Page $page): array
+    {
+        return $page->generateNavigationItems([
+            EditForm::class,
+            ManageFormOptions::class,
+        ]);
     }
 
     public static function getPages(): array

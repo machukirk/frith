@@ -21,6 +21,16 @@ class EditForm extends EditRecord
         return 'Wording';
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return 'Wording';
+    }
+
+    public static function getNavigationIcon(): string
+    {
+        return 'heroicon-o-pencil-square';
+    }
+
     protected function getHeaderActions(): array
     {
         return [

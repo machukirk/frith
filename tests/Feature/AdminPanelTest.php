@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\UserRole;
 use App\Filament\Resources\Forms\Pages\EditForm;
+use App\Filament\Resources\Forms\Pages\ManageFormOptions;
 use App\Filament\Resources\Pages\Pages\EditPage;
 use App\Filament\Resources\Pages\Pages\ListPages;
 use App\Filament\Resources\Registrations\Pages\ListRegistrations;
@@ -121,7 +122,7 @@ class AdminPanelTest extends TestCase
             ->html();
 
         $this->assertStringContainsString('The follow-up screens', $html);
-        $this->assertStringContainsString('One screen per area they picked', $html);
+        $this->assertStringContainsString('One screen per area somebody picks', $html);
 
         // Every area is listed, with its own wording and how much is on it.
         foreach (Taxonomy::categories() as $slug => $area) {
@@ -130,7 +131,32 @@ class AdminPanelTest extends TestCase
         }
 
         $this->assertStringContainsString('8 statements', $html);
-        $this->assertStringContainsString('Change this wording on the Options tab', $html);
+        $this->assertStringContainsString('Their wording lives on the Options tab', $html);
+
+        // And that tab has to be reachable by clicking, or the note above is a
+        // pointer to somewhere nobody can get to.
+        $this->assertStringContainsString(
+            ManageFormOptions::getUrl(['record' => $form]),
+            $html,
+            'the Options tab is not linked from the wording page',
+        );
+    }
+
+    #[Test]
+    public function both_form_tabs_are_reachable_from_each_other(): void
+    {
+        // The Options page had a route and no link to it for weeks. It was only
+        // openable by typing the URL, which nobody was ever going to do.
+        $this->seed(FormSeeder::class);
+        $form = Form::query()->where('slug', Taxonomy::FORM)->sole();
+
+        $this->actingAs($this->editor());
+
+        $wording = EditForm::getUrl(['record' => $form]);
+        $options = ManageFormOptions::getUrl(['record' => $form]);
+
+        $this->assertStringContainsString($options, Livewire::test(EditForm::class, ['record' => $form->getRouteKey()])->html());
+        $this->assertStringContainsString($wording, Livewire::test(ManageFormOptions::class, ['record' => $form->getRouteKey()])->html());
     }
 
     #[Test]
