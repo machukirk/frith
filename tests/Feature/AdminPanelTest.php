@@ -159,7 +159,7 @@ class AdminPanelTest extends TestCase
 
         $this->get(route('coming-soon'))
             ->assertOk()
-            ->assertSee('Tell me when Frith launches');
+            ->assertSee('Become a Frith Founder');
     }
 
     #[Test]

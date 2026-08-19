@@ -21,13 +21,16 @@ class WaitlistSignupTest extends TestCase
     }
 
     #[Test]
-    public function the_coming_soon_page_renders_the_signup_form(): void
+    public function the_coming_soon_page_now_points_at_the_full_registration(): void
     {
+        // The email-only form was replaced by the Founders registration at
+        // /join. These endpoints stay because confirmation links already sent
+        // to people have to keep working.
         $this->get(route('coming-soon'))
             ->assertOk()
             ->assertSee('Let’s find your village', false)
-            ->assertSee('Tell me when Frith launches')
-            ->assertSee('name="email"', false);
+            ->assertSee(route('register.start'), false)
+            ->assertDontSee('name="email"', false);
     }
 
     #[Test]

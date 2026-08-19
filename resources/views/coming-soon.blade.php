@@ -25,68 +25,16 @@
 
                 <p class="hero__standfirst">{{ $copy['standfirst'] }}</p>
 
-                @if ($status === 'pending-confirmation')
+                {{-- The sign-up is now a full registration at /join. It is a link
+                     rather than a form so the first thing a visitor does is read,
+                     not type — and so the wizard owns all of the validation. --}}
+                <div class="hero__cta">
+                    <a class="btn btn--hero" href="{{ route('register.start') }}">
+                        {{ $copy['form']['button'] }}
+                    </a>
+                    <p class="hero__cta-note">{{ $copy['founders_note'] ?? '' }}</p>
+                </div>
 
-                    <div class="notice" role="status">
-                        <p class="notice__heading"><span class="notice__mark" aria-hidden="true">&check;</span>{{ $copy['success']['heading'] }}</p>
-                        <p class="notice__body">{{ $copy['success']['body'] }}</p>
-                        <p class="notice__body">
-                            {{ $copy['success']['footnote'] }}
-                            <a href="mailto:{{ config('frith.company.contact_email') }}">{{ config('frith.company.contact_email') }}</a>
-                        </p>
-                    </div>
-
-                @elseif ($status === 'confirmed')
-
-                    <div class="notice" role="status">
-                        <p class="notice__heading"><span class="notice__mark" aria-hidden="true">&check;</span>{{ $copy['confirmed']['heading'] }}</p>
-                        <p class="notice__body">{{ $copy['confirmed']['body'] }}</p>
-                    </div>
-
-                @else
-
-                    {{-- No JavaScript anywhere on this page. A plain POST and a
-                         redirect works on a cracked phone, a slow connection and
-                         a text-only browser alike. --}}
-                    <form class="signup" method="POST" action="{{ route('waitlist.store') }}" novalidate>
-                        @csrf
-                        <x-honeypot />
-
-                        <label class="signup__label" for="email">{{ $copy['form']['label'] }}</label>
-
-                        <div class="signup__row">
-                            <input class="signup__input"
-                                   id="email"
-                                   type="email"
-                                   name="email"
-                                   value="{{ old('email') }}"
-                                   inputmode="email"
-                                   autocomplete="email"
-                                   autocapitalize="off"
-                                   spellcheck="false"
-                                   placeholder="{{ $copy['form']['placeholder'] }}"
-                                   aria-describedby="email-help"
-                                   @error('email') aria-invalid="true" @enderror
-                                   >
-
-                            <button class="btn" type="submit">{{ $copy['form']['button'] }}</button>
-                        </div>
-
-                        <p class="signup__help" id="email-help">{{ config('frith.consent.text') }}</p>
-
-                        {{-- §08: errors announced politely, and carried by an
-                             icon and words as well as colour. --}}
-                        <div aria-live="polite">
-                            @error('email')
-                                <p class="alert alert--error">
-                                    <span class="alert__mark" aria-hidden="true">&#10005;</span>
-                                    <span>{{ $message }}</span>
-                                </p>
-                            @enderror
-                        </div>
-                    </form>
-
-                @endif
             </div>
 
             {{-- The hero framing device (§05). Decorative, so the alt text

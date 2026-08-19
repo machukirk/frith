@@ -39,5 +39,15 @@ class AppServiceProvider extends ServiceProvider
                     ->withErrors(['email' => 'That’s a few tries in a short space of time. Give it an hour, or write to us at '.config('frith.company.contact_email').' and we’ll add you ourselves.'])
             );
         });
+
+        // Registration is many steps, so the limit is per-step generous while
+        // still being far too slow to script. Keyed by IP like the waiting list.
+        RateLimiter::for('registration', function (Request $request) {
+            return Limit::perHour(60)->by($request->ip())->response(
+                fn () => back()
+                    ->withInput()
+                    ->withErrors(['email' => 'That is a lot of tries in a short space of time. Give it an hour, or write to us at '.config('frith.company.contact_email').' and we will sort it out.'])
+            );
+        });
     }
 }

@@ -631,3 +631,313 @@ img { max-width: 100%; }
     min-height: var(--target-min);
     text-decoration: none;
 }
+
+/* ==========================================================================
+   Registration wizard
+   One question per screen. Everything here is built to the §08 floor: 48px
+   targets, 16px minimum text, visible focus, and nothing that moves unless
+   the visitor is happy for things to move.
+   ========================================================================== */
+
+.wizard {
+    max-width: 34em;
+    margin-inline: auto;
+    padding-block: clamp(24px, 4cqi, 56px);
+}
+
+.wizard__progress { margin-bottom: var(--space-6); }
+
+.wizard__count {
+    margin: 0 0 var(--space-2) 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--text-secondary);
+}
+.wizard__count--sub { margin-bottom: var(--space-4); }
+
+/* Counts up, not down. A bar that empties as you go reads as time running out,
+   which is the opposite of what this should feel like. */
+.wizard__track {
+    height: 6px;
+    background: var(--frith-linen-200);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+}
+.wizard__bar {
+    display: block;
+    height: 100%;
+    background: var(--action-primary);
+    border-radius: var(--radius-pill);
+    transition: width 250ms ease;
+}
+
+.wizard__panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-panel);
+    padding: clamp(24px, 4cqi, 40px);
+}
+
+/* The "swipe": each screen arrives from the right. It is a plain CSS
+   animation on load, so it happens whether or not any JavaScript ran. */
+@keyframes wizard-slide-in {
+    from { opacity: 0; transform: translateX(18px); }
+    to   { opacity: 1; transform: none; }
+}
+.wizard__panel { animation: wizard-slide-in 260ms cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+
+.wizard__heading {
+    margin: 0 0 var(--space-3) 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 5cqi, 2.25rem);
+    line-height: 1.18;
+    font-weight: 400;
+    color: var(--text-primary);
+    text-wrap: pretty;
+}
+
+.wizard__standfirst {
+    margin: 0 0 var(--space-6) 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    text-wrap: pretty;
+}
+
+/* Guidelines §07: say the safety thing where the worry is. */
+.wizard__private {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin: 0 0 var(--space-6) 0;
+    background: var(--frith-violet-100);
+    border-radius: var(--radius-input);
+    padding: 12px 16px;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: #2D1C57;
+}
+.wizard__private-mark { color: var(--frith-violet-500); flex: none; line-height: 1.55; }
+
+.wizard__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+    margin-top: var(--space-6);
+}
+
+.wizard__note {
+    margin: var(--space-4) 0 0 0;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+}
+
+.wizard__back { margin: var(--space-4) 0 0 0; font-size: 1rem; }
+.wizard__back a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    color: var(--text-secondary);
+}
+.wizard__back a:hover { color: var(--action-primary); }
+
+/* ---- Fields ---- */
+
+.field { margin-bottom: var(--space-6); }
+
+.field__label {
+    display: flex;
+    gap: var(--space-2);
+    align-items: baseline;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+.field__optional {
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+.field__input {
+    width: 100%;
+    min-height: 52px;
+    background: var(--bg-surface);
+    border: 1.5px solid var(--border-input);
+    border-radius: var(--radius-input);
+    padding: 14px 16px;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+.field__input::placeholder { color: var(--frith-ink-600); }
+.field__input:focus-visible { border-color: var(--action-primary); }
+.field__input[aria-invalid="true"] { border-color: var(--state-error); border-width: 2px; }
+.field__input--short { max-width: 9em; text-transform: uppercase; }
+
+select.field__input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234F5B70' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 18px;
+    padding-right: 44px;
+}
+
+.field__help {
+    margin: var(--space-2) 0 0 0;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+}
+
+.field-row { display: flex; flex-wrap: wrap; gap: var(--space-4); }
+.field-row .field { flex: 1 1 12em; }
+
+/* ---- Choice cards ---- */
+
+.choices {
+    border: none;
+    margin: 0 0 var(--space-6) 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+.choices--compact { gap: var(--space-2); }
+
+/* The whole card is the label, so there is no small tickbox to aim at. */
+.choice {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    min-height: var(--target-min);
+    padding: 14px 16px;
+    background: var(--bg-surface);
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-input);
+    cursor: pointer;
+    transition: border-color 150ms ease, background-color 150ms ease;
+}
+.choice:hover { border-color: var(--frith-euc-300); }
+
+.choice__input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+.choice__mark {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    margin-top: 1px;
+    border: 1.5px solid var(--border-input);
+    border-radius: 6px;
+    background: var(--bg-surface);
+    position: relative;
+    transition: background-color 150ms ease, border-color 150ms ease;
+}
+.choice__mark::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: no-repeat center / 14px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F8F4EE' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");
+    opacity: 0;
+    transition: opacity 120ms ease;
+}
+
+.choice:has(.choice__input:checked) {
+    border-color: var(--action-primary);
+    background: var(--frith-euc-50);
+}
+.choice:has(.choice__input:checked) .choice__mark {
+    background: var(--action-primary);
+    border-color: var(--action-primary);
+}
+.choice:has(.choice__input:checked) .choice__mark::after { opacity: 1; }
+
+/* Focus lands on the visually hidden input, so the ring is drawn on the card. */
+.choice:has(.choice__input:focus-visible) {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--bg-page), 0 0 0 6px var(--focus-ring);
+}
+
+.choice__text { display: flex; flex-direction: column; gap: 2px; }
+.choice__label { font-size: 1rem; line-height: 1.5; color: var(--text-primary); }
+.choice__description { font-size: 0.875rem; line-height: 1.5; color: var(--text-secondary); }
+
+/* ---- Children ---- */
+
+.children { display: flex; flex-direction: column; gap: var(--space-4); margin-bottom: var(--space-4); }
+
+.child {
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-input);
+    padding: var(--space-4);
+    margin: 0;
+}
+.child__legend {
+    padding: 0 var(--space-2);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+.child__fields { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: flex-end; }
+.child__fields .field { flex: 1 1 9em; margin-bottom: 0; }
+.child__remove { flex: none; }
+
+/* ---- Quiet button ---- */
+
+.btn--quiet {
+    background: transparent;
+    color: var(--action-primary);
+    border: 1.5px solid var(--frith-euc-200);
+}
+.btn--quiet:hover { background: var(--frith-euc-50); color: var(--action-primary); }
+.btn--quiet:active { background: var(--frith-euc-100); }
+
+/* ---- Founder badge ---- */
+
+.founder-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0 0 var(--space-4) 0;
+    background: var(--frith-mustard-100);
+    color: var(--frith-mustard-700);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 9px 16px;
+    border-radius: var(--radius-pill);
+}
+.founder-badge__mark { color: var(--frith-mustard-700); font-size: 0.625rem; }
+
+/* ---- Homepage call to action ---- */
+
+.hero__cta { max-width: 30em; }
+
+.btn--hero {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.0625rem;
+    padding: 17px 32px;
+}
+.btn--hero:hover { color: var(--text-on-inverse); }
+
+.hero__cta-note {
+    margin: var(--space-3) 0 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+}

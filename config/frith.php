@@ -84,8 +84,11 @@ return [
         'form' => [
             'label' => 'Your email',
             'placeholder' => 'you@example.com',
-            'button' => 'Tell me when Frith launches',
+            'button' => 'Become a Frith Founder',
         ],
+
+        // Shown under the button on the homepage.
+        'founders_note' => 'Register now and Frith’s premium features stay free for your family, for good. Takes about two minutes.',
 
         // Null means use the artwork shipped in public/brand/img. Uploading a
         // replacement in the admin panel stores a path here.

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\RegistrationExperienceController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\WaitlistController;
 use App\Http\Controllers\WebManifestController;
@@ -48,3 +50,25 @@ Route::match(['get', 'post'], '/waitlist/{signup}/unsubscribe', [WaitlistControl
 Route::post('/waitlist/{signup}/resubscribe', [WaitlistController::class, 'resubscribe'])
     ->middleware('signed')
     ->name('waitlist.resubscribe');
+
+/*
+ * Frith Founders registration. Every step is a real POST that saves before it
+ * redirects, so a visitor who answers one screen and then puts the phone down
+ * is still registered.
+ */
+Route::prefix('join')->name('register.')->group(function () {
+    Route::get('/', [RegistrationController::class, 'start'])->name('start');
+
+    Route::get('/experiences', [RegistrationExperienceController::class, 'start'])->name('experiences');
+    Route::get('/experiences/{category}', [RegistrationExperienceController::class, 'show'])->name('experiences.show');
+    Route::post('/experiences/{category}', [RegistrationExperienceController::class, 'store'])
+        ->middleware('throttle:registration')
+        ->name('experiences.store');
+
+    Route::get('/done', [RegistrationExperienceController::class, 'done'])->name('done');
+
+    Route::get('/{step}', [RegistrationController::class, 'show'])->name('step');
+    Route::post('/{step}', [RegistrationController::class, 'store'])
+        ->middleware([ProtectAgainstSpam::class, 'throttle:registration'])
+        ->name('step.store');
+});
