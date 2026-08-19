@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Support\FormDefinition;
+use App\Support\RegistrationFlow;
+use App\Support\StepContent;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -28,8 +30,10 @@ class FormOption extends Model
      * which is what makes usageCount() work for any of them.
      */
     public const GROUPS = [
-        'support_areas' => 'Areas of family life',
+        // In the order somebody meets them filling the form in. The Options
+        // screen groups by this, so the order is what an editor reads.
         'family_structures' => 'Who is part of your family',
+        'support_areas' => 'Areas of family life',
         'interests' => 'Interests & activities',
         'activity_supports' => 'What helps them enjoy activities',
         'hopes' => 'What they are hoping to find',
@@ -37,10 +41,27 @@ class FormOption extends Model
         'family_preferences' => 'Who they would like to connect with',
     ];
 
+    /**
+     * Which screen each list is offered on.
+     *
+     * The Options screen is one table of a hundred-odd rows; without this an
+     * editor can read every word on it and still not know which question they
+     * are looking at.
+     */
+    public const GROUP_STEPS = [
+        'family_structures' => 'family',
+        'support_areas' => 'support',
+        'interests' => 'interests',
+        'activity_supports' => 'interests',
+        'hopes' => 'finding',
+        'connection_styles' => 'finding',
+        'family_preferences' => 'finding',
+    ];
+
     /** Short forms, for the table column that has no room for the long ones. */
     public const GROUP_BADGES = [
-        'support_areas' => 'Family life',
         'family_structures' => 'Family',
+        'support_areas' => 'Family life',
         'interests' => 'Interests',
         'activity_supports' => 'What helps',
         'hopes' => 'Hoping to find',
@@ -74,6 +95,36 @@ class FormOption extends Model
     public function children(): HasMany
     {
         return $this->hasMany(FormOption::class, 'parent_id')->orderBy('position');
+    }
+
+    /**
+     * The block of the Options screen this row belongs in.
+     *
+     * Top-level options group by their list. The detailed statements group by
+     * the area they sit under instead, because sixty-three of them under one
+     * heading is the pile this is meant to break up.
+     */
+    public function listTitle(): string
+    {
+        return $this->parent_id === null
+            ? (self::GROUPS[$this->group] ?? $this->group)
+            : ($this->parent?->label ?? 'Follow-up questions');
+    }
+
+    /** Where in the form that block is shown. */
+    public function listDescription(): string
+    {
+        if ($this->parent_id !== null) {
+            return 'Shown on the follow-up screen for this area';
+        }
+
+        $step = self::GROUP_STEPS[$this->group] ?? null;
+
+        if ($step === null || ! RegistrationFlow::exists($step)) {
+            return '';
+        }
+
+        return 'Step '.RegistrationFlow::number($step).' — '.StepContent::for($step)->heading();
     }
 
     public function isArchived(): bool

@@ -20,6 +20,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
@@ -137,8 +138,16 @@ class ManageFormOptions extends ManageRelatedRecords
     {
         return $table
             ->recordTitleAttribute('label')
-            ->modifyQueryUsing(fn (Builder $query) => $query->with('parent'))
-            ->defaultSort('position')
+            // reorder() clears the orderBy('position') that Form::options()
+            // carries. Without it that runs first, and every list's first
+            // option lands together, then every list's second — which is the
+            // pile this screen was in to begin with.
+            ->modifyQueryUsing(fn (Builder $query) => $query->with('parent')->reorder())
+            ->groups([static::listGrouping()])
+            ->defaultGroup('list')
+            // No defaultSort: a table sort is applied before the group's own
+            // ordering, which would interleave the lists again — the exact
+            // thing the grouping is here to stop.
             ->columns([
                 TextColumn::make('label')
                     ->label('Option')
@@ -147,10 +156,14 @@ class ManageFormOptions extends ManageRelatedRecords
                     ->description(fn (FormOption $record) => $record->parent?->label)
                     ->weight(fn (FormOption $record) => $record->parent_id === null ? 'medium' : null),
 
+                // Hidden by default: the block heading above each run of rows
+                // already says which list they are. Here for anybody who turns
+                // the grouping off.
                 TextColumn::make('group')
                     ->label('List')
                     ->badge()
                     ->color('gray')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->formatStateUsing(fn (string $state) => FormOption::GROUP_BADGES[$state] ?? $state),
 
                 TextColumn::make('slug')
@@ -237,9 +250,62 @@ class ManageFormOptions extends ManageRelatedRecords
                     ->modalDescription('Nobody has chosen this one, so deleting it is safe. If anybody had, you would be archiving it instead.'),
             ])
             ->reorderable('position')
-            ->paginated([25, 50, 100, 'all'])
-            ->defaultPaginationPageOption(50)
+            // All of them on one page: paging splits a list across two, which
+            // is the opposite of what the grouping is for. There are only a
+            // hundred-odd rows, and every block collapses.
+            ->paginated([50, 100, 'all'])
+            ->defaultPaginationPageOption('all')
             ->emptyStateHeading('No options yet');
+    }
+
+    /**
+     * One block per list, in the order somebody meets them filling the form in.
+     *
+     * The default sort is by position, which is per-list — so ungrouped, the
+     * table interleaved every list's first option, then every list's second,
+     * and so on. It was unreadable, and no amount of squinting at a badge
+     * column was going to fix it.
+     */
+    private static function listGrouping(): Group
+    {
+        return Group::make('list')
+            ->label('List')
+            ->getTitleFromRecordUsing(fn (FormOption $record) => $record->listTitle())
+            ->getKeyFromRecordUsing(fn (FormOption $record) => $record->listTitle())
+            ->getDescriptionFromRecordUsing(fn (FormOption $record) => $record->listDescription())
+            ->collapsible()
+            ->orderQueryUsing(fn (Builder $query) => $query
+                // The lists in the order somebody meets them filling the form in...
+                ->orderByRaw(...static::listOrder($query))
+                // ...then every area before any of its statements, so the areas
+                // are one block rather than eight headings of one row each...
+                ->orderByRaw('(parent_id IS NULL) DESC')
+                // ...then each area's statements under that area, in its order.
+                ->orderByRaw('COALESCE((SELECT p.position FROM form_options p WHERE p.id = form_options.parent_id), 0)')
+                ->orderBy('position'));
+    }
+
+    /**
+     * A CASE expression ranking the lists, rather than MySQL's FIELD(): the
+     * test suite runs on SQLite, which does not have it.
+     *
+     * @return array{0: string, 1: array<int, string>}
+     */
+    private static function listOrder(Builder $query): array
+    {
+        $groups = array_keys(FormOption::GROUPS);
+        $column = $query->getQuery()->getGrammar()->wrap('group');
+
+        $cases = [];
+
+        foreach (array_keys($groups) as $rank) {
+            $cases[] = "WHEN ? THEN {$rank}";
+        }
+
+        return [
+            'CASE '.$column.' '.implode(' ', $cases).' ELSE '.count($groups).' END',
+            $groups,
+        ];
     }
 
     private static function archiveWarning(FormOption $option): string

@@ -175,6 +175,59 @@ class AdminPanelTest extends TestCase
     }
 
     #[Test]
+    public function the_options_are_grouped_by_list_in_the_order_the_form_asks_them(): void
+    {
+        // A hundred and sixteen rows in one table, ordered by a position that
+        // only means anything within its own list — so every list's first
+        // option came out together, then every list's second. Grouped, each
+        // list is one block, and the block says where in the form it is shown.
+        $this->seed(FormSeeder::class);
+        $form = Form::query()->where('slug', Taxonomy::FORM)->sole();
+
+        $this->actingAs($this->owner());
+
+        $expected = collect();
+
+        // Step 3, then the step 5 areas, then one block per follow-up screen...
+        $expected = $expected->concat($form->optionsIn('family_structures')->orderBy('position')->get());
+
+        $areas = $form->optionsIn('support_areas')->orderBy('position')->get();
+        $expected = $expected->concat($areas);
+
+        foreach ($areas as $area) {
+            $expected = $expected->concat($area->children()->orderBy('position')->get());
+        }
+
+        // ...then the rest, in the order somebody meets them.
+        foreach (['interests', 'activity_supports', 'hopes', 'connection_styles', 'family_preferences'] as $group) {
+            $expected = $expected->concat($form->optionsIn($group)->orderBy('position')->get());
+        }
+
+        $this->assertCount(116, $expected, 'every option should be accounted for');
+
+        Livewire::test(ManageFormOptions::class, ['record' => $form->getRouteKey()])
+            ->assertOk()
+            ->assertCanSeeTableRecords($expected, inOrder: true);
+    }
+
+    #[Test]
+    public function each_block_says_where_in_the_form_it_is_shown(): void
+    {
+        $this->seed(FormSeeder::class);
+        $form = Form::query()->where('slug', Taxonomy::FORM)->sole();
+
+        $interest = $form->optionsIn('interests')->first();
+        $statement = $form->optionsIn('support_areas')->first()->children()->first();
+
+        $this->assertSame('Interests & activities', $interest->listTitle());
+        $this->assertSame('Step 6 — Interests & activities', $interest->listDescription());
+
+        // A statement groups under its own area, not with the other sixty-two.
+        $this->assertSame('Learning & Education', $statement->listTitle());
+        $this->assertSame('Shown on the follow-up screen for this area', $statement->listDescription());
+    }
+
+    #[Test]
     public function an_edit_records_who_made_it(): void
     {
         $this->seed(PageSeeder::class);
