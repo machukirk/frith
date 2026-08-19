@@ -1,6 +1,6 @@
 {{--
     600px table layout with web-safe fallbacks, per brand guidelines §09.
-    Poppins will not load in Outlook, so the stack degrades to Segoe UI without
+    Livvic will not load in Outlook, so the stack degrades to Segoe UI without
     the layout moving. Styles are inline because Gmail strips <style> blocks,
     and the logo is a PNG because no major client renders SVG in email.
 --}}
@@ -12,7 +12,7 @@
     $linen = '#F8F4EE';
     $linenBorder = '#DCD8D3';
     $euc = '#274B44';
-    $font = "'Poppins', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+    $font = "'Livvic', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 @endphp
 <!DOCTYPE html>
 <html lang="en-GB">

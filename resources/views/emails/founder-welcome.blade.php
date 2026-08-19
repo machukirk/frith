@@ -5,7 +5,7 @@
     $euc = '#274B44';
     $mustardBg = '#FCEACF';
     $mustardText = '#785300';
-    $font = "'Poppins', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+    $font = "'Livvic', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
     $number = $registration->founder_number;
 @endphp
 
