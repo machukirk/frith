@@ -453,6 +453,10 @@ img { max-width: 100%; }
 
 .notice {
     max-width: 34em;
+    /* Always followed by the way out of the page. A little more than the gap
+       above it, because the border gives the box a visual weight that a
+       paragraph does not — matched margins read as tighter underneath. */
+    margin: 0 0 var(--space-8) 0;
     background: var(--bg-surface);
     border: 1px solid var(--border-default);
     border-left: 3px solid var(--state-success);
