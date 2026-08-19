@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Registrations\Schemas;
 
 use App\Models\Registration;
+use App\Support\RegistrationFlow;
 use App\Support\Taxonomy;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
@@ -75,11 +76,37 @@ class RegistrationInfolist
                         ->bulleted(),
                 ]),
 
+            Section::make('What they enjoy')
+                ->description('The lighter half of matching. Two families with the same Tuesday morning still need a reason to meet.')
+                ->schema([
+                    TextEntry::make('interests')
+                        ->label('Interests')
+                        ->placeholder('Not answered')
+                        ->badge()
+                        ->color('gray')
+                        // One slug at a time, as with the other array columns.
+                        ->formatStateUsing(fn (string $state) => Taxonomy::interestLabel($state)),
+
+                    TextEntry::make('interests_other')
+                        ->label('In their own words')
+                        ->placeholder('—')
+                        ->columnSpanFull(),
+
+                    TextEntry::make('activity_supports')
+                        ->label('What helps them enjoy activities')
+                        ->placeholder('Not answered')
+                        ->badge()
+                        ->color('gray')
+                        ->formatStateUsing(fn (string $state) => Taxonomy::activitySupportLabel($state)),
+                ]),
+
             Section::make('Progress')->schema([
                 TextEntry::make('progress')
                     ->label('How far they got')
                     ->badge()
-                    ->state(fn (Registration $r) => $r->isComplete() ? 'Finished section one' : 'Step '.$r->furthest_step.' of 5')
+                    ->state(fn (Registration $r) => $r->isComplete()
+                        ? 'Finished section one'
+                        : 'Step '.min($r->furthest_step, RegistrationFlow::total()).' of '.RegistrationFlow::total())
                     ->color(fn (string $state) => $state === 'Finished section one' ? 'success' : 'warning'),
                 TextEntry::make('created_at')->label('Registered')->dateTime('j M Y, H:i'),
                 TextEntry::make('completed_at')->label('Finished')->dateTime('j M Y, H:i')->placeholder('—'),

@@ -2,8 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\FormOption;
 use App\Models\Registration;
+use App\Support\FormDefinition;
+use App\Support\RegistrationFlow;
 use App\Support\Taxonomy;
+use Database\Seeders\FormSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Test;
@@ -203,14 +207,229 @@ class RegistrationTest extends TestCase
     {
         $this->openWith();
 
+        // Support is no longer the last screen, so it moves them on rather
+        // than finishing them.
         $this->post(route('register.step.store', 'support'), [
             'support_areas' => ['learning-education', 'identity-belonging'],
+        ])->assertRedirect(route('register.step', 'interests'));
+
+        $this->assertNull(Registration::sole()->completed_at);
+
+        $this->post(route('register.step.store', 'interests'), [
+            'interests' => ['outdoors-nature'],
         ])->assertRedirect(route('register.experiences'));
 
         $registration = Registration::sole();
 
         $this->assertNotNull($registration->completed_at);
         $this->assertSame(['learning-education', 'identity-belonging'], $registration->support_areas);
+    }
+
+    #[Test]
+    public function the_interests_screen_asks_both_questions_two_to_a_row(): void
+    {
+        $this->openWith();
+
+        $response = $this->get(route('register.step', 'interests'));
+
+        $response->assertOk()
+            ->assertSee('Interests &amp; activities', false)
+            ->assertSee('Shared interests are often where friendships begin.', false)
+            ->assertSee('Are there things that help you enjoy activities?')
+            // Both lists are two per row, not just the first.
+            ->assertSee('choices choices--two-up', false)
+            ->assertSee('name="interests_other"', false);
+
+        $html = $response->getContent();
+
+        $this->assertSame(2, substr_count($html, 'choices--two-up'), 'both fieldsets should be two-up');
+        $this->assertSame(12, substr_count($html, 'name="interests[]"'));
+        $this->assertSame(7, substr_count($html, 'name="activity_supports[]"'));
+
+        foreach (['Outdoors &amp; Nature', 'Quiet &amp; Sensory-Friendly Activities', 'Other'] as $label) {
+            $response->assertSee($label, false);
+        }
+
+        // The examples under each heading are what make a broad label mean
+        // something to somebody skim-reading at 11pm.
+        $response->assertSee('Parks, walks, gardening, exploring, wildlife');
+    }
+
+    #[Test]
+    public function every_answer_on_the_interests_screen_is_optional(): void
+    {
+        $this->openWith();
+        $this->post(route('register.step.store', 'support'), ['support_areas' => []]);
+
+        $this->post(route('register.step.store', 'interests'), [])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(route('register.experiences'));
+
+        $registration = Registration::sole();
+
+        $this->assertNotNull($registration->completed_at, 'answering nothing still finishes section one');
+        $this->assertSame([], $registration->interests);
+        $this->assertNull($registration->interests_other);
+    }
+
+    #[Test]
+    public function an_empty_textarea_is_stored_as_nothing_rather_than_an_empty_string(): void
+    {
+        // What a browser actually posts: the textarea is always present, and
+        // present-but-empty is not the same as absent. An empty string here
+        // would read as "they wrote something" everywhere downstream.
+        $this->openWith();
+
+        $this->post(route('register.step.store', 'interests'), [
+            'interests' => ['animals'],
+            'interests_other' => '',
+        ])->assertSessionHasNoErrors();
+
+        $registration = Registration::sole();
+
+        $this->assertNull($registration->interests_other);
+        $this->assertSame(['animals'], $registration->interests, 'an empty box is not a choice of Other');
+    }
+
+    #[Test]
+    public function whitespace_alone_in_the_box_is_not_an_answer(): void
+    {
+        $this->openWith();
+
+        $this->post(route('register.step.store', 'interests'), [
+            'interests_other' => '   ',
+        ])->assertSessionHasNoErrors();
+
+        $registration = Registration::sole();
+
+        $this->assertNull($registration->interests_other);
+        $this->assertSame([], $registration->interests);
+    }
+
+    #[Test]
+    public function what_they_enjoy_and_what_helps_are_both_saved(): void
+    {
+        $this->openWith();
+
+        $this->post(route('register.step.store', 'interests'), [
+            'interests' => ['animals', 'water', 'quiet-sensory'],
+            'activity_supports' => ['smaller-groups', 'familiar-places'],
+        ])->assertSessionHasNoErrors();
+
+        $registration = Registration::sole();
+
+        $this->assertSame(['animals', 'water', 'quiet-sensory'], $registration->interests);
+        $this->assertSame(['smaller-groups', 'familiar-places'], $registration->activity_supports);
+    }
+
+    #[Test]
+    public function an_interest_that_is_not_offered_is_rejected(): void
+    {
+        $this->openWith();
+
+        $this->post(route('register.step.store', 'interests'), [
+            'interests' => ['animals', 'competitive-yodelling'],
+        ])->assertSessionHasErrors('interests.1');
+
+        $this->post(route('register.step.store', 'interests'), [
+            'activity_supports' => ['not-a-real-thing'],
+        ])->assertSessionHasErrors('activity_supports.0');
+    }
+
+    #[Test]
+    public function writing_in_the_box_counts_as_choosing_other(): void
+    {
+        // The box is always on screen, because the form works with no
+        // JavaScript. Somebody who fills it in has told us something, and
+        // their answer should not turn on whether they spotted the tickbox.
+        $this->openWith();
+
+        $this->post(route('register.step.store', 'interests'), [
+            'interests' => ['animals'],
+            'interests_other' => 'Steam trains, mostly. And the seaside.',
+        ])->assertSessionHasNoErrors();
+
+        $registration = Registration::sole();
+
+        $this->assertSame(['animals', 'other'], $registration->interests);
+        $this->assertSame('Steam trains, mostly. And the seaside.', $registration->interests_other);
+    }
+
+    #[Test]
+    public function ticking_other_as_well_does_not_record_it_twice(): void
+    {
+        $this->openWith();
+
+        $this->post(route('register.step.store', 'interests'), [
+            'interests' => ['other'],
+            'interests_other' => 'Birdwatching',
+        ]);
+
+        $this->assertSame(['other'], Registration::sole()->interests);
+    }
+
+    #[Test]
+    public function an_archived_other_is_never_added_behind_the_scenes(): void
+    {
+        // Archiving takes an option off the form. Auto-adding it would put a
+        // retired slug back into live data, which is the one thing archiving
+        // exists to prevent.
+        $this->seed(FormSeeder::class);
+        FormOption::query()->where('group', 'interests')->where('slug', 'other')
+            ->update(['archived_at' => now()]);
+        FormDefinition::forget(Taxonomy::FORM);
+
+        $this->openWith();
+
+        $this->post(route('register.step.store', 'interests'), [
+            'interests_other' => 'Something they typed anyway',
+        ])->assertSessionHasNoErrors();
+
+        $registration = Registration::sole();
+
+        $this->assertSame([], $registration->interests);
+        $this->assertSame('Something they typed anyway', $registration->interests_other, 'what they wrote is still kept');
+    }
+
+    #[Test]
+    public function a_note_that_runs_away_with_itself_is_refused_kindly(): void
+    {
+        $this->openWith();
+
+        $this->post(route('register.step.store', 'interests'), [
+            'interests_other' => str_repeat('a', 1001),
+        ])->assertSessionHasErrors(['interests_other' => 'That is a little long for this box — could you shorten it a bit?']);
+
+        $this->assertNull(Registration::sole()->interests_other);
+    }
+
+    #[Test]
+    public function coming_back_to_the_interests_screen_shows_what_they_chose(): void
+    {
+        $this->openWith();
+
+        $this->post(route('register.step.store', 'interests'), [
+            'interests' => ['animals'],
+            'activity_supports' => ['clear-routines'],
+            'interests_other' => 'Long walks',
+        ]);
+
+        $html = $this->get(route('register.step', 'interests'))->assertOk()->getContent();
+
+        $this->assertMatchesRegularExpression('/value="animals"[^>]*checked/', $html);
+        $this->assertMatchesRegularExpression('/value="clear-routines"[^>]*checked/', $html);
+        $this->assertStringContainsString('Long walks</textarea>', $html);
+    }
+
+    #[Test]
+    public function the_progress_bar_counts_every_screen_there_is(): void
+    {
+        $this->openWith();
+
+        $total = RegistrationFlow::total();
+
+        $this->get(route('register.step', 'you'))->assertSee("Step 1 of {$total}");
+        $this->get(route('register.step', 'interests'))->assertSee("Step {$total} of {$total}");
     }
 
     #[Test]

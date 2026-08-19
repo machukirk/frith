@@ -7,6 +7,7 @@ use App\Filament\Resources\Pages\Pages\EditPage;
 use App\Filament\Resources\Pages\Pages\ListPages;
 use App\Filament\Resources\Registrations\Pages\ListRegistrations;
 use App\Filament\Resources\Registrations\RegistrationResource;
+use App\Filament\Resources\Registrations\Schemas\RegistrationInfolist;
 use App\Filament\Resources\Registrations\Tables\ExportRegistrationsAction;
 use App\Models\Page;
 use App\Models\Registration;
@@ -14,6 +15,7 @@ use App\Models\User;
 use App\Support\PageContent;
 use Database\Seeders\PageSeeder;
 use Filament\Actions\Testing\TestAction;
+use Filament\Schemas\Schema;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
@@ -173,6 +175,83 @@ class AdminPanelTest extends TestCase
             ->callAction(TestAction::make('delete')->table($registration));
 
         $this->assertDatabaseCount('registrations', 0);
+    }
+
+    #[Test]
+    public function a_founders_interests_are_readable_in_the_panel(): void
+    {
+        // Naming an infolist entry after an array column makes Filament run the
+        // formatter once per element. That is what is wanted for badges and
+        // exactly what breaks a summary, so the new array entries are rendered
+        // here rather than assumed to behave like the ones beside them.
+        $registration = Registration::factory()->create([
+            'interests' => ['games-technology-building', 'water'],
+            'interests_other' => 'Steam trains, mostly.',
+            'activity_supports' => ['smaller-groups', 'clear-routines'],
+        ]);
+
+        $html = $this->renderInfolist($registration);
+
+        $this->assertStringContainsString('Games, Technology &amp; Building', $html);
+        $this->assertStringContainsString('Water Activities', $html);
+        $this->assertStringContainsString('Steam trains, mostly.', $html);
+        $this->assertStringContainsString('Smaller groups', $html);
+        $this->assertStringContainsString('Clear routines', $html);
+        $this->assertStringNotContainsString('games-technology-building', $html, 'a slug should never reach the screen');
+    }
+
+    #[Test]
+    public function a_founder_who_skipped_the_last_screen_reads_as_skipped(): void
+    {
+        $html = $this->renderInfolist(Registration::factory()->create([
+            'interests' => null,
+            'interests_other' => null,
+            'activity_supports' => null,
+        ]));
+
+        $this->assertStringContainsString('Not answered', $html);
+    }
+
+    /**
+     * Renders the read-only view of one family.
+     *
+     * Built against a real Livewire host rather than mounted through the table
+     * action: Filament renders the modal body client-side, so the action route
+     * shows nothing to assert on.
+     */
+    private function renderInfolist(Registration $registration): string
+    {
+        $this->actingAs($this->owner());
+
+        $host = Livewire::test(ListRegistrations::class)->instance();
+
+        return RegistrationInfolist::configure(Schema::make($host)->record($registration))->toHtml();
+    }
+
+    #[Test]
+    public function the_csv_export_writes_labels_rather_than_slugs(): void
+    {
+        // "quiet-sensory" in a spreadsheet is not something anybody can read.
+        Registration::factory()->create([
+            'interests' => ['quiet-sensory', 'animals'],
+            'interests_other' => 'Steam trains',
+            'activity_supports' => ['smaller-groups'],
+        ]);
+
+        $this->actingAs($this->owner());
+
+        Livewire::test(ListRegistrations::class)
+            ->callAction(TestAction::make('export')->table());
+
+        $csv = $this->captureExport();
+
+        $this->assertStringContainsString('Quiet & Sensory-Friendly Activities', $csv);
+        $this->assertStringContainsString('Smaller groups', $csv);
+        $this->assertStringContainsString('Steam trains', $csv);
+        $this->assertStringNotContainsString('quiet-sensory', $csv);
+
+        // Taxonomy order, not the order they happened to be submitted in.
+        $this->assertStringContainsString('Animals; Quiet & Sensory-Friendly Activities', $csv);
     }
 
     #[Test]

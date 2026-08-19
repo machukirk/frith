@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Registrations\Tables;
 
 use App\Models\Registration;
+use App\Support\RegistrationFlow;
 use App\Support\Taxonomy;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -48,7 +49,7 @@ class RegistrationsTable
                     ->badge()
                     ->state(fn (Registration $r) => $r->isComplete()
                         ? 'Complete'
-                        : 'Step '.$r->furthest_step.' of 5')
+                        : 'Step '.min($r->furthest_step, RegistrationFlow::total()).' of '.RegistrationFlow::total())
                     ->color(fn (string $state) => $state === 'Complete' ? 'success' : 'warning'),
 
                 TextColumn::make('created_at')
@@ -76,6 +77,13 @@ class RegistrationsTable
                     ->options(fn () => collect(Taxonomy::categories())->map(fn ($c) => $c['label'])->all())
                     ->query(fn (Builder $q, array $data) => filled($data['value'] ?? null)
                         ? $q->whereJsonContains('support_areas', $data['value'])
+                        : $q),
+
+                SelectFilter::make('interest')
+                    ->label('Interest')
+                    ->options(fn () => collect(Taxonomy::interests())->map(fn ($i) => $i['label'])->all())
+                    ->query(fn (Builder $q, array $data) => filled($data['value'] ?? null)
+                        ? $q->whereJsonContains('interests', $data['value'])
                         : $q),
 
                 Filter::make('has_children')

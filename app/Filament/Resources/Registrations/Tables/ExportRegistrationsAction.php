@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Registrations\Tables;
 
 use App\Models\Registration;
+use App\Support\RegistrationFlow;
 use App\Support\Taxonomy;
 use Filament\Actions\Action;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -43,6 +44,7 @@ class ExportRegistrationsAction
         fputcsv($out, [
             'Founder number', 'Name', 'Email', 'Postcode area',
             'Family', 'Children (born)', 'Support areas', 'Detailed experiences',
+            'Interests', 'Interests in their own words', 'What helps them enjoy activities',
             'Progress', 'Registered', 'Consent wording', 'Consent version', 'Consented at',
         ]);
 
@@ -62,7 +64,14 @@ class ExportRegistrationsAction
                         collect($r->orderedSupportAreas())
                             ->map(fn ($s) => Taxonomy::categoryLabel($s))->implode('; '),
                         $r->experiences->map(fn ($e) => $e->categoryLabel().': '.$e->label())->implode(' | '),
-                        $r->isComplete() ? 'Complete' : 'Step '.$r->furthest_step.' of 5',
+                        collect($r->orderedInterests())
+                            ->map(fn ($s) => Taxonomy::interestLabel($s))->implode('; '),
+                        $r->interests_other,
+                        collect($r->activity_supports ?? [])
+                            ->map(fn ($s) => Taxonomy::activitySupportLabel($s))->implode('; '),
+                        $r->isComplete()
+                            ? 'Complete'
+                            : 'Step '.min($r->furthest_step, RegistrationFlow::total()).' of '.RegistrationFlow::total(),
                         $r->created_at?->toDateTimeString(),
                         $r->consent_text,
                         $r->consent_version,

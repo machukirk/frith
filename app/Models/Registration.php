@@ -33,6 +33,8 @@ class Registration extends Model
         return [
             'family_structures' => 'array',
             'support_areas' => 'array',
+            'interests' => 'array',
+            'activity_supports' => 'array',
             'consented_at' => 'datetime',
             'completed_at' => 'datetime',
             'email_verified_at' => 'datetime',
@@ -95,6 +97,16 @@ class Registration extends Model
     public function orderedSupportAreas(): array
     {
         return Taxonomy::orderCategories($this->support_areas ?? []);
+    }
+
+    /**
+     * Their interests in taxonomy order rather than submission order.
+     *
+     * @return array<int, string>
+     */
+    public function orderedInterests(): array
+    {
+        return Taxonomy::orderInterests($this->interests ?? []);
     }
 
     /** Detailed selections grouped by category slug. */

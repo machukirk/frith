@@ -19,7 +19,7 @@ return [
 
     'founders-registration' => [
         'name' => 'Frith Founders registration',
-        'description' => 'The five-screen registration, plus the optional detail questions.',
+        'description' => 'The six-screen registration, plus the optional detail questions.',
 
         'steps' => [
             'you' => [
@@ -74,6 +74,21 @@ return [
                 'standfirst' => 'Choose as many as fit. This is how we find you families who understand, so there are no wrong answers.',
                 'is_private' => true,
                 'fields' => [],
+            ],
+
+            'interests' => [
+                'heading' => 'Interests & activities',
+                'standfirst' => 'Shared interests are often where friendships begin. Tell us what your family enjoys.',
+                'is_private' => false,
+                'fields' => [
+                    'interests_other' => [
+                        'label' => 'Tell us more',
+                        'help' => 'If you chose Other above, or there is anything else your family enjoys, this is the place.',
+                    ],
+                    'activity_supports' => [
+                        'label' => 'Are there things that help you enjoy activities?',
+                    ],
+                ],
             ],
         ],
     ],

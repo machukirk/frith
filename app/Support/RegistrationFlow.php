@@ -8,11 +8,16 @@ namespace App\Support;
  * Section one is short on purpose. Every extra screen is somewhere a tired
  * person puts the phone down, and the design goal here is that putting the
  * phone down still leaves them registered.
+ *
+ * Interests comes last deliberately. It is the lightest question on the form
+ * and the only one that is purely about what a family likes, so it is the
+ * kindest note to end on — and if somebody stops before it, nothing that
+ * matters for matching them has been lost.
  */
 class RegistrationFlow
 {
     /** @var array<int, string> */
-    public const STEPS = ['you', 'location', 'family', 'children', 'support'];
+    public const STEPS = ['you', 'location', 'family', 'children', 'support', 'interests'];
 
     public static function number(string $step): int
     {

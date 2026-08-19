@@ -67,14 +67,17 @@ class ManageFormOptions extends ManageRelatedRecords
 
             Select::make('group')
                 ->label('Which list')
-                ->options([
-                    'support_areas' => 'Areas of family life',
-                    'family_structures' => 'Who is part of your family',
-                ])
+                ->options(FormOption::GROUPS)
                 ->default('support_areas')
                 ->required()
+                ->live()
+                ->afterStateUpdated(fn (callable $set) => $set('parent_id', null))
                 ->disabledOn('edit'),
 
+            // Only the areas of family life have anything underneath them. Left
+            // on show for the other lists, this offers to file an interest as a
+            // detailed statement about school, which is not a choice anybody
+            // means to make.
             Select::make('parent_id')
                 ->label('Sits under')
                 ->placeholder('Nothing — this is a top-level choice')
@@ -85,6 +88,9 @@ class ManageFormOptions extends ManageRelatedRecords
                     ->orderBy('position')
                     ->pluck('label', 'id'))
                 ->helperText('Detailed statements sit under an area of family life. Leave this empty for an area itself.')
+                ->visible(fn (callable $get, string $operation) => $operation === 'edit'
+                    ? true
+                    : $get('group') === 'support_areas')
                 ->disabledOn('edit'),
 
             TextInput::make('label')
@@ -135,11 +141,7 @@ class ManageFormOptions extends ManageRelatedRecords
                     ->label('List')
                     ->badge()
                     ->color('gray')
-                    ->formatStateUsing(fn (string $state) => match ($state) {
-                        'support_areas' => 'Family life',
-                        'family_structures' => 'Family',
-                        default => $state,
-                    }),
+                    ->formatStateUsing(fn (string $state) => FormOption::GROUP_BADGES[$state] ?? $state),
 
                 TextColumn::make('slug')
                     ->label('Slug')
@@ -167,10 +169,7 @@ class ManageFormOptions extends ManageRelatedRecords
             ->filters([
                 SelectFilter::make('group')
                     ->label('List')
-                    ->options([
-                        'support_areas' => 'Areas of family life',
-                        'family_structures' => 'Who is part of your family',
-                    ]),
+                    ->options(FormOption::GROUPS),
 
                 TernaryFilter::make('archived')
                     ->label('Shown on the form')

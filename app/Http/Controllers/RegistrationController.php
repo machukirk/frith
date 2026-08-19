@@ -202,10 +202,41 @@ class RegistrationController extends Controller
                 'support_areas' => $data['support_areas'] ?? [],
             ])->save(),
 
+            'interests' => $registration->forceFill([
+                'interests' => $this->interestSelections($data),
+                'interests_other' => $data['interests_other'] ?? null,
+                'activity_supports' => $data['activity_supports'] ?? [],
+            ])->save(),
+
             default => null,
         };
 
         $registration->recordProgress(RegistrationFlow::number($step) + 1);
+    }
+
+    /**
+     * The interests they ticked, plus "Other" if they wrote in the box.
+     *
+     * The box is always on screen — the form works with no JavaScript, so it
+     * cannot be revealed by a checkbox — and somebody who fills it in has
+     * plainly told us something. Their answer should not turn on whether they
+     * also spotted the tickbox above it.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<int, string>
+     */
+    private function interestSelections(array $data): array
+    {
+        $chosen = array_values($data['interests'] ?? []);
+
+        $wroteSomething = filled($data['interests_other'] ?? null);
+        $otherIsOffered = in_array('other', Taxonomy::interestSlugs(), true);
+
+        if ($wroteSomething && $otherIsOffered && ! in_array('other', $chosen, true)) {
+            $chosen[] = 'other';
+        }
+
+        return $chosen;
     }
 
     /** @param array<int, array{birth_month: string, birth_year: string}> $children */
@@ -275,6 +306,20 @@ class RegistrationController extends Controller
                 'support_areas' => ['nullable', 'array'],
                 'support_areas.*' => [Rule::in(Taxonomy::categorySlugs())],
             ], []],
+
+            // Every answer on this screen is optional, so there is nothing to
+            // require and nothing to complain about. The length cap on the
+            // free text is generous but finite: it is a sentence or two about
+            // what a family enjoys, not somewhere to paste an EHCP.
+            'interests' => [[
+                'interests' => ['nullable', 'array'],
+                'interests.*' => [Rule::in(Taxonomy::interestSlugs())],
+                'interests_other' => ['nullable', 'string', 'max:1000'],
+                'activity_supports' => ['nullable', 'array'],
+                'activity_supports.*' => [Rule::in(Taxonomy::activitySupportSlugs())],
+            ], [
+                'interests_other.max' => 'That is a little long for this box — could you shorten it a bit?',
+            ]],
 
             default => [[], []],
         };

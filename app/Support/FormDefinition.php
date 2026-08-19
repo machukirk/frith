@@ -94,7 +94,12 @@ class FormDefinition
     {
         $steps = config("frith-forms.{$slug}.steps", []);
 
-        $options = ['support_areas' => [], 'family_structures' => []];
+        $options = [
+            'support_areas' => [],
+            'family_structures' => [],
+            'interests' => [],
+            'activity_supports' => [],
+        ];
 
         foreach (config('frith-taxonomy.categories', []) as $categorySlug => $category) {
             $options['support_areas'][$categorySlug] = [
@@ -107,13 +112,24 @@ class FormDefinition
             ];
         }
 
-        foreach (config('frith-taxonomy.family_structures', []) as $structureSlug => $label) {
-            $options['family_structures'][$structureSlug] = [
-                'label' => $label,
-                'description' => null,
+        foreach (config('frith-taxonomy.interests', []) as $interestSlug => $interest) {
+            $options['interests'][$interestSlug] = [
+                'label' => $interest['label'],
+                'description' => $interest['description'] ?? null,
                 'archived' => false,
                 'items' => [],
             ];
+        }
+
+        foreach (['family_structures', 'activity_supports'] as $group) {
+            foreach (config("frith-taxonomy.{$group}", []) as $slug => $label) {
+                $options[$group][$slug] = [
+                    'label' => $label,
+                    'description' => null,
+                    'archived' => false,
+                    'items' => [],
+                ];
+            }
         }
 
         return ['steps' => $steps, 'options' => $options];

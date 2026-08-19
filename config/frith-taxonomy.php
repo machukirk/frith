@@ -143,6 +143,79 @@ return [
     ],
 
     /*
+    | What the family enjoys. A different axis from the support areas above:
+    | those are what is hard, these are what is good, and a match on the second
+    | is what turns an introduction into a friendship.
+    |
+    | Same slug rule as everything else here — reword freely, never rekey.
+    */
+    'interests' => [
+        'outdoors-nature' => [
+            'label' => 'Outdoors & Nature',
+            'description' => 'Parks, walks, gardening, exploring, wildlife',
+        ],
+        'animals' => [
+            'label' => 'Animals',
+            'description' => 'Pets, farms, zoos, animal care',
+        ],
+        'sport-movement' => [
+            'label' => 'Sport & Movement',
+            'description' => 'Sports, dancing, cycling, climbing, active play',
+        ],
+        'creative' => [
+            'label' => 'Creative Activities',
+            'description' => 'Art, music, crafts, drama, making things',
+        ],
+        'games-technology-building' => [
+            'label' => 'Games, Technology & Building',
+            'description' => 'Gaming, coding, puzzles, board games, construction',
+        ],
+        'books-reading' => [
+            'label' => 'Books, Reading & Storytelling',
+            'description' => 'Reading, stories, imaginative play',
+        ],
+        'vehicles-collecting' => [
+            'label' => 'Vehicles, Trains & Collecting',
+            'description' => 'Trains, cars, transport, collections, special interests',
+        ],
+        'water' => [
+            'label' => 'Water Activities',
+            'description' => 'Swimming, beaches, paddling, water play',
+        ],
+        'food-eating-out' => [
+            'label' => 'Food & Eating Out',
+            'description' => 'Cooking, baking, trying new foods, cafés, restaurants and family-friendly places',
+        ],
+        'community' => [
+            'label' => 'Community Activities',
+            'description' => 'Local groups, clubs, events and days out',
+        ],
+        'quiet-sensory' => [
+            'label' => 'Quiet & Sensory-Friendly Activities',
+            'description' => 'Calm spaces, sensory play, relaxing activities',
+        ],
+        'other' => [
+            'label' => 'Other',
+            'description' => 'Tell us more',
+        ],
+    ],
+
+    /*
+    | What makes an activity work for them. Asked alongside the interests
+    | rather than under support, because it is practical rather than personal —
+    | it is what somebody needs to know before suggesting a Saturday.
+    */
+    'activity_supports' => [
+        'smaller-groups' => 'Smaller groups',
+        'familiar-places' => 'Familiar places',
+        'quiet-environments' => 'Quiet environments',
+        'being-active' => 'Being active',
+        'parent-carer-nearby' => 'Having a parent/carer nearby',
+        'clear-routines' => 'Clear routines',
+        'similar-interests' => 'Meeting children with similar interests',
+    ],
+
+    /*
     | Who is part of your family. Multi-select: the data doc's wording is
     | "select all that apply", because families do not fit one box.
     */

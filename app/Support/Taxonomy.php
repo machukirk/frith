@@ -76,10 +76,7 @@ class Taxonomy
     /** @return array<string, string> */
     public static function familyStructures(): array
     {
-        return collect(self::rawGroup('family_structures'))
-            ->reject(fn ($option) => $option['archived'])
-            ->map(fn ($option) => $option['label'])
-            ->all();
+        return self::liveLabels('family_structures');
     }
 
     /** @return array<int, string> */
@@ -90,7 +87,69 @@ class Taxonomy
 
     public static function familyStructureLabel(string $slug): string
     {
-        return self::rawGroup('family_structures')[$slug]['label'] ?? $slug;
+        return self::label('family_structures', $slug);
+    }
+
+    /**
+     * What families enjoy, as opposed to what they find hard.
+     *
+     * Carries a description as well as a label, so the choice cards can say
+     * "Parks, walks, gardening" under "Outdoors & Nature" — the examples are
+     * what make a broad heading mean something to somebody skim-reading.
+     *
+     * @return array<string, array{label: string, description: ?string}>
+     */
+    public static function interests(): array
+    {
+        return collect(self::rawGroup('interests'))
+            ->reject(fn ($option) => $option['archived'])
+            ->map(fn ($option) => [
+                'label' => $option['label'],
+                'description' => $option['description'],
+            ])
+            ->all();
+    }
+
+    /** @return array<int, string> */
+    public static function interestSlugs(): array
+    {
+        return array_keys(self::interests());
+    }
+
+    /** Includes archived, for the same reason as categoryLabel(). */
+    public static function interestLabel(string $slug): string
+    {
+        return self::label('interests', $slug);
+    }
+
+    /**
+     * Taxonomy order rather than submission order, so a family's interests
+     * always read the same way round wherever they are shown.
+     *
+     * @param  array<int, string>  $slugs
+     * @return array<int, string>
+     */
+    public static function orderInterests(array $slugs): array
+    {
+        return array_values(array_intersect(array_keys(self::rawGroup('interests')), $slugs));
+    }
+
+    /** @return array<string, string> */
+    public static function activitySupports(): array
+    {
+        return self::liveLabels('activity_supports');
+    }
+
+    /** @return array<int, string> */
+    public static function activitySupportSlugs(): array
+    {
+        return array_keys(self::activitySupports());
+    }
+
+    /** Includes archived, for the same reason as categoryLabel(). */
+    public static function activitySupportLabel(string $slug): string
+    {
+        return self::label('activity_supports', $slug);
     }
 
     /**
@@ -103,6 +162,26 @@ class Taxonomy
     public static function orderCategories(array $slugs): array
     {
         return array_values(array_intersect(self::categorySlugs(), $slugs));
+    }
+
+    /**
+     * A flat group's live options as slug => label. Archived ones are dropped,
+     * because these feed what gets offered and what gets accepted.
+     *
+     * @return array<string, string>
+     */
+    private static function liveLabels(string $group): array
+    {
+        return collect(self::rawGroup($group))
+            ->reject(fn ($option) => $option['archived'])
+            ->map(fn ($option) => $option['label'])
+            ->all();
+    }
+
+    /** Archived included: an answer already given still needs a name. */
+    private static function label(string $group, string $slug): string
+    {
+        return self::rawGroup($group)[$slug]['label'] ?? $slug;
     }
 
     /** @return array<string, mixed> */

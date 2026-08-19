@@ -58,7 +58,9 @@ class FormSeeder extends Seeder
         }
 
         $this->seedSupportAreas($form);
-        $this->seedFamilyStructures($form);
+        $this->seedInterests($form);
+        $this->seedFlatGroup($form, 'family_structures');
+        $this->seedFlatGroup($form, 'activity_supports');
     }
 
     private function seedSupportAreas(Form $form): void
@@ -86,13 +88,31 @@ class FormSeeder extends Seeder
         }
     }
 
-    private function seedFamilyStructures(Form $form): void
+    /** Interests carry a description as well as a label; nothing sits under them. */
+    private function seedInterests(Form $form): void
     {
         $position = 0;
 
-        foreach (config('frith-taxonomy.family_structures', []) as $slug => $label) {
+        foreach (config('frith-taxonomy.interests', []) as $slug => $interest) {
             $form->options()->firstOrCreate(
-                ['group' => 'family_structures', 'parent_id' => null, 'slug' => $slug],
+                ['group' => 'interests', 'parent_id' => null, 'slug' => $slug],
+                [
+                    'label' => $interest['label'],
+                    'description' => $interest['description'] ?? null,
+                    'position' => $position++,
+                ],
+            );
+        }
+    }
+
+    /** A group that is a plain slug => label list with no nesting. */
+    private function seedFlatGroup(Form $form, string $group): void
+    {
+        $position = 0;
+
+        foreach (config("frith-taxonomy.{$group}", []) as $slug => $label) {
+            $form->options()->firstOrCreate(
+                ['group' => $group, 'parent_id' => null, 'slug' => $slug],
                 ['label' => $label, 'position' => $position++],
             );
         }

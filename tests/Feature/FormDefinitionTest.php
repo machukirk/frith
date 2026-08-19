@@ -6,6 +6,7 @@ use App\Models\Form;
 use App\Models\FormOption;
 use App\Models\Registration;
 use App\Support\FormDefinition;
+use App\Support\RegistrationFlow;
 use App\Support\Taxonomy;
 use Database\Seeders\FormSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -39,15 +40,28 @@ class FormDefinitionTest extends TestCase
     {
         $form = $this->seedForm();
 
-        $this->assertCount(5, $form->steps);
+        $this->assertCount(count(RegistrationFlow::STEPS), $form->steps);
         $this->assertCount(8, $form->options()->whereNull('parent_id')->where('group', 'support_areas')->get());
         $this->assertCount(63, $form->options()->whereNotNull('parent_id')->get());
         $this->assertCount(6, $form->options()->where('group', 'family_structures')->get());
+        $this->assertCount(12, $form->options()->where('group', 'interests')->get());
+        $this->assertCount(7, $form->options()->where('group', 'activity_supports')->get());
+
+        // Every list the form offers has to be one the options screen can name,
+        // or an editor gets a row labelled with a raw database string.
+        foreach ($form->options->pluck('group')->unique() as $group) {
+            $this->assertArrayHasKey($group, FormOption::GROUPS, "{$group} is not a named list");
+            $this->assertArrayHasKey($group, FormOption::GROUP_BADGES, "{$group} has no short label");
+        }
 
         // The slugs are what registrations already point at, so they must not move.
         $this->assertSame(
             array_keys(config('frith-taxonomy.categories')),
             Taxonomy::categorySlugs(),
+        );
+        $this->assertSame(
+            array_keys(config('frith-taxonomy.interests')),
+            Taxonomy::interestSlugs(),
         );
     }
 
