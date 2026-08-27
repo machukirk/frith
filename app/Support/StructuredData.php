@@ -68,7 +68,7 @@ class StructuredData
                     'url' => asset('brand/logo/png/frith-logo-horizontal-fullcolour@2x.png'),
                     'contentUrl' => asset('brand/logo/png/frith-logo-horizontal-fullcolour@2x.png'),
                     'width' => 980,
-                    'height' => 310,
+                    'height' => 386,
                     'caption' => 'Frith',
                 ],
 

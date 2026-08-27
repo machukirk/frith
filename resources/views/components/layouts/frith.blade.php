@@ -95,7 +95,7 @@
             <a class="site-header__home" href="{{ route('coming-soon') }}">
                 <img class="site-header__logo"
                      src="{{ asset('brand/logo/frith-logo-horizontal-fullcolour.svg') }}"
-                     alt="Frith — home" width="490" height="155">
+                     alt="Frith — home" width="1179" height="464">
             </a>
             @isset($badge){{ $badge }}@endisset
         </header>

@@ -532,17 +532,13 @@ img { max-width: 100%; }
     color: var(--frith-euc-100);
     max-width: 30em;
 }
-.status-band__lockup { width: clamp(258px, 29cqi, 300px); }
-.status-band__logo { display: block; width: 100%; height: auto; }
-/* Coral 200 on Eucalyptus 700 = 5.53:1. Never Coral 300 below 24px (§02). */
-.status-band__tagline {
-    margin: 3px 0 0 41.2%;
-    font-size: 1rem;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    line-height: 1.25;
-    white-space: nowrap;
-    color: var(--frith-coral-200);
+/* The lockup carries its own tagline now, so there is no text beside it to
+   align. Coral 200 on Eucalyptus 700 = 5.53:1, which is why the reversed
+   artwork uses 200 and not the brand Coral 400 (§02). */
+.status-band__lockup {
+    display: block;
+    width: clamp(258px, 32cqi, 330px);
+    height: auto;
 }
 .status-band__points {
     margin: 0;

@@ -66,12 +66,12 @@
                     <h2 class="status-band__heading">{{ $copy['status']['heading'] }}</h2>
                     <p class="status-band__standfirst">{{ $copy['status']['standfirst'] }}</p>
 
-                    <div class="status-band__lockup">
-                        <img class="status-band__logo"
-                             src="{{ asset('brand/logo/frith-logo-horizontal-reversed.svg') }}"
-                             alt="Frith" width="490" height="155">
-                        <p class="status-band__tagline">{{ $copy['status']['tagline'] }}</p>
-                    </div>
+                    {{-- The tagline is part of the artwork here rather than text
+                         beside it, so it is not editable in the admin panel — the
+                         lockup is the lockup. --}}
+                    <img class="status-band__lockup"
+                         src="{{ asset('brand/logo/frith-logo-tagline-reversed.svg') }}"
+                         alt="Frith — Find your village" width="1132" height="464">
                 </div>
 
                 <ul class="status-band__points">
