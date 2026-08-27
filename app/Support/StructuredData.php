@@ -65,8 +65,8 @@ class StructuredData
                 [
                     '@type' => 'ImageObject',
                     '@id' => $logoId,
-                    'url' => asset('brand/logo/png/frith-logo-horizontal-fullcolour@2x.png'),
-                    'contentUrl' => asset('brand/logo/png/frith-logo-horizontal-fullcolour@2x.png'),
+                    'url' => BrandAsset::url('brand/logo/png/frith-logo-horizontal-fullcolour@2x.png'),
+                    'contentUrl' => BrandAsset::url('brand/logo/png/frith-logo-horizontal-fullcolour@2x.png'),
                     'width' => 980,
                     'height' => 395,
                     'caption' => 'Frith',
@@ -122,6 +122,6 @@ class StructuredData
     {
         return ! empty($copy['hero_image'])
             ? Storage::url($copy['hero_image'])
-            : asset('brand/img/frith-hero-hillside.png');
+            : BrandAsset::url('brand/img/frith-hero-hillside.png');
     }
 }

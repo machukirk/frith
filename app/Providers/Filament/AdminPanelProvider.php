@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Support\AdminPalette;
+use App\Support\BrandAsset;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -28,9 +29,9 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('Frith')
-            ->brandLogo(asset('brand/logo/frith-logo-horizontal-fullcolour.svg'))
+            ->brandLogo(BrandAsset::url('brand/logo/frith-logo-horizontal-fullcolour.svg'))
             ->brandLogoHeight('2rem')
-            ->favicon(asset('brand/logo/frith-logo-horizontal-fullcolour.svg'))
+            ->favicon(BrandAsset::url('brand/logo/frith-logo-horizontal-fullcolour.svg'))
             // Brand ramps, supplied outright rather than generated. See
             // App\Support\AdminPalette for why.
             ->colors([

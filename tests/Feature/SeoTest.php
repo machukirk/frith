@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Page;
 use App\Models\Registration;
+use App\Support\BrandAsset;
 use Database\Seeders\PageSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -184,6 +185,31 @@ class SeoTest extends TestCase
                 $this->assertSame($home, $node['url']);
             }
         }
+    }
+
+    #[Test]
+    public function brand_assets_carry_a_version_so_a_new_logo_actually_reaches_people(): void
+    {
+        // public/brand is served with a year-long cache under filenames that
+        // never change, so replacing the logo on the server is not enough — a
+        // returning visitor keeps the old one. The URL has to move with it.
+        $html = $this->get(route('coming-soon'))->assertOk()->getContent();
+
+        preg_match_all('#(/brand/[a-z0-9/_.@-]+\.(?:svg|png))(\?v=\d+)?#i', $html, $matches, PREG_SET_ORDER);
+
+        $this->assertNotEmpty($matches, 'the page should reference some brand assets');
+
+        foreach ($matches as $match) {
+            $this->assertArrayHasKey(2, $match, "{$match[1]} is served unversioned");
+            $this->assertNotEmpty($match[2], "{$match[1]} is served unversioned");
+        }
+
+        // And the version has to be the file's own, not a constant.
+        $logo = 'brand/logo/frith-logo-horizontal-fullcolour.svg';
+        $this->assertStringContainsString(
+            '?v='.filemtime(public_path($logo)),
+            BrandAsset::url($logo),
+        );
     }
 
     #[Test]

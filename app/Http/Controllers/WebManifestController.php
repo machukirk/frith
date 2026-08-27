@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\BrandAsset;
 use App\Support\PageContent;
 use Illuminate\Http\JsonResponse;
 
@@ -34,13 +35,13 @@ class WebManifestController extends Controller
             'categories' => ['social', 'lifestyle', 'education'],
             'icons' => [
                 [
-                    'src' => asset('brand/icon/frith-icon-192.png'),
+                    'src' => BrandAsset::url('brand/icon/frith-icon-192.png'),
                     'sizes' => '192x192',
                     'type' => 'image/png',
                     'purpose' => 'any',
                 ],
                 [
-                    'src' => asset('brand/icon/frith-icon-512.png'),
+                    'src' => BrandAsset::url('brand/icon/frith-icon-512.png'),
                     'sizes' => '512x512',
                     'type' => 'image/png',
                     'purpose' => 'any',
@@ -48,7 +49,7 @@ class WebManifestController extends Controller
                 [
                     // Android crops icons to whatever shape the launcher uses,
                     // so this one carries a safe zone around the mark.
-                    'src' => asset('brand/icon/frith-icon-512-maskable.png'),
+                    'src' => BrandAsset::url('brand/icon/frith-icon-512-maskable.png'),
                     'sizes' => '512x512',
                     'type' => 'image/png',
                     'purpose' => 'maskable',

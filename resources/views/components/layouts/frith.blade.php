@@ -13,7 +13,7 @@
 
     $heroUrl = ! empty($copy['hero_image'])
         ? \Illuminate\Support\Facades\Storage::url($copy['hero_image'])
-        : asset('brand/img/frith-hero-hillside.png');
+        : \App\Support\BrandAsset::url('brand/img/frith-hero-hillside.png');
 @endphp
 
 <!DOCTYPE html>
@@ -69,10 +69,10 @@
 
     {{-- Icons. 16 and 32 use the thickened variant from guidelines §02, because
          the standard hairline ring breaks up below 32px. --}}
-    <link rel="icon" href="{{ asset('brand/logo/frith-icon.svg') }}" type="image/svg+xml">
-    <link rel="icon" href="{{ asset('brand/icon/frith-icon-32.png') }}" sizes="32x32" type="image/png">
-    <link rel="icon" href="{{ asset('brand/icon/frith-icon-16.png') }}" sizes="16x16" type="image/png">
-    <link rel="apple-touch-icon" href="{{ asset('brand/icon/frith-icon-180.png') }}" sizes="180x180">
+    <link rel="icon" href="{{ \App\Support\BrandAsset::url('brand/logo/frith-icon.svg') }}" type="image/svg+xml">
+    <link rel="icon" href="{{ \App\Support\BrandAsset::url('brand/icon/frith-icon-32.png') }}" sizes="32x32" type="image/png">
+    <link rel="icon" href="{{ \App\Support\BrandAsset::url('brand/icon/frith-icon-16.png') }}" sizes="16x16" type="image/png">
+    <link rel="apple-touch-icon" href="{{ \App\Support\BrandAsset::url('brand/icon/frith-icon-180.png') }}" sizes="180x180">
     <link rel="manifest" href="{{ route('manifest') }}">
 
     {{-- Livvic is self-hosted and render-blocking on first paint, so the two
@@ -94,7 +94,7 @@
         <header class="site-header gutter">
             <a class="site-header__home" href="{{ route('coming-soon') }}">
                 <img class="site-header__logo"
-                     src="{{ asset('brand/logo/frith-logo-horizontal-fullcolour.svg') }}"
+                     src="{{ \App\Support\BrandAsset::url('brand/logo/frith-logo-horizontal-fullcolour.svg') }}"
                      alt="Frith — home" width="1152" height="464">
             </a>
             @isset($badge){{ $badge }}@endisset

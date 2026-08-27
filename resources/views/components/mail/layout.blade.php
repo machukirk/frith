@@ -42,7 +42,7 @@
                                  on a retina screen. If a client blocks images the
                                  email still works: the call to action below is a
                                  background-coloured cell, not a picture. --}}
-                            <img src="{{ asset('brand/logo/png/frith-logo-horizontal-fullcolour-email.png') }}"
+                            <img src="{{ \App\Support\BrandAsset::url('brand/logo/png/frith-logo-horizontal-fullcolour-email.png') }}"
                                  width="132" height="53" alt="Frith"
                                  style="display:block; width:132px; height:53px; border:0;">
                         </td>

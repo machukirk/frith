@@ -41,11 +41,11 @@
             <div class="hero__figure">
                 <div class="hero__photo-mask">
                     <img class="hero__photo"
-                         src="{{ $copy['hero_image'] ? \Illuminate\Support\Facades\Storage::url($copy['hero_image']) : asset('brand/img/frith-hero-hillside.png') }}"
+                         src="{{ $copy['hero_image'] ? \Illuminate\Support\Facades\Storage::url($copy['hero_image']) : \App\Support\BrandAsset::url('brand/img/frith-hero-hillside.png') }}"
                          alt="{{ $copy['hero_image_alt'] }}"
                          width="519" height="340">
                 </div>
-                <img class="hero__brush" src="{{ asset('brand/img/frith-swoosh-hero.svg') }}" alt="" aria-hidden="true">
+                <img class="hero__brush" src="{{ \App\Support\BrandAsset::url('brand/img/frith-swoosh-hero.svg') }}" alt="" aria-hidden="true">
                 <span class="hero__sun" aria-hidden="true"></span>
             </div>
         </section>
@@ -70,7 +70,7 @@
                          beside it, so it is not editable in the admin panel — the
                          lockup is the lockup. --}}
                     <img class="status-band__lockup"
-                         src="{{ asset('brand/logo/frith-logo-tagline-reversed.svg') }}"
+                         src="{{ \App\Support\BrandAsset::url('brand/logo/frith-logo-tagline-reversed.svg') }}"
                          alt="Frith — Find your village" width="1107" height="464">
                 </div>
 
