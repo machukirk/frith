@@ -71,7 +71,7 @@
                          lockup is the lockup. --}}
                     <img class="status-band__lockup"
                          src="{{ asset('brand/logo/frith-logo-tagline-reversed.svg') }}"
-                         alt="Frith — Find your village" width="1132" height="464">
+                         alt="Frith — Find your village" width="1107" height="464">
                 </div>
 
                 <ul class="status-band__points">
