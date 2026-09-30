@@ -9,28 +9,28 @@
     announces it as a disclosure without being told to.
 --}}
 <header class="site-header">
-    <details class="menu">
-        <summary class="menu__bar">
-            <span class="menu__brand">
-                {{-- Two marks, one shown at a time: the menu's own background
-                     is the deep green, so the closed bar's logo cannot stay. --}}
-                <img class="menu__logo menu__logo--closed"
-                     src="{{ \App\Support\BrandAsset::url('brand/logo/frith-logo-horizontal-fullcolour.svg') }}"
-                     alt="Frith" width="1152" height="464">
-                <img class="menu__logo menu__logo--open"
-                     src="{{ \App\Support\BrandAsset::url('brand/logo/frith-logo-horizontal-reversed.svg') }}"
-                     alt="" aria-hidden="true" width="1152" height="464">
-            </span>
+    <div class="menu">
+        {{-- A link, not part of the toggle. The whole bar used to be the
+             <summary>, so tapping the wordmark opened the menu instead of
+             going home. --}}
+        <a class="menu__home" href="{{ route('home') }}">
+            <img class="menu__logo menu__logo--closed"
+                 src="{{ \App\Support\BrandAsset::url('brand/logo/frith-logo-horizontal-fullcolour.svg') }}"
+                 alt="Frith — home" width="1152" height="464">
+            <img class="menu__logo menu__logo--open"
+                 src="{{ \App\Support\BrandAsset::url('brand/logo/frith-logo-horizontal-reversed.svg') }}"
+                 alt="" aria-hidden="true" width="1152" height="464">
+        </a>
 
-            <span class="menu__toggle" aria-hidden="true">
-                <svg class="menu__toggle-open" width="22" height="22" viewBox="0 0 24 24" fill="none"
+        <details class="menu__disclosure">
+            <summary class="menu__toggle">
+                <svg class="menu__burger" width="26" height="26" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round">
                     <path d="M3 6h18M3 12h18M3 18h18"/>
                 </svg>
-                <span class="menu__close">&#10005;</span>
-            </span>
-            <span class="visually-hidden">Menu</span>
-        </summary>
+                <span class="menu__close" aria-hidden="true">&#10005;</span>
+                <span class="visually-hidden">Menu</span>
+            </summary>
 
         <div class="menu__panel @if ($founder) menu__panel--founder @endif">
             @if ($founder)
@@ -80,7 +80,8 @@
                 </div>
             </div>
         </div>
-    </details>
+        </details>
+    </div>
 
     {{-- The same links again for anything wide enough to show them outright.
          Hidden from assistive tech on a phone so the menu is not read twice. --}}

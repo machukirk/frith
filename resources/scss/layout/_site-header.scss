@@ -3,6 +3,20 @@
 .site-header {
   background: $bg-page;
 
+  // The phone menu slides in underneath this bar rather than over it, so the
+  // bar has to be dark before the panel arrives — otherwise the reversed
+  // wordmark fades up against a page-coloured background and vanishes for a
+  // quarter of a second on the way in.
+  //
+  // Quick on the way in so it cannot be outrun, and on the way out the length
+  // of the slide, so the bar and the panel clear the screen together.
+  transition: background-color 260ms ease;
+
+  &:has(.menu__disclosure[open]) {
+    background: $bg-deep;
+    transition-duration: 140ms;
+  }
+
   // Two headers, one shown at a time: the phone menu (layout/_menu.scss) up
   // to md, and this laid-out bar from md up. Cheaper than scripting one into
   // the other, and the phone one needs no JavaScript at all.

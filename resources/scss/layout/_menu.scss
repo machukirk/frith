@@ -2,55 +2,68 @@
 
 // The phone menu: a full-screen takeover in the deep green.
 //
-// Still a native <details>. When it opens, the whole disclosure becomes the
-// overlay — the summary is the row along the top, so the wordmark and the
-// close sit where the header's own bar was a moment ago, and the panel fills
-// what is left. No JavaScript, a keyboard already knows how to work it, and a
-// screen reader announces it as a disclosure without being told to.
+// Three parts, and the split matters. The wordmark is a plain link, the
+// <summary> is only the burger, and the panel is the overlay. It used to be
+// one <details> wrapping the whole bar, which made the wordmark part of the
+// toggle — tapping it opened the menu instead of going home.
 //
-// Sizes come from the design, which is drawn on a 390px phone at 222px — so
-// everything here is its value scaled back up. It is a big-type menu on
-// purpose: every row is a target you can hit without looking.
+// The panel is always in the document, parked off the right of the screen
+// rather than removed. A closed disclosure's contents are not rendered, and an
+// element that was never rendered has no state to transition from, so anything
+// that only exists while open can slide in and then simply vanish. Keeping it
+// there gives both directions with no JavaScript, which is the point of it.
+//
+// Sizes come from the design, which is drawn on a 390px phone at 222px, so
+// they are its values scaled back up. Big type on purpose: every row is a
+// target you can hit without looking.
 .menu {
+  @include container;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+
   @include from(md) { display: none; }
 
-  &__bar {
-    @include container;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 64px;
-    cursor: pointer;
-    list-style: none;
-    @include focus-ring;
-
-    &::-webkit-details-marker { display: none; }
+  // Above the panel, so the wordmark and the toggle stay exactly where the
+  // header had them and the menu arrives around them.
+  &:has(&__disclosure[open]) {
+    position: relative;
+    z-index: 101;
   }
 
-  &__brand {
+  // Above the panel, which is z-index 100 in this same stacking context. Both
+  // of these stay exactly where the closed header had them, so opening the
+  // menu slides the panel in underneath them rather than moving anything.
+  &__home {
     position: relative;
+    z-index: 101;
     display: inline-flex;
+    @include focus-ring;
   }
 
   &__logo {
     width: 104px;
     height: auto;
-    transition: opacity 200ms ease;
+    // Behind the bar's own colour change, so the reversed mark never appears
+    // before there is something dark for it to sit on.
+    transition: opacity 180ms ease 60ms;
   }
 
   // Stacked and cross-faded rather than swapped: on the way out the panel is
-  // still sliding, and a dark wordmark appearing on top of it looks like a
-  // fault.
+  // still sliding, and a dark wordmark appearing over it reads as a fault.
   &__logo--open {
     position: absolute;
     inset: 0;
     opacity: 0;
   }
 
-  &[open] &__logo--closed { opacity: 0; }
-  &[open] &__logo--open { opacity: 1; }
+  &:has(&__disclosure[open]) &__logo--closed { opacity: 0; }
+  &:has(&__disclosure[open]) &__logo--open { opacity: 1; }
 
   &__toggle {
+    position: relative;
+    z-index: 101;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -58,39 +71,25 @@
     height: $target-min;
     margin-inline-end: -12px;
     color: $ink-900;
-    transition: color 200ms ease;
-  }
+    cursor: pointer;
+    list-style: none;
+    transition: color 180ms ease 60ms;
+    @include focus-ring;
 
-  &__toggle-open {
-    width: 26px;
-    height: 26px;
+    &::-webkit-details-marker { display: none; }
   }
 
   &__close { display: none; }
 
-  // ---- open ---------------------------------------------------------------
-  //
-  // The overlay is the panel, and the panel is always here — parked off the
-  // right of the screen rather than removed. That is what lets it animate both
-  // ways: a <details> drops its contents the instant it closes, so anything
-  // that relies on being in the DOM only while open can slide in and then
-  // vanish. This slides out.
-  //
-  // The bar rides above it, so the wordmark and the close stay exactly where
-  // the header had them and the menu arrives around them.
-  &[open] &__bar {
-    position: relative;
-    z-index: 101;
-  }
+  &__disclosure[open] &__toggle,
+  &__disclosure[open] > &__toggle { color: $linen-050; }
 
-  &[open] &__toggle { color: $linen-050; }
+  &__disclosure[open] &__burger { display: none; }
 
-  &[open] &__toggle-open { display: none; }
-
-  // The ring sits inside the toggle's box rather than being it, so the cross
-  // lands on the same centre the burger was on. It can be smaller than a tap
-  // target because the control is the whole summary row, not the ring.
-  &[open] &__close {
+  // The ring is drawn inside the toggle's box rather than being it, so the
+  // cross lands on the centre the burger was on. It can be smaller than a tap
+  // target because the control is the summary, not the ring.
+  &__disclosure[open] &__close {
     display: grid;
     place-items: center;
     width: 44px;
@@ -101,13 +100,22 @@
     line-height: 1;
   }
 
+  // The browser drops a closed disclosure's content outright, which is why
+  // this needed two pieces of CSS made for exactly that. allow-discrete holds
+  // the content rendered for the length of the close, so the panel inside has
+  // something to slide out of; @starting-style supplies the state to slide in
+  // FROM, which an element that has never been rendered does not otherwise
+  // have. Browsers without either simply open and close at once — which is
+  // what a <details> does anyway, so nothing breaks.
+  &__disclosure::details-content {
+    transition: content-visibility 260ms allow-discrete;
+  }
+
   &__panel {
     @include container;
     position: fixed;
     inset: 0;
     z-index: 100;
-    // An author declaration beats the UA's display:none on a closed
-    // disclosure's contents, which is what keeps it around to animate.
     display: flex;
     flex-direction: column;
     padding-block: 82px 32px;
@@ -115,18 +123,15 @@
     overscroll-behavior: contain;
     background: $bg-deep;
     transform: translateX(100%);
-    visibility: hidden;
-    transition:
-      transform 260ms cubic-bezier(0.32, 0.72, 0, 1),
-      visibility 0s linear 260ms;
+    transition: transform 260ms cubic-bezier(0.32, 0.72, 0, 1);
   }
 
-  &[open] &__panel {
+  &__disclosure[open] &__panel {
     transform: translateX(0);
-    visibility: visible;
-    transition:
-      transform 260ms cubic-bezier(0.32, 0.72, 0, 1),
-      visibility 0s;
+
+    @starting-style {
+      transform: translateX(100%);
+    }
   }
 
   // ---- who you are --------------------------------------------------------
@@ -278,7 +283,8 @@
 // the travel. It still arrives and leaves; it just does not slide.
 @media (prefers-reduced-motion: reduce) {
   .menu__panel,
-  .menu[open] .menu__panel {
+  .menu__disclosure[open] .menu__panel,
+  .menu__disclosure::details-content {
     transition-duration: 0s;
     transition-delay: 0s;
   }

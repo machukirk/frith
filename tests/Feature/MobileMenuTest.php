@@ -36,9 +36,29 @@ class MobileMenuTest extends TestCase
         // panel, a phone with a blocked script loses the navigation entirely.
         $html = $this->get(route('home'))->assertOk()->getContent();
 
-        $this->assertStringContainsString('<details class="menu"', $html);
-        $this->assertStringContainsString('<summary class="menu__bar"', $html);
+        $this->assertStringContainsString('<details class="menu__disclosure"', $html);
+        $this->assertStringContainsString('<summary class="menu__toggle"', $html);
         $this->assertStringNotContainsString('menu__panel" hidden', $html);
+    }
+
+    #[Test]
+    public function the_wordmark_goes_home_rather_than_opening_the_menu(): void
+    {
+        // It used to sit inside the <summary>, which made the whole bar the
+        // toggle: tapping the logo opened the menu instead of going home.
+        $html = $this->get(route('home'))->assertOk()->getContent();
+
+        $this->assertMatchesRegularExpression(
+            '/<a class="menu__home" href="'.preg_quote(route('home'), '/').'"/',
+            $html,
+        );
+
+        // And it is outside the control, not within it.
+        $summary = mb_substr($html, mb_strpos($html, '<summary class="menu__toggle"'));
+        $summary = mb_substr($summary, 0, mb_strpos($summary, '</summary>'));
+
+        $this->assertStringNotContainsString('menu__home', $summary);
+        $this->assertStringNotContainsString('<img', $summary);
     }
 
     #[Test]
