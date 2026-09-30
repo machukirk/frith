@@ -1,0 +1,241 @@
+@use '../abstracts' as *;
+
+// The phone menu: a full-screen takeover in the deep green.
+//
+// Still a native <details>. When it opens, the whole disclosure becomes the
+// overlay — the summary is the row along the top, so the wordmark and the
+// close sit where the header's own bar was a moment ago, and the panel fills
+// what is left. No JavaScript, a keyboard already knows how to work it, and a
+// screen reader announces it as a disclosure without being told to.
+//
+// Sizes come from the design, which is drawn on a 390px phone at 222px — so
+// everything here is its value scaled back up. It is a big-type menu on
+// purpose: every row is a target you can hit without looking.
+.menu {
+  @include from(md) { display: none; }
+
+  &__bar {
+    @include container;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 64px;
+    cursor: pointer;
+    list-style: none;
+    @include focus-ring;
+
+    &::-webkit-details-marker { display: none; }
+  }
+
+  &__brand { display: inline-flex; }
+
+  &__logo {
+    width: 104px;
+    height: auto;
+  }
+
+  &__logo--open { display: none; }
+
+  &__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: $target-min;
+    height: $target-min;
+    margin-inline-end: -12px;
+    color: $ink-900;
+  }
+
+  &__close { display: none; }
+
+  // ---- open: the whole thing becomes the screen ---------------------------
+  &[open] {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    background: $bg-deep;
+    overscroll-behavior: contain;
+  }
+
+  &[open] &__bar {
+    flex: none;
+    padding-block: 10px 18px;
+  }
+
+  &[open] &__logo--closed { display: none; }
+  &[open] &__logo--open { display: block; }
+
+  &[open] &__toggle {
+    width: 52px;
+    height: 52px;
+    margin-inline-end: 0;
+    border: 1.5px solid $euc-650;
+    border-radius: $radius-circle;
+    color: $linen-050;
+  }
+
+  &[open] &__toggle-open { display: none; }
+
+  &[open] &__close {
+    display: block;
+    font-size: 25px;
+    line-height: 1;
+  }
+
+  &__panel {
+    @include container;
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    padding-bottom: 32px;
+    overflow-y: auto;
+  }
+
+  &[open] &__panel { display: flex; }
+
+  // ---- who you are --------------------------------------------------------
+  &__profile {
+    display: flex;
+    gap: 17px;
+    align-items: center;
+    padding-block: 7px 24px;
+    border-bottom: 1px solid $euc-750;
+  }
+
+  &__avatar {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 63px;
+    height: 63px;
+    background: $euc-700;
+    border: 1px solid $euc-300;
+    border-radius: $radius-circle;
+    color: $linen-050;
+    @include type((25px, 25px), 1, 600);
+  }
+
+  &__name {
+    display: block;
+    color: $linen-050;
+    @include type((23px, 23px), 1.2, 600);
+  }
+
+  &__area {
+    display: block;
+    color: $euc-100;
+    @include type((20px, 20px), 1.5);
+  }
+
+  // ---- the rows -----------------------------------------------------------
+  &__nav { display: flex; flex-direction: column; }
+
+  &__row {
+    display: flex;
+    gap: $space-4;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 23px;
+    border-bottom: 1px solid $euc-750;
+    text-decoration: none;
+    @include focus-ring;
+  }
+
+  &__label {
+    display: block;
+    color: $linen-050;
+    @include type((32px, 32px), 1.2, 600);
+    letter-spacing: -0.015em;
+  }
+
+  // Where you already are, said in coral rather than by a highlight — the one
+  // row that is not a place to go.
+  &__row[aria-current='page'] &__label { color: $coral-200; }
+
+  &__meta {
+    display: block;
+    margin-top: 4px;
+    color: $euc-200;
+    @include type((17.5px, 17.5px), 1.4);
+  }
+
+  &__chevron {
+    flex: none;
+    color: $euc-300;
+    font-size: 25px;
+    line-height: 1;
+  }
+
+  // ---- the bottom ---------------------------------------------------------
+  &__foot {
+    margin-top: auto;
+    padding-top: 32px;
+  }
+
+  &__cta {
+    display: block;
+    padding: 21px;
+    margin-bottom: 14px;
+    background: $action-accent;
+    border: 1.5px solid transparent;
+    border-radius: $radius-pill;
+    // Ink on coral, never white: white on Coral 400 is 3.23:1 and fails at
+    // every size (guidelines §02).
+    color: $ink-900;
+    @include type((23px, 23px), 1.2, 500);
+    text-align: center;
+    text-decoration: none;
+    @include focus-ring;
+
+    &--quiet {
+      padding: 19px;
+      margin-bottom: 25px;
+      background: none;
+      border-color: $euc-300;
+      color: $linen-050;
+    }
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    align-items: baseline;
+  }
+
+  &__link {
+    padding: 0;
+    background: none;
+    border: 0;
+    color: $euc-200;
+    @include type((18.5px, 18.5px), 1.4);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    @include focus-ring;
+
+    &--out { color: $coral-200; }
+  }
+
+  // Signed in there are no buttons, so the bottom is a stack of quiet links
+  // rather than a row of small print.
+  &__panel--founder &__foot { padding-top: 28px; }
+
+  &__panel--founder &__links {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__panel--founder &__link {
+    color: $euc-100;
+    font-size: 22px;
+    text-decoration: none;
+  }
+
+  &__panel--founder &__link--out {
+    margin-top: 10px;
+    color: $coral-200;
+  }
+}

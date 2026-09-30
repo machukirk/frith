@@ -3,62 +3,9 @@
 .site-header {
   background: $bg-page;
 
-  // Two headers, one shown at a time: a <details> disclosure on a phone and
-  // the laid-out bar from md up. Cheaper than scripting one into the other,
-  // and the phone one needs no JavaScript at all.
-  &__disclosure {
-    @include from(md) { display: none; }
-  }
-
-  &__bar {
-    @include container;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 64px;
-    cursor: pointer;
-    list-style: none;
-    @include focus-ring;
-
-    &::-webkit-details-marker { display: none; }
-  }
-
-  &__home-slot { display: inline-flex; }
-
-  &__toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: $target-min;
-    height: $target-min;
-    margin-inline-end: -12px;
-    color: $ink-900;
-  }
-
-  &__toggle-close { display: none; }
-
-  &__disclosure[open] {
-    .site-header__toggle-open { display: none; }
-    .site-header__toggle-close { display: block; }
-  }
-
-  &__panel {
-    display: grid;
-    gap: $space-1;
-    padding-block: $space-2 $space-6;
-    border-top: 1px solid rgba($ink-900, 0.08);
-  }
-
-  &__panel-link {
-    @include tap-target;
-    color: $ink-900;
-    font-size: 16px;
-    text-decoration: none;
-    @include focus-ring;
-
-    &:hover { color: $action; }
-  }
-
+  // Two headers, one shown at a time: the phone menu (layout/_menu.scss) up
+  // to md, and this laid-out bar from md up. Cheaper than scripting one into
+  // the other, and the phone one needs no JavaScript at all.
   &__inner {
     display: none;
 

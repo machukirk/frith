@@ -17,6 +17,22 @@ class SiteNavigation
         return self::resolve(config('frith-nav.primary', []));
     }
 
+    /**
+     * The phone menu, which carries more than the top bar has room for.
+     *
+     * @return array<int, array{label: string, url: string, meta: string|null}>
+     */
+    public static function menu(bool $founder = false): array
+    {
+        return self::resolve(config($founder ? 'frith-nav.menu_founder' : 'frith-nav.menu', []));
+    }
+
+    /** @return array<int, array{label: string, url: string, meta: string|null}> */
+    public static function menuFoot(bool $founder = false): array
+    {
+        return self::resolve(config($founder ? 'frith-nav.menu_foot_founder' : 'frith-nav.menu_foot', []));
+    }
+
     /** @return array<int, array{title: string, links: array<int, array{label: string, url: string}>}> */
     public static function footer(): array
     {
@@ -38,6 +54,7 @@ class SiteNavigation
             ->map(fn (array $item) => [
                 'label' => $item['label'],
                 'url' => self::url($item),
+                'meta' => $item['meta'] ?? null,
             ])
             ->all();
     }

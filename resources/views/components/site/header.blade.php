@@ -9,39 +9,76 @@
     announces it as a disclosure without being told to.
 --}}
 <header class="site-header">
-    <details class="site-header__disclosure">
-        <summary class="site-header__bar">
-            <span class="site-header__home-slot">
-                <img class="site-header__logo"
+    <details class="menu">
+        <summary class="menu__bar">
+            <span class="menu__brand">
+                {{-- Two marks, one shown at a time: the menu's own background
+                     is the deep green, so the closed bar's logo cannot stay. --}}
+                <img class="menu__logo menu__logo--closed"
                      src="{{ \App\Support\BrandAsset::url('brand/logo/frith-logo-horizontal-fullcolour.svg') }}"
                      alt="Frith" width="1152" height="464">
+                <img class="menu__logo menu__logo--open"
+                     src="{{ \App\Support\BrandAsset::url('brand/logo/frith-logo-horizontal-reversed.svg') }}"
+                     alt="" aria-hidden="true" width="1152" height="464">
             </span>
 
-            <span class="site-header__toggle" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2" stroke-linecap="round">
-                    <path class="site-header__toggle-open" d="M3 6h18M3 12h18M3 18h18"/>
-                    <path class="site-header__toggle-close" d="M6 6l12 12M18 6L6 18"/>
+            <span class="menu__toggle" aria-hidden="true">
+                <svg class="menu__toggle-open" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M3 6h18M3 12h18M3 18h18"/>
                 </svg>
+                <span class="menu__close">&#10005;</span>
             </span>
             <span class="visually-hidden">Menu</span>
         </summary>
 
-        <div class="site-header__panel wrap">
-            @foreach ($nav as $item)
-                <a class="site-header__panel-link" href="{{ $item['url'] }}">{{ $item['label'] }}</a>
-            @endforeach
-
+        <div class="menu__panel @if ($founder) menu__panel--founder @endif">
             @if ($founder)
-                <span class="site-header__panel-link site-header__panel-link--name">{{ $founder->displayName() }}</span>
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button class="button button--quiet button--block" type="submit">Log out</button>
-                </form>
-            @else
-                <a class="site-header__panel-link" href="{{ route('login') }}">Log in</a>
-                <a class="button button--primary button--block" href="{{ route('register.start') }}">Register</a>
+                <div class="menu__profile">
+                    <span class="menu__avatar" aria-hidden="true">{{ Str::upper(Str::substr($founder->displayName(), 0, 1)) }}</span>
+                    <span>
+                        <span class="menu__name">{{ $founder->displayName() }}</span>
+                        @if ($founder->postcode_outcode)
+                            <span class="menu__area">{{ $founder->postcode_outcode }} area</span>
+                        @endif
+                    </span>
+                </div>
             @endif
+
+            <nav class="menu__nav" aria-label="Primary">
+                @foreach (\App\Support\SiteNavigation::menu((bool) $founder) as $item)
+                    <a class="menu__row" href="{{ $item['url'] }}"
+                       @if (url()->current() === $item['url']) aria-current="page" @endif>
+                        <span>
+                            <span class="menu__label">{{ $item['label'] }}</span>
+                            @if ($item['meta'])
+                                <span class="menu__meta">{{ $item['meta'] }}</span>
+                            @endif
+                        </span>
+                        <span class="menu__chevron" aria-hidden="true">&rsaquo;</span>
+                    </a>
+                @endforeach
+            </nav>
+
+            <div class="menu__foot">
+                @unless ($founder)
+                    <a class="menu__cta" href="{{ route('register.start') }}">Register</a>
+                    <a class="menu__cta menu__cta--quiet" href="{{ route('login') }}">Log in</a>
+                @endunless
+
+                <div class="menu__links">
+                    @foreach (\App\Support\SiteNavigation::menuFoot((bool) $founder) as $link)
+                        <a class="menu__link" href="{{ $link['url'] }}">{{ $link['label'] }}</a>
+                    @endforeach
+
+                    @if ($founder)
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button class="menu__link menu__link--out" type="submit">Log out</button>
+                        </form>
+                    @endif
+                </div>
+            </div>
         </div>
     </details>
 
