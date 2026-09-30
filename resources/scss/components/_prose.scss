@@ -2,10 +2,28 @@
 
 // Long-form copy: the policies, the guidelines, the safety guide. Ink rather
 // than the lighter body grey, because these are read end to end.
+//
+// The measure sits on the things you read in lines, not on the article itself.
+// Capping the whole block held a comparison table to the width of a paragraph
+// and left half the column empty beside it; this way the article fills its
+// column, the prose keeps a measure you can actually read, and a table or a
+// figure takes the room it needs.
 .prose {
-  max-width: 68ch;
+  // 72ch lands around 80 characters a line in Livvic — wider than it was,
+  // and still inside what somebody can read paragraph after paragraph.
+  --measure: 72ch;
+
   color: $ink-900;
   @include type((16px, 16.5px), 1.72);
+
+  > * { max-width: var(--measure); }
+
+  // Anything that is not a line of text: it is not read at a measure, and
+  // squeezing it to one only makes it harder to follow.
+  > .data-table__scroll,
+  > table,
+  > figure,
+  > img { max-width: none; }
 
   > * + * { margin-top: $space-5; }
 

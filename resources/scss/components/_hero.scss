@@ -14,6 +14,11 @@
 
     @include from(lg) {
       grid-template-columns: minmax(0, 690px) minmax(0, 470px);
+      // The two columns are the widths the hi-fi draws them at, and together
+      // they are narrower than the page. Pushing them apart puts the picture
+      // against the right edge and the extra room between them, rather than
+      // leaving it stranded past the picture.
+      justify-content: space-between;
       align-items: center;
       gap: $space-10;
     }
