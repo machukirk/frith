@@ -8,6 +8,29 @@ return [
     |--------------------------------------------------------------------------
     */
 
+    /*
+    |--------------------------------------------------------------------------
+    | Which site this is
+    |--------------------------------------------------------------------------
+    |
+    | Only one host is the real Frith. Anything else running this code — the
+    | staging site, a preview, somebody's copy — is not, and must not turn up
+    | in a search result: a second crawlable copy competes with the real site
+    | and shows people a version nobody is maintaining.
+    |
+    | Worked out from the host rather than declared, so a new environment is
+    | private without anybody having to remember to make it so — including when
+    | its APP_URL was copied from production and still says frith.community.
+    |
+    */
+
+    'site' => [
+        'canonical_host' => env('FRITH_CANONICAL_HOST', 'frith.community'),
+
+        // Null means "work it out". Set it only if you mean to override.
+        'indexable' => env('FRITH_INDEXABLE'),
+    ],
+
     'company' => [
         'name' => 'Frith Community Ltd',
         'contact_email' => 'hello@frith.community',

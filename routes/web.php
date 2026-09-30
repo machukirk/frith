@@ -6,6 +6,7 @@ use App\Http\Controllers\PagePreviewController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RegistrationEmailController;
 use App\Http\Controllers\RegistrationExperienceController;
+use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\WebManifestController;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -49,6 +50,7 @@ Route::withoutMiddleware([
     ShareErrorsFromSession::class,
     PreventRequestForgery::class,
 ])->group(function () {
+    Route::get('/robots.txt', RobotsController::class)->name('robots');
     Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
     Route::get('/site.webmanifest', WebManifestController::class)->name('manifest');
 });

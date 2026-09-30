@@ -133,14 +133,63 @@ class SeoTest extends TestCase
     #[Test]
     public function robots_txt_points_at_the_sitemap_and_hides_the_signed_urls(): void
     {
-        $robots = file_get_contents(public_path('robots.txt'));
+        $robots = $this->get('/robots.txt')
+            ->assertOk()
+            ->assertHeader('Content-Type', 'text/plain; charset=UTF-8')
+            ->getContent();
 
-        $this->assertStringContainsString('Sitemap: https://frith.community/sitemap.xml', $robots);
+        $this->assertStringContainsString('Sitemap: '.route('sitemap'), $robots);
         $this->assertStringContainsString('Disallow: /admin', $robots);
 
         // The registration steps stay crawlable on purpose: they carry a
         // noindex tag, and a crawler has to fetch a page to see that.
         $this->assertStringNotContainsString('Disallow: /join', $robots);
+    }
+
+    #[Test]
+    public function a_copy_of_the_site_tells_every_crawler_to_go_away(): void
+    {
+        // Staging is stood up by copying production's .env, so its APP_URL
+        // still says frith.community while it answers on another domain
+        // entirely. The host the request arrived on is what decides, which is
+        // what makes this survive that.
+        config(['frith.site.canonical_host' => 'frith.community']);
+
+        $this->get('/robots.txt')
+            ->assertOk()
+            ->assertSee('Disallow: /')
+            ->assertDontSee('Allow: /')
+            ->assertSee('https://frith.community');
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertHeader('X-Robots-Tag', 'noindex, nofollow')
+            ->assertSee('name="robots" content="noindex, nofollow"', false)
+            ->assertDontSee('application/ld+json', false);
+
+        // And the things that never went through the layout are covered too.
+        $this->get(route('sitemap'))->assertHeader('X-Robots-Tag', 'noindex, nofollow');
+        $this->get(route('manifest'))->assertHeader('X-Robots-Tag', 'noindex, nofollow');
+    }
+
+    #[Test]
+    public function the_real_site_carries_no_such_header(): void
+    {
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertHeaderMissing('X-Robots-Tag');
+    }
+
+    #[Test]
+    public function the_indexing_rule_can_be_overridden_when_somebody_means_to(): void
+    {
+        config([
+            'frith.site.canonical_host' => 'frith.community',
+            'frith.site.indexable' => 'true',
+        ]);
+
+        $this->get('/robots.txt')->assertOk()->assertSee('Allow: /');
+        $this->get(route('home'))->assertOk()->assertHeaderMissing('X-Robots-Tag');
     }
 
     #[Test]

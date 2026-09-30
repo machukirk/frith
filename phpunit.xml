@@ -34,6 +34,11 @@
         <env name="NIGHTWATCH_ENABLED" value="false"/>
         <!-- No live MX lookups in the suite. -->
         <env name="FRITH_VALIDATE_EMAIL_DNS" value="false"/>
+
+        <!-- The suite runs as the real site, so pages assert the SEO tags they
+             would really carry. The tests that cover a copy of the site set
+             the host themselves. -->
+        <env name="FRITH_CANONICAL_HOST" value="frith.ddev.site"/>
         <!-- Honeypot is exercised by its own test, which turns it back on. -->
         <env name="HONEYPOT_ENABLED" value="false"/>
     </php>

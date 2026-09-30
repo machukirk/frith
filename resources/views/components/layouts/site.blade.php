@@ -28,7 +28,7 @@
          is a second copy of the page as far as a crawler is concerned. --}}
     <link rel="canonical" href="{{ url()->current() }}">
 
-    @if ($noindex)
+    @if ($noindex || ! \App\Support\SearchVisibility::indexable())
         <meta name="robots" content="noindex, nofollow">
     @else
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -72,9 +72,9 @@
     <link rel="apple-touch-icon" href="{{ \App\Support\BrandAsset::url('brand/icon/frith-icon-180.png') }}" sizes="180x180">
     <link rel="manifest" href="{{ route('manifest') }}">
 
-    @unless ($noindex)
+    @if (! $noindex && \App\Support\SearchVisibility::indexable())
         <script type="application/ld+json">{!! json_encode(\App\Support\StructuredData::home(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
-    @endunless
+    @endif
 
     @vite('resources/scss/main.scss')
 

@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Staging, a preview, anybody's copy: not the real site, and it says
+        // so to crawlers on every response. See App\Support\SearchVisibility.
+        $middleware->append(\App\Http\Middleware\KeepCopiesOutOfSearch::class);
+
         // One-click unsubscribe is a POST from Gmail or Outlook, which has no
         // session and therefore no CSRF token. The signature on the URL is what
         // authenticates it, so dropping the token check costs nothing.
