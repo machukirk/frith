@@ -3,6 +3,11 @@
 // The policies share a shell: a list of the other policies beside the prose.
 // On a phone the list comes first and reads as a contents page.
 .policy {
+  // The article fills the column the sidebar leaves it, rather than carrying a
+  // measure of its own on top of that. Matt's call — it reads as one block
+  // beside the contents list instead of a narrow strip inside a wide column.
+  .prose { --measure: none; }
+
   &__inner {
     @include container;
     display: grid;
