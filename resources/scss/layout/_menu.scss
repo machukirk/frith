@@ -27,14 +27,28 @@
     &::-webkit-details-marker { display: none; }
   }
 
-  &__brand { display: inline-flex; }
+  &__brand {
+    position: relative;
+    display: inline-flex;
+  }
 
   &__logo {
     width: 104px;
     height: auto;
+    transition: opacity 200ms ease;
   }
 
-  &__logo--open { display: none; }
+  // Stacked and cross-faded rather than swapped: on the way out the panel is
+  // still sliding, and a dark wordmark appearing on top of it looks like a
+  // fault.
+  &__logo--open {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  &[open] &__logo--closed { opacity: 0; }
+  &[open] &__logo--open { opacity: 1; }
 
   &__toggle {
     display: inline-flex;
@@ -44,6 +58,7 @@
     height: $target-min;
     margin-inline-end: -12px;
     color: $ink-900;
+    transition: color 200ms ease;
   }
 
   &__toggle-open {
@@ -53,54 +68,66 @@
 
   &__close { display: none; }
 
-  // ---- open: the whole thing becomes the screen ---------------------------
-  &[open] {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    background: $bg-deep;
-    overscroll-behavior: contain;
-  }
-
+  // ---- open ---------------------------------------------------------------
+  //
+  // The overlay is the panel, and the panel is always here — parked off the
+  // right of the screen rather than removed. That is what lets it animate both
+  // ways: a <details> drops its contents the instant it closes, so anything
+  // that relies on being in the DOM only while open can slide in and then
+  // vanish. This slides out.
+  //
+  // The bar rides above it, so the wordmark and the close stay exactly where
+  // the header had them and the menu arrives around them.
   &[open] &__bar {
-    flex: none;
-    padding-block: 10px 18px;
+    position: relative;
+    z-index: 101;
   }
 
-  &[open] &__logo--closed { display: none; }
-  &[open] &__logo--open { display: block; }
-
-  // The ring can be smaller than a tap target: the whole summary row is the
-  // control, so what you press is the width of the bar either way.
-  &[open] &__toggle {
-    width: 44px;
-    height: 44px;
-    margin-inline-end: 0;
-    border: 1.5px solid $euc-650;
-    border-radius: $radius-circle;
-    color: $linen-050;
-  }
+  &[open] &__toggle { color: $linen-050; }
 
   &[open] &__toggle-open { display: none; }
 
+  // The ring sits inside the toggle's box rather than being it, so the cross
+  // lands on the same centre the burger was on. It can be smaller than a tap
+  // target because the control is the whole summary row, not the ring.
   &[open] &__close {
-    display: block;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1.5px solid $euc-650;
+    border-radius: $radius-circle;
     font-size: 21px;
     line-height: 1;
   }
 
   &__panel {
     @include container;
-    display: none;
-    flex: 1;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    // An author declaration beats the UA's display:none on a closed
+    // disclosure's contents, which is what keeps it around to animate.
+    display: flex;
     flex-direction: column;
-    padding-bottom: 32px;
+    padding-block: 82px 32px;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    background: $bg-deep;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition:
+      transform 260ms cubic-bezier(0.32, 0.72, 0, 1),
+      visibility 0s linear 260ms;
   }
 
-  &[open] &__panel { display: flex; }
+  &[open] &__panel {
+    transform: translateX(0);
+    visibility: visible;
+    transition:
+      transform 260ms cubic-bezier(0.32, 0.72, 0, 1),
+      visibility 0s;
+  }
 
   // ---- who you are --------------------------------------------------------
   &__profile {
@@ -245,4 +272,17 @@
     margin-top: 10px;
     color: $coral-200;
   }
+}
+
+// Somebody who has asked their system for less movement gets the menu without
+// the travel. It still arrives and leaves; it just does not slide.
+@media (prefers-reduced-motion: reduce) {
+  .menu__panel,
+  .menu[open] .menu__panel {
+    transition-duration: 0s;
+    transition-delay: 0s;
+  }
+
+  .menu__logo,
+  .menu__toggle { transition: none; }
 }
