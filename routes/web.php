@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PagePreviewController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RegistrationEmailController;
 use App\Http\Controllers\RegistrationExperienceController;
@@ -50,6 +51,14 @@ Route::withoutMiddleware([
     Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
     Route::get('/site.webmanifest', WebManifestController::class)->name('manifest');
 });
+
+/*
+ * The admin panel's live preview. Behind the panel's own guard, because it
+ * renders somebody's unsaved draft.
+ */
+Route::get('/admin/preview/{slug}', PagePreviewController::class)
+    ->middleware(['auth'])
+    ->name('admin.preview');
 
 /*
  * The help page's "write to a person" form. Honeypot rather than a CAPTCHA:

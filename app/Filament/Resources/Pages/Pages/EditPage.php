@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Pages\Pages;
 
 use App\Filament\Resources\Pages\PageResource;
+use App\Http\Controllers\PagePreviewController;
 use App\Support\SiteNavigation;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
@@ -11,6 +12,11 @@ use Illuminate\Support\Facades\Auth;
 class EditPage extends EditRecord
 {
     protected static string $resource = PageResource::class;
+
+    protected string $view = 'filament.pages.edit-page-with-preview';
+
+    /** Widened by the preview toggle; the form alone does not need the room. */
+    public bool $showPreview = true;
 
     public function getHeading(): string
     {
@@ -22,15 +28,79 @@ class EditPage extends EditRecord
         return 'Editing';
     }
 
+    public function mount(int|string $record): void
+    {
+        parent::mount($record);
+
+        // So the preview shows the current state from the moment it opens,
+        // rather than a blank frame until the first field is touched.
+        $this->syncPreview();
+    }
+
+    /**
+     * Keeps the preview in step with the form.
+     *
+     * Fields are live on blur rather than on every keystroke, so this runs
+     * when somebody leaves a field — which is also when they want to see what
+     * they have done.
+     */
+    public function updated(string $property): void
+    {
+        if (str_starts_with($property, 'data.content')) {
+            $this->syncPreview();
+            $this->dispatch('preview-changed');
+        }
+    }
+
+    public function togglePreview(): void
+    {
+        $this->showPreview = ! $this->showPreview;
+    }
+
+    public function previewUrl(): string
+    {
+        return route('admin.preview', $this->record->slug);
+    }
+
+    /**
+     * Hands the form's current state to the preview.
+     *
+     * Through the form's own getState() rather than the raw $data, because a
+     * repeater keys its items by UUID in there — a list of FAQ entries comes
+     * out as a map, and a page looping over it prints the map rather than the
+     * entries. getState() is what turns that back into the shape the page
+     * reads, and it is Filament's job to know.
+     *
+     * It validates on the way, so mid-edit it can throw. The preview then just
+     * keeps showing the last good state, which is better than an error page
+     * where the page should be.
+     */
+    private function syncPreview(): void
+    {
+        $content = rescue(
+            fn () => $this->form->getState(afterValidate: null)['content'] ?? null,
+            rescue: null,
+            report: false,
+        );
+
+        session()->put(
+            PagePreviewController::key($this->record->slug),
+            $content ?? $this->record->content,
+        );
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            // Editing copy you can't see is guesswork. Opens in a new tab so
-            // unsaved changes in the form survive the trip.
+            Action::make('togglePreview')
+                ->label(fn () => $this->showPreview ? 'Hide preview' : 'Show preview')
+                ->icon(fn () => $this->showPreview ? 'heroicon-o-eye-slash' : 'heroicon-o-eye')
+                ->color('gray')
+                ->action('togglePreview'),
+
             Action::make('view')
-                ->label('View the page')
+                ->label('Open the live page')
                 ->icon('heroicon-o-arrow-top-right-on-square')
-                // The page being edited, not always the home page.
                 ->url(fn () => SiteNavigation::url($this->record->slug), shouldOpenInNewTab: true)
                 ->color('gray'),
         ];
@@ -39,11 +109,16 @@ class EditPage extends EditRecord
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $data['updated_by'] = Auth::id();
-        // Compared against what was stored, because whether a null is noise
-        // depends entirely on whether it was there before.
         $data['content'] = self::prune($data['content'] ?? [], $this->record->getOriginal('content') ?? []);
 
         return $data;
+    }
+
+    protected function afterSave(): void
+    {
+        // The draft has become the page, so the preview should read from the
+        // page again rather than from a copy of it.
+        session()->forget(PagePreviewController::key($this->record->slug));
     }
 
     /**
@@ -56,10 +131,9 @@ class EditPage extends EditRecord
      * this form must never do.
      *
      * A null or an empty list is dropped only where the stored page did not
-     * have one — some pages hold a deliberate null, like a contact card with
-     * no address of its own. Empty strings are always kept: a field an editor
-     * clears comes back as '', and keeping it is what stops the default
-     * quietly reappearing.
+     * have one — some pages hold a deliberate null. Empty strings are always
+     * kept: a field an editor clears comes back as '', and keeping it is what
+     * stops the default quietly reappearing.
      *
      * @param  array<string, mixed>  $content
      * @param  mixed  $original  what was stored at this level

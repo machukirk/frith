@@ -1,0 +1,91 @@
+/*
+ * Styles for the bits of the admin panel that are ours rather than Filament's.
+ *
+ * A plain stylesheet, linked from a render hook, because the panel's own CSS
+ * is precompiled — utility classes written in a Blade file here would simply
+ * not exist. Kept small on purpose: everything else is Filament's.
+ */
+
+.page-editor--split {
+    display: grid;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (min-width: 1280px) {
+    .page-editor--split {
+        /* The form needs room to be usable; the preview needs room to be
+           recognisable. Neither wins outright. */
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+}
+
+.page-editor__preview {
+    position: sticky;
+    top: 5rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgb(228 228 231);
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.06);
+}
+
+.page-editor__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.875rem;
+    background: #fafafa;
+    border-bottom: 1px solid rgb(228 228 231);
+}
+
+.page-editor__label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: rgb(39 75 68);
+}
+
+.page-editor__hint {
+    flex: 1;
+    font-size: 0.75rem;
+    color: rgb(113 113 122);
+}
+
+.page-editor__refresh,
+.page-editor__toggle {
+    min-height: 2rem;
+    padding: 0 0.75rem;
+    background: #fff;
+    border: 1px solid rgb(212 212 216);
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgb(39 75 68);
+    cursor: pointer;
+}
+
+.page-editor__refresh:hover,
+.page-editor__toggle:hover {
+    background: rgb(244 244 245);
+}
+
+.page-editor__refresh:focus-visible,
+.page-editor__toggle:focus-visible {
+    outline: 2px solid rgb(39 75 68);
+    outline-offset: 2px;
+}
+
+.page-editor__frame-wrap {
+    /* Tall enough to show a section rather than a strip of one, and it scrolls
+       inside itself so the form beside it keeps its place. */
+    height: min(78vh, 900px);
+}
+
+.page-editor__frame {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}

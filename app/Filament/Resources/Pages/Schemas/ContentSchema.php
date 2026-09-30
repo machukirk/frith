@@ -43,12 +43,29 @@ class ContentSchema
     /** Tabs that belong at the end whatever order the file puts them in. */
     private const TRAILING = ['meta'];
 
+    /**
+     * Where humanising the key would give something clumsy or unclear.
+     * "primary_cta" becomes "Primary cta", which is neither.
+     */
     private const LABELS = [
         'meta' => 'Search & sharing',
         'cta' => 'Call to action',
         'faq' => 'Questions',
         'head' => 'Top of the page',
         'page_head' => 'Top of the page',
+        'how_it_works' => 'How it works',
+        'primary_cta' => 'Button',
+        'secondary_cta' => 'Link beside the button',
+        'image_alt' => 'Description of the photograph',
+        'standfirst' => 'Line underneath',
+        'eyebrow' => 'Small line above',
+        'doc_meta' => 'Last updated line',
+        'short_version' => 'The short version',
+        'search_placeholder' => 'Search box placeholder',
+        'search_label' => 'Search button',
+        'frith_plus' => 'Frith+',
+        'meet_up_safety' => 'Meet-up safety',
+        'community_guidelines' => 'Community Guidelines',
     ];
 
     /**
@@ -191,16 +208,20 @@ class ContentSchema
     /** One editable value: a line, or a box if it is prose. */
     private static function control(string $path, string $key, mixed $value): TextInput|Textarea
     {
+        // live on blur, not on every keystroke: the preview should follow the
+        // editor rather than race them, and blur is when somebody looks up.
         if (self::isProse($key, $value)) {
             return Textarea::make($path)
                 ->label(self::label($key))
                 ->rows(self::rows($value))
-                ->autosize();
+                ->autosize()
+                ->live(onBlur: true);
         }
 
         return TextInput::make($path)
             ->label(self::label($key))
-            ->maxLength(255);
+            ->maxLength(255)
+            ->live(onBlur: true);
     }
 
     private static function isProse(string $key, mixed $value): bool

@@ -12,6 +12,7 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -55,6 +56,13 @@ class AdminPanelProvider extends PanelProvider
             ->pages([])
             ->widgets([])
             ->databaseNotifications(false)
+            // Our own styles for the page editor's split view. A linked file
+            // rather than utility classes, because the panel's CSS is
+            // precompiled and would not carry them.
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn (): string => '<link rel="stylesheet" href="'.BrandAsset::url('css/admin.css').'">',
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

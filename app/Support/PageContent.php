@@ -21,17 +21,68 @@ class PageContent
     private const CACHE_PREFIX = 'page-content:';
 
     /**
+     * Content to use instead of what is stored, for one request.
+     *
+     * The admin panel's live preview renders the real page from the form's
+     * unsaved state. Overriding here rather than passing content down through
+     * every view means the preview goes through exactly the same Blade and the
+     * same stylesheet as the page itself, so it cannot drift from it.
+     *
+     * @var array<string, array<string, mixed>>
+     */
+    private static array $overrides = [];
+
+    /** @param array<string, mixed> $content */
+    public static function preview(string $slug, array $content): void
+    {
+        self::$overrides[$slug] = $content;
+    }
+
+    /**
+     * Stops previewing.
+     *
+     * The override is static, so without this it would outlive the render and
+     * a later read in the same process would get somebody's draft.
+     */
+    public static function endPreview(?string $slug = null): void
+    {
+        if ($slug === null) {
+            self::$overrides = [];
+
+            return;
+        }
+
+        unset(self::$overrides[$slug]);
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public static function for(string $slug): array
     {
-        return Cache::rememberForever(self::CACHE_PREFIX.$slug, function () use ($slug) {
-            // Slugs are hyphenated because they are URLs; config keys are
-            // snake_case because they are PHP array keys. "how-it-works" reads
-            // from frith-content.how_it_works.
-            $key = str_replace('-', '_', $slug);
+        // A preview never touches the cache, in either direction: it must not
+        // read a stale one and must not leave its unsaved content behind for
+        // the next visitor to the real page.
+        //
+        // It layers over the stored page as well as the defaults, because a
+        // draft is only the fields the form has hydrated so far — everything
+        // the editor has not scrolled to yet still has to render.
+        if (isset(self::$overrides[$slug])) {
+            $stored = rescue(
+                fn () => Page::query()->where('slug', $slug)->value('content'),
+                rescue: null,
+                report: false,
+            );
 
-            $defaults = config("frith-content.{$key}", []);
+            $base = is_array($stored)
+                ? self::merge(self::defaults($slug), $stored)
+                : self::defaults($slug);
+
+            return self::merge($base, self::$overrides[$slug]);
+        }
+
+        return Cache::rememberForever(self::CACHE_PREFIX.$slug, function () use ($slug) {
+            $defaults = self::defaults($slug);
 
             // During `migrate:fresh` and on a brand new install the table may not
             // exist yet. Falling back to config keeps artisan usable.
@@ -43,6 +94,20 @@ class PageContent
 
             return is_array($stored) ? self::merge($defaults, $stored) : $defaults;
         });
+    }
+
+    /**
+     * The shipped copy for a page.
+     *
+     * Slugs are hyphenated because they are URLs; config keys are snake_case
+     * because they are PHP array keys. "how-it-works" reads from
+     * frith-content.how_it_works.
+     *
+     * @return array<string, mixed>
+     */
+    private static function defaults(string $slug): array
+    {
+        return config('frith-content.'.str_replace('-', '_', $slug), []);
     }
 
     /**
