@@ -99,9 +99,10 @@ class MailerLiteSyncTest extends TestCase
         $this->post(route('register.step.store', 'you'), [
             'first_name' => 'Sam',
             'email' => 'sam@example.com',
+            'postcode_outcode' => 'SS9',
         ])->assertSessionHasNoErrors();
 
-        $this->post(route('register.step.store', 'support'), ['support_areas' => ['identity-belonging']]);
+        $this->post(route('register.step.store', 'areas'), ['support_areas' => ['identity-belonging']]);
 
         Http::assertNothingSent();
     }

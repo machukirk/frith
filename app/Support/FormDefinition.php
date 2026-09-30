@@ -31,7 +31,9 @@ class FormDefinition
                 report: false,
             );
 
-            return $stored ? self::fromModel($stored) : self::fromConfig($slug);
+            $floor = self::fromConfig($slug);
+
+            return $stored ? self::layer($floor, self::fromModel($stored)) : $floor;
         });
     }
 
@@ -40,6 +42,92 @@ class FormDefinition
         if ($slug !== null) {
             Cache::forget(self::CACHE_PREFIX.$slug);
         }
+    }
+
+    /**
+     * Database over config, key by key.
+     *
+     * Not a replacement: a deploy that adds a screen, a field or an option has
+     * to work on a site that was seeded before it existed, or the new thing
+     * renders as an empty heading until somebody remembers to re-seed. The
+     * config decides which screens there are; the database decides what they
+     * say.
+     *
+     * @param  array<string, mixed>  $floor
+     * @param  array<string, mixed>  $stored
+     * @return array<string, mixed>
+     */
+    private static function layer(array $floor, array $stored): array
+    {
+        $steps = [];
+
+        // Config order, and config membership: a step that has been taken out
+        // of the flow must not come back just because its old row is still in
+        // the database.
+        foreach ($floor['steps'] as $key => $step) {
+            $saved = $stored['steps'][$key] ?? null;
+
+            $steps[$key] = $saved === null ? $step : [
+                'heading' => $saved['heading'] ?: $step['heading'],
+                'standfirst' => $saved['standfirst'] ?? $step['standfirst'] ?? null,
+                'is_private' => $saved['is_private'],
+                'fields' => self::layerFields($step['fields'] ?? [], $saved['fields']),
+            ];
+        }
+
+        $options = [];
+
+        foreach ($floor['options'] as $group => $fromConfig) {
+            $saved = $stored['options'][$group] ?? [];
+
+            // Stored first, in the order an editor put them in, then anything
+            // the config has gained since.
+            $options[$group] = $saved;
+
+            foreach ($fromConfig as $slug => $option) {
+                if (! isset($options[$group][$slug])) {
+                    $options[$group][$slug] = $option;
+
+                    continue;
+                }
+
+                $options[$group][$slug]['items'] = self::layerItems(
+                    $option['items'] ?? [],
+                    $options[$group][$slug]['items'] ?? [],
+                );
+            }
+        }
+
+        // A group an editor added that the config has never heard of.
+        return ['steps' => $steps, 'options' => $options + $stored['options']];
+    }
+
+    /**
+     * @param  array<string, mixed>  $floor
+     * @param  array<string, mixed>  $saved
+     * @return array<string, mixed>
+     */
+    private static function layerFields(array $floor, array $saved): array
+    {
+        foreach ($floor as $key => $field) {
+            $floor[$key] = [
+                'label' => $saved[$key]['label'] ?? $field['label'] ?? '',
+                'help' => $saved[$key]['help'] ?? $field['help'] ?? null,
+                'placeholder' => $saved[$key]['placeholder'] ?? $field['placeholder'] ?? null,
+            ];
+        }
+
+        return $floor + $saved;
+    }
+
+    /**
+     * @param  array<string, mixed>  $floor
+     * @param  array<string, mixed>  $saved
+     * @return array<string, mixed>
+     */
+    private static function layerItems(array $floor, array $saved): array
+    {
+        return $saved + $floor;
     }
 
     /** @return array<string, mixed> */

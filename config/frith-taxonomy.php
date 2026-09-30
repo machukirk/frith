@@ -151,7 +151,7 @@ return [
     */
     'interests' => [
         'outdoors-nature' => [
-            'label' => 'Outdoors & Nature',
+            'label' => 'Outdoors & nature',
             'description' => 'Parks, walks, gardening, exploring, wildlife',
         ],
         'animals' => [
@@ -159,39 +159,39 @@ return [
             'description' => 'Pets, farms, zoos, animal care',
         ],
         'sport-movement' => [
-            'label' => 'Sport & Movement',
+            'label' => 'Sport & movement',
             'description' => 'Sports, dancing, cycling, climbing, active play',
         ],
         'creative' => [
-            'label' => 'Creative Activities',
+            'label' => 'Creative',
             'description' => 'Art, music, crafts, drama, making things',
         ],
         'games-technology-building' => [
-            'label' => 'Games, Technology & Building',
+            'label' => 'Games & building',
             'description' => 'Gaming, coding, puzzles, board games, construction',
         ],
         'books-reading' => [
-            'label' => 'Books, Reading & Storytelling',
+            'label' => 'Books & stories',
             'description' => 'Reading, stories, imaginative play',
         ],
         'vehicles-collecting' => [
-            'label' => 'Vehicles, Trains & Collecting',
+            'label' => 'Vehicles & collecting',
             'description' => 'Trains, cars, transport, collections, special interests',
         ],
         'water' => [
-            'label' => 'Water Activities',
+            'label' => 'Water',
             'description' => 'Swimming, beaches, paddling, water play',
         ],
         'food-eating-out' => [
-            'label' => 'Food & Eating Out',
+            'label' => 'Food',
             'description' => 'Cooking, baking, trying new foods, cafés, restaurants and family-friendly places',
         ],
         'community' => [
-            'label' => 'Community Activities',
+            'label' => 'Community',
             'description' => 'Local groups, clubs, events and days out',
         ],
         'quiet-sensory' => [
-            'label' => 'Quiet & Sensory-Friendly Activities',
+            'label' => 'Quiet & sensory',
             'description' => 'Calm spaces, sensory play, relaxing activities',
         ],
         'other' => [
@@ -221,27 +221,36 @@ return [
     | "here are families like yours" into an introduction somebody actually
     | wants. All optional, like everything else on that screen.
     */
+    // The order the hi-fi puts them in: what somebody wants from other
+    // families first, then what they can offer, then the practical.
     'hopes' => [
-        'families-who-understand' => 'Families who understand our journey',
-        'parents-to-talk-to' => 'Parents to talk to who understand',
-        'friendships-for-my-child' => 'Friendships for my child',
-        'local-families' => 'Local families to meet',
+        'families-who-understand' => 'Families who understand our experiences',
+        'friendships-for-my-child' => 'Friendships for me and my child',
+        'local-families' => 'Local meet-ups and get-togethers',
+        'similar-experience' => 'Advice from parents with lived experience',
+        'supporting-others' => 'To support other families',
+        'parents-to-talk-to' => 'Someone to talk to who gets it',
+        'practical-advice' => 'Practical help with forms and processes',
+        'something-else' => 'Something else',
+        // Off the form, kept so the answers that point at them still resolve.
         'activity-ideas' => 'Ideas for activities and places to go',
-        'practical-advice' => 'Practical advice from other parents',
-        'similar-experience' => 'Someone who has been through a similar experience',
         'belonging' => 'A sense of belonging and community',
-        'supporting-others' => 'Opportunities to support other families',
     ],
 
     'connection_styles' => [
         'one-to-one' => 'One-to-one chats',
         'small-local-groups' => 'Small local groups',
-        'family-meet-ups' => 'Family meet-ups and activities',
+        'family-meet-ups' => 'Family meet-ups',
         'online' => 'Online conversations',
         'sharing-experiences' => 'Sharing experiences and advice',
         'local-recommendations' => 'Finding local recommendations',
     ],
 
+    /*
+    | No longer asked. The redesigned registration has no screen for it, and
+    | every option is archived — kept here so the answers families already gave
+    | still resolve to a label rather than to a slug.
+    */
     'family_preferences' => [
         'nearby' => 'Families nearby',
         'similar-age' => 'Families with children a similar age',
@@ -255,11 +264,11 @@ return [
     | "select all that apply", because families do not fit one box.
     */
     'family_structures' => [
-        'two-parents' => 'Two parents/carers',
-        'parenting-alone' => 'I am parenting on my own',
-        'blended' => 'Step-family/blended family',
+        'two-parents' => 'Two parents or carers',
+        'parenting-alone' => 'Parenting on my own',
+        'blended' => 'Step or blended family',
         'extended' => 'Extended family plays an important role',
-        'foster-adoptive' => 'Foster/adoptive family',
+        'foster-adoptive' => 'Fostering or adoption',
         'other' => 'Other family structure',
     ],
 ];

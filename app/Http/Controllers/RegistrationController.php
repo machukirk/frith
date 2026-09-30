@@ -14,7 +14,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 /**
- * The Frith Founders registration form.
+ * The Frith Founders registration.
  *
  * Every step is a real POST that saves before it redirects. A visitor who
  * answers the first screen and then has to go and deal with something is
@@ -22,9 +22,9 @@ use Illuminate\View\View;
  * with a submit button at the bottom.
  *
  * It works with no JavaScript at all: each step is its own URL, "add another
- * child" is a submit, and the sliding between steps is a CSS animation on
- * arrival. That matters for an audience the brand guidelines describe as
- * reading on a cracked phone at 11pm.
+ * child" is a submit, and the accordions on step five are <details>. That
+ * matters for an audience the guidelines describe as reading on a cracked
+ * phone at 11pm.
  */
 class RegistrationController extends Controller
 {
@@ -43,6 +43,19 @@ class RegistrationController extends Controller
         return redirect()->route('register.step', RegistrationFlow::STEPS[0]);
     }
 
+    /**
+     * The end of the form. Guarded, because "You are now a First Frith
+     * Family" is not something to tell somebody who is not one.
+     */
+    public function welcome(Request $request): View|RedirectResponse
+    {
+        if ($this->current($request) === null) {
+            return redirect()->route('register.start');
+        }
+
+        return view('register.welcome');
+    }
+
     public function show(Request $request, string $step): View|RedirectResponse
     {
         abort_unless(RegistrationFlow::exists($step), 404);
@@ -59,7 +72,7 @@ class RegistrationController extends Controller
             'step' => $step,
             'stepNumber' => RegistrationFlow::number($step),
             'totalSteps' => RegistrationFlow::total(),
-            'previous' => RegistrationFlow::backFromStep($step, $registration?->orderedSupportAreas() ?? []),
+            'previous' => RegistrationFlow::backFrom($step),
             'children' => $this->childRows($request, $registration),
         ]);
     }
@@ -70,8 +83,27 @@ class RegistrationController extends Controller
 
         // "Add another child" and "Remove" are submits, so the screen works
         // without JavaScript. They re-render rather than moving on.
-        if ($step === 'children' && $request->input('action') !== 'continue') {
+        if ($step === 'family' && $request->input('action') !== 'continue') {
             return $this->adjustChildRows($request);
+        }
+
+        // "Skip this section" on the areas screen. It clears the areas and
+        // their detail statements and goes straight past the screen that asks
+        // about them — there is nothing there to ask once nothing is chosen.
+        if ($step === 'areas' && $request->input('action') === 'skip') {
+            $registration = $this->current($request);
+
+            if ($registration === null) {
+                return redirect()->route('register.step', RegistrationFlow::STEPS[0]);
+            }
+
+            if (! $this->isShadow($request)) {
+                $registration->forceFill(['support_areas' => []])->save();
+                $registration->experiences()->delete();
+                $registration->recordProgress(RegistrationFlow::number('experiences') + 1);
+            }
+
+            return redirect()->route('register.step', 'interests');
         }
 
         $data = $this->validateStep($request, $step);
@@ -85,12 +117,6 @@ class RegistrationController extends Controller
             $this->applyStep($request, $registration, $step, $data);
         }
 
-        // The detail questions deepen this answer rather than following it, so
-        // they come next and stay numbered as step five.
-        if ($step === RegistrationFlow::DETAIL_STEP) {
-            return redirect()->route('register.experiences');
-        }
-
         $next = RegistrationFlow::next($step);
 
         if ($next !== null) {
@@ -102,7 +128,7 @@ class RegistrationController extends Controller
             $registration->forceFill(['completed_at' => $registration->completed_at ?? now()])->save();
         }
 
-        return redirect()->route('register.done');
+        return redirect()->route('register.welcome');
     }
 
     /**
@@ -128,7 +154,7 @@ class RegistrationController extends Controller
 
         $registration = $existing ?? new Registration([
             'email' => $email,
-            'source' => 'coming-soon',
+            'source' => 'website',
             'consent_version' => config('frith.consent.version'),
             'consent_text' => config('frith.consent.text'),
             'consented_at' => now(),
@@ -136,7 +162,10 @@ class RegistrationController extends Controller
             'consent_user_agent' => substr((string) $request->userAgent(), 0, 1000),
         ]);
 
-        $registration->fill(['first_name' => $data['first_name']]);
+        $registration->fill([
+            'first_name' => $data['first_name'],
+            'postcode_outcode' => Registration::normaliseOutcode($data['postcode_outcode']),
+        ]);
 
         $registration->save();
 
@@ -194,30 +223,23 @@ class RegistrationController extends Controller
         }
 
         match ($step) {
-            'location' => $registration->forceFill([
-                'postcode_outcode' => Registration::normaliseOutcode($data['postcode_outcode']),
+            'family' => $this->saveFamily($registration, $data),
+
+            'hopes' => $registration->forceFill([
+                'hopes' => $data['hopes'] ?? [],
             ])->save(),
 
-            'family' => $registration->forceFill([
-                'family_structures' => $data['family_structures'] ?? [],
-            ])->save(),
-
-            'children' => $this->saveChildren($registration, $data['children'] ?? []),
-
-            'support' => $registration->forceFill([
+            'areas' => $registration->forceFill([
                 'support_areas' => $data['support_areas'] ?? [],
             ])->save(),
+
+            'experiences' => $this->saveExperiences($registration, $data['items'] ?? []),
 
             'interests' => $registration->forceFill([
                 'interests' => $this->interestSelections($data),
                 'interests_other' => $data['interests_other'] ?? null,
                 'activity_supports' => $data['activity_supports'] ?? [],
-            ])->save(),
-
-            'finding' => $registration->forceFill([
-                'hopes' => $data['hopes'] ?? [],
                 'connection_styles' => $data['connection_styles'] ?? [],
-                'family_preferences' => $data['family_preferences'] ?? [],
             ])->save(),
 
             default => null,
@@ -232,7 +254,7 @@ class RegistrationController extends Controller
      * The box is always on screen — the form works with no JavaScript, so it
      * cannot be revealed by a checkbox — and somebody who fills it in has
      * plainly told us something. Their answer should not turn on whether they
-     * also spotted the tickbox above it.
+     * also spotted the pill above it.
      *
      * @param  array<string, mixed>  $data
      * @return array<int, string>
@@ -251,6 +273,16 @@ class RegistrationController extends Controller
         return $chosen;
     }
 
+    /** @param array<string, mixed> $data */
+    private function saveFamily(Registration $registration, array $data): void
+    {
+        $registration->forceFill([
+            'family_structures' => $data['family_structures'] ?? [],
+        ])->save();
+
+        $this->saveChildren($registration, $data['children'] ?? []);
+    }
+
     /** @param array<int, array{birth_month: string, birth_year: string}> $children */
     private function saveChildren(Registration $registration, array $children): void
     {
@@ -260,22 +292,64 @@ class RegistrationController extends Controller
         $registration->children()->delete();
 
         foreach (array_values($children) as $position => $child) {
+            if (blank($child['birth_month'] ?? null) || blank($child['birth_year'] ?? null)) {
+                continue;
+            }
+
             $registration->children()->create([
                 'birth_month' => (int) $child['birth_month'],
                 'birth_year' => (int) $child['birth_year'],
                 'position' => $position,
             ]);
         }
+
+        $registration->load('children');
+    }
+
+    /**
+     * The detail statements, all of them, from one screen.
+     *
+     * Replaced wholesale, and filtered rather than validated: the statements
+     * arrive keyed by area, which is not a shape a validation rule expresses
+     * well, and an unknown pair should be dropped rather than throw the whole
+     * screen back at somebody. Anything not in the taxonomy, and anything
+     * under an area they did not choose, is not theirs to answer.
+     *
+     * @param  array<string, array<int, string>>  $items
+     */
+    private function saveExperiences(Registration $registration, array $items): void
+    {
+        $chosenAreas = $registration->orderedSupportAreas();
+
+        $registration->experiences()->delete();
+
+        foreach ($items as $category => $statements) {
+            if (! in_array($category, $chosenAreas, true)) {
+                continue;
+            }
+
+            $allowed = Taxonomy::itemSlugs($category);
+
+            foreach (array_unique((array) $statements) as $item) {
+                if (! is_string($item) || ! in_array($item, $allowed, true)) {
+                    continue;
+                }
+
+                $registration->experiences()->create(['category' => $category, 'item' => $item]);
+            }
+        }
+
+        $registration->load('experiences');
     }
 
     /** @return array<string, mixed> */
     private function validateStep(Request $request, string $step): array
     {
-        return Validator::make($request->all(), ...$this->rulesFor($step))->validate();
+        return Validator::make($request->all(), ...$this->rulesFor($request, $step))->validate();
     }
 
     /** @return array{0: array<string, mixed>, 1: array<string, string>} */
-    private function rulesFor(string $step): array
+    private function rulesFor(Request $request, string $step): array
     {
         $emailFormat = config('frith.registration.validate_email_dns') ? 'email:rfc,dns' : 'email:rfc';
 
@@ -283,18 +357,14 @@ class RegistrationController extends Controller
             'you' => [[
                 'first_name' => ['required', 'string', 'max:80'],
                 'email' => ['required', 'string', $emailFormat, 'max:254'],
-            ], [
-                'first_name.required' => 'We need something to call you. A first name or a nickname is fine.',
-                'email.required' => 'We need an email address so we can tell you when Frith opens.',
-                'email.email' => 'That email does not look right. It should look like name@example.com.',
-            ]],
-
-            'location' => [[
                 // Outcode only: the first half of a UK postcode. Between one
                 // and two letters, a digit, then optionally another digit or
                 // letter — SS9, M1, EC1A, W1A.
                 'postcode_outcode' => ['required', 'string', 'regex:/^[A-Za-z]{1,2}\d[A-Za-z\d]?$/'],
             ], [
+                'first_name.required' => 'We need something to call you. A first name or a nickname is fine.',
+                'email.required' => 'We need an email address so we can tell you when Frith opens.',
+                'email.email' => 'That email does not look right. It should look like name@example.com.',
                 'postcode_outcode.required' => 'We need the first part of your postcode to find families near you.',
                 'postcode_outcode.regex' => 'That does not look like the first part of a postcode. It should look like SS9.',
             ]],
@@ -302,47 +372,41 @@ class RegistrationController extends Controller
             'family' => [[
                 'family_structures' => ['nullable', 'array'],
                 'family_structures.*' => [Rule::in(Taxonomy::familyStructureSlugs())],
-            ], []],
-
-            'children' => [[
                 'children' => ['nullable', 'array', 'max:12'],
-                'children.*.birth_month' => ['required', 'integer', 'between:1,12'],
-                'children.*.birth_year' => ['required', 'integer', 'between:'.(now()->year - 25).','.now()->year],
+                'children.*.birth_month' => ['nullable', 'integer', 'between:1,12'],
+                'children.*.birth_year' => ['nullable', 'integer', 'between:'.(now()->year - 25).','.now()->year],
             ], [
-                'children.*.birth_month.required' => 'Please choose a month for each child, or remove the row.',
-                'children.*.birth_year.required' => 'Please choose a year for each child, or remove the row.',
                 'children.*.birth_year.between' => 'Please check the year of birth.',
             ]],
 
-            'support' => [[
+            'hopes' => [[
+                'hopes' => ['nullable', 'array'],
+                'hopes.*' => [Rule::in(Taxonomy::hopeSlugs())],
+            ], []],
+
+            'areas' => [[
                 'support_areas' => ['nullable', 'array'],
                 'support_areas.*' => [Rule::in(Taxonomy::categorySlugs())],
             ], []],
 
-            // Every answer on this screen is optional, so there is nothing to
-            // require and nothing to complain about. The length cap on the
-            // free text is generous but finite: it is a sentence or two about
-            // what a family enjoys, not somewhere to paste an EHCP.
+            // One accordion per area they chose, so the statements arrive
+            // keyed by area. Only areas they actually chose are accepted.
+            'experiences' => [[
+                'items' => ['nullable', 'array'],
+                'items.*' => ['array'],
+            ], []],
+
             'interests' => [[
                 'interests' => ['nullable', 'array'],
                 'interests.*' => [Rule::in(Taxonomy::interestSlugs())],
                 'interests_other' => ['nullable', 'string', 'max:1000'],
                 'activity_supports' => ['nullable', 'array'],
                 'activity_supports.*' => [Rule::in(Taxonomy::activitySupportSlugs())],
+                'connection_styles' => ['nullable', 'array'],
+                'connection_styles.*' => [Rule::in(Taxonomy::connectionStyleSlugs())],
             ], [
                 'interests_other.max' => 'That is a little long for this box — could you shorten it a bit?',
             ]],
-
-            // The last screen, and optional the whole way down. Three
-            // questions, nothing required, nothing to complain about.
-            'finding' => [[
-                'hopes' => ['nullable', 'array'],
-                'hopes.*' => [Rule::in(Taxonomy::hopeSlugs())],
-                'connection_styles' => ['nullable', 'array'],
-                'connection_styles.*' => [Rule::in(Taxonomy::connectionStyleSlugs())],
-                'family_preferences' => ['nullable', 'array'],
-                'family_preferences.*' => [Rule::in(Taxonomy::familyPreferenceSlugs())],
-            ], []],
 
             default => [[], []],
         };
@@ -366,8 +430,9 @@ class RegistrationController extends Controller
         }
 
         $request->session()->put('registration.child_rows', $rows);
+        $request->session()->flash('registration.family_structures', $request->input('family_structures', []));
 
-        return redirect()->route('register.step', 'children');
+        return redirect()->route('register.step', 'family');
     }
 
     /**
@@ -395,7 +460,7 @@ class RegistrationController extends Controller
     {
         $id = $request->session()->get(self::SESSION_ID);
 
-        return $id ? Registration::query()->with('children')->find($id) : null;
+        return $id ? Registration::query()->with(['children', 'experiences'])->find($id) : null;
     }
 
     private function isShadow(Request $request): bool

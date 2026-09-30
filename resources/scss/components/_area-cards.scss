@@ -1,0 +1,81 @@
+@use '../abstracts' as *;
+
+// The eight areas of family life: a tick, a name, and the line that says what
+// it covers. Two to a row once there is room.
+.area-cards {
+  display: grid;
+  gap: $space-3;
+  padding: 0;
+  margin: 0;
+  border: 0;
+
+  @include from(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+    gap: $space-3;
+    align-items: start;
+    min-height: $target-min;
+    padding: $space-4;
+    background: $bg-surface;
+    border: 1.5px solid $linen-300;
+    border-radius: $radius-lg;
+    cursor: pointer;
+    transition: border-color 150ms ease;
+
+    input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    &:hover { border-color: $euc-300; }
+
+    &:has(input:checked) { border-color: $action; }
+
+    &:has(input:focus-visible) {
+      outline: 3px solid $action;
+      outline-offset: 2px;
+    }
+  }
+
+  &__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+    background: $bg-surface;
+    border: 1.5px solid $linen-300;
+    border-radius: $radius-sm;
+    color: transparent;
+    font-size: 11px;
+    line-height: 1;
+
+    &::after { content: '\2713'; }
+  }
+
+  &__item:has(input:checked) &__mark {
+    background: $action;
+    border-color: $action;
+    color: $linen-050;
+  }
+
+  &__title {
+    display: block;
+    color: $text-heading;
+    @include type((14px, 14.5px), 1.35, 600);
+  }
+
+  &__detail {
+    display: block;
+    margin-top: 2px;
+    color: $text-body;
+    @include type((12.5px, 13px), 1.5);
+  }
+}

@@ -24,6 +24,7 @@ class FounderEmailTest extends TestCase
         $this->post(route('register.step.store', 'you'), [
             'first_name' => 'Sam',
             'email' => $email,
+            'postcode_outcode' => 'SS9',
         ]);
 
         return Registration::query()->where('email', $email)->sole();

@@ -112,20 +112,17 @@ class AdminPanelTest extends TestCase
     #[Test]
     public function a_screen_that_is_only_a_list_of_choices_has_no_empty_fields_panel(): void
     {
-        // Who is in your family and which areas of family life are nothing but
-        // their options, which live on the Options tab. An empty "Fields on
-        // this screen" panel only sends somebody looking for something that
-        // was never going to be in it.
+        // Which areas of family life is nothing but its options, which live on
+        // the Options tab. An empty "Fields on this screen" panel only sends
+        // somebody looking for something that was never going to be in it.
         $this->seed(FormSeeder::class);
         $form = Form::query()->where('slug', Taxonomy::FORM)->sole();
 
-        foreach (['family', 'support'] as $key) {
-            $this->assertSame(
-                0,
-                $form->steps()->where('key', $key)->sole()->fields()->count(),
-                "the {$key} screen should have no fields of its own",
-            );
-        }
+        $this->assertSame(
+            0,
+            $form->steps()->where('key', 'areas')->sole()->fields()->count(),
+            'the areas screen should have no fields of its own',
+        );
 
         // The screens that do have fields still show them.
         $this->assertGreaterThan(0, $form->steps()->where('key', 'you')->sole()->fields()->count());
@@ -183,7 +180,7 @@ class AdminPanelTest extends TestCase
 
         $this->assertTrue($archived->refresh()->isArchived());
         $this->assertArrayNotHasKey('water', Taxonomy::interests(), 'it should stop being offered');
-        $this->assertSame('Water Activities', Taxonomy::interestLabel('water'), 'and still resolve for anybody who chose it');
+        $this->assertSame('Water', Taxonomy::interestLabel('water'), 'and still resolve for anybody who chose it');
     }
 
     #[Test]
@@ -286,8 +283,8 @@ class AdminPanelTest extends TestCase
         $this->assertStringContainsString('A sense of belonging and community', $html);
         $this->assertStringContainsString('One-to-one chats', $html);
         $this->assertStringContainsString('Families with children a similar age', $html);
-        $this->assertStringContainsString('Games, Technology &amp; Building', $html);
-        $this->assertStringContainsString('Water Activities', $html);
+        $this->assertStringContainsString('Games &amp; building', $html);
+        $this->assertStringContainsString('Water', $html);
         $this->assertStringContainsString('Steam trains, mostly.', $html);
         $this->assertStringContainsString('Smaller groups', $html);
         $this->assertStringContainsString('Clear routines', $html);
@@ -330,6 +327,7 @@ class AdminPanelTest extends TestCase
             'interests' => ['quiet-sensory', 'animals'],
             'interests_other' => 'Steam trains',
             'activity_supports' => ['smaller-groups'],
+            'connection_styles' => ['one-to-one'],
             'hopes' => ['practical-advice'],
             'family_preferences' => ['open-to-any'],
         ]);
@@ -341,15 +339,16 @@ class AdminPanelTest extends TestCase
 
         $csv = $this->captureExport();
 
-        $this->assertStringContainsString('Quiet & Sensory-Friendly Activities', $csv);
+        $this->assertStringContainsString('Quiet & sensory', $csv);
         $this->assertStringContainsString('Smaller groups', $csv);
-        $this->assertStringContainsString('Practical advice from other parents', $csv);
+        $this->assertStringContainsString('Practical help with forms and processes', $csv);
+        $this->assertStringContainsString('One-to-one chats', $csv);
         $this->assertStringContainsString('I’m open to meeting any family who understands', $csv);
         $this->assertStringContainsString('Steam trains', $csv);
         $this->assertStringNotContainsString('quiet-sensory', $csv);
 
         // Taxonomy order, not the order they happened to be submitted in.
-        $this->assertStringContainsString('Animals; Quiet & Sensory-Friendly Activities', $csv);
+        $this->assertStringContainsString('Animals; Quiet & sensory', $csv);
     }
 
     #[Test]

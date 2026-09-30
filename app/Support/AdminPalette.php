@@ -13,7 +13,7 @@ namespace App\Support;
  *
  * Only the values marked below come from Brand Guidelines §03. The steps
  * between them are interpolated for this panel and are not brand tokens — the
- * public site uses the real ramps in resources/css/frith.css.
+ * public site uses the real ramps in resources/scss/abstracts/_tokens.scss.
  */
 class AdminPalette
 {

@@ -1,0 +1,159 @@
+@use '../abstracts' as *;
+
+// The frame every registration screen sits in. One question per screen, a
+// progress bar that counts up rather than down, and a back link that never
+// loses what was typed — the answers are saved server-side by the time you
+// can press it.
+.wizard {
+  @include container(720px);
+  padding-block: $space-8 $space-16;
+
+  @include from(md) { padding-block: $space-12 $space-20; }
+
+  &__count {
+    margin-bottom: $space-2;
+    color: $linen-700;
+    @include type($type-fine, 1.3);
+  }
+
+  &__track {
+    height: 4px;
+    margin-bottom: $space-8;
+    overflow: hidden;
+    background: $linen-200;
+    border-radius: $radius-pill;
+  }
+
+  &__bar {
+    display: block;
+    height: 100%;
+    background: $action;
+    border-radius: $radius-pill;
+    transition: width 250ms ease;
+  }
+
+  &__heading {
+    margin-bottom: $space-3;
+    @include type((26px, 34px), 1.15);
+  }
+
+  &__standfirst {
+    margin-bottom: $space-8;
+    color: $text-body;
+    @include type((15px, 16px), 1.6);
+  }
+
+  &__form { display: grid; gap: $space-8; }
+
+  &__group { display: grid; gap: $space-3; }
+
+  &__label {
+    color: $text-heading;
+    @include type((14.5px, 15px), 1.3, 600);
+  }
+
+  &__hint {
+    color: $linen-700;
+    @include type((13px, 13.5px), 1.55);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-3;
+    align-items: center;
+
+    &--spaced { margin-top: $space-6; }
+  }
+
+  // "Skip this section", beside Continue. A submit styled as a link: it is an
+  // action with a consequence, so it is a button, but it must not compete
+  // with the one most people want.
+  &__skip {
+    @include tap-target(44px);
+    padding: 0;
+    color: $action;
+    background: none;
+    border: 0;
+    @include type((14.5px, 14.5px), 1.3, 500);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    @include focus-ring;
+
+    &:hover { text-decoration-thickness: 2px; }
+  }
+
+  &__back {
+    margin-top: $space-6;
+
+    a {
+      @include tap-target(40px);
+      color: $text-body;
+      @include type((14px, 14px), 1.3);
+      @include focus-ring;
+
+      &:hover { color: $action; }
+    }
+  }
+
+  // The screen at the end. Not a step, so it has no counter — a tick, what
+  // happens next, and one way onward.
+  &__tick {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: $space-5;
+    color: $euc-700;
+    background: $euc-100;
+    border-radius: $radius-pill;
+    @include type((22px, 22px), 1);
+  }
+
+  // "Frith Founder #47" — the one place a number is a nice thing to be given.
+  &__badge {
+    display: inline-flex;
+    gap: $space-2;
+    align-items: center;
+    padding: $space-2 $space-4;
+    margin-bottom: $space-4;
+    color: $euc-700;
+    background: $euc-050;
+    border-radius: $radius-pill;
+    @include type((13px, 13.5px), 1.2, 600);
+  }
+
+  // What is waiting in the village, listed rather than offered: these are not
+  // controls, so they carry no tickbox to press.
+  &__journeys {
+    display: grid;
+    gap: $space-2;
+    padding: 0;
+    margin-top: $space-4;
+    list-style: none;
+  }
+
+  &__journey {
+    padding: $space-3;
+    background: $bg-surface;
+    border: 1px solid $linen-300;
+    border-radius: $radius-md;
+    color: $ink-900;
+    @include type((14px, 14px), 1.4);
+  }
+
+  &__panel-link { margin-top: $space-3; }
+
+  &__footnote { margin-top: $space-3; }
+
+  // "Only ever used to match you" — said where the worry is, not in a policy
+  // page nobody opens.
+  &__private {
+    display: flex;
+    gap: $space-2;
+    align-items: baseline;
+    color: $euc-600;
+    @include type($type-fine, 1.5);
+  }
+}

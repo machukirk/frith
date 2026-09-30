@@ -1,0 +1,90 @@
+@use '../abstracts' as *;
+
+// One accordion per area somebody chose. This used to be a screen each — up
+// to eight of them, with the step counter frozen so the form did not appear
+// to grow the more they told us. One screen is the same information without
+// the sleight of hand.
+.experience-groups {
+  display: grid;
+  gap: $space-3;
+
+  &__item {
+    overflow: hidden;
+    background: $bg-surface;
+    border: 1px solid $linen-300;
+    border-radius: $radius-lg;
+  }
+
+  &__summary {
+    @include tap-target(56px);
+    // tap-target is inline-flex, which would shrink the row to its text and
+    // leave the mark beside the label instead of out at the edge.
+    display: flex;
+    justify-content: space-between;
+    gap: $space-4;
+    padding-inline: $space-4;
+    color: $text-heading;
+    @include type((14.5px, 15px), 1.4, 600);
+    cursor: pointer;
+    list-style: none;
+    @include focus-ring;
+
+    &::-webkit-details-marker { display: none; }
+  }
+
+  &__mark {
+    flex: none;
+    color: $action;
+    font-size: 16px;
+    line-height: 1;
+
+    &::after { content: '\FF0B'; }
+  }
+
+  &__item[open] &__mark::after { content: '\2212'; }
+
+  &__body {
+    padding: 0 $space-4 $space-4;
+    border-top: 1px solid $linen-200;
+  }
+
+  &__note {
+    padding-block: $space-3;
+    color: $text-body;
+    @include type((12.5px, 13px), 1.55);
+  }
+
+  // The statements past the first four. Eight tickboxes at once reads as a
+  // form; four reads as a question, and the rest are one press away. A nested
+  // <details>, so it still works with no JavaScript, and it opens itself when
+  // something inside it is already ticked.
+  &__more {
+    margin-top: $space-2;
+
+    &-summary {
+      @include tap-target(40px);
+      // Lines up under the statement labels rather than under their boxes.
+      padding-left: calc(20px + #{$space-3});
+      color: $linen-700;
+      @include type((13px, 13px), 1.4);
+      cursor: pointer;
+      list-style: none;
+      @include focus-ring;
+
+      &::-webkit-details-marker { display: none; }
+
+      &:hover { color: $action; }
+    }
+
+    &[open] &-summary { margin-bottom: $space-1; }
+  }
+
+  &__empty {
+    padding: $space-6;
+    background: $bg-surface;
+    border: 1px solid $linen-300;
+    border-radius: $radius-lg;
+    color: $text-body;
+    @include type((14px, 15px), 1.6);
+  }
+}

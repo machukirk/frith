@@ -17,6 +17,7 @@
 @use 'layout/site-footer';
 @use 'layout/policy';
 @use 'layout/split';
+@use 'layout/wizard';
 
 @use 'components/button';
 @use 'components/hero';
@@ -39,3 +40,8 @@
 @use 'components/field';
 @use 'components/data-table';
 @use 'components/auth';
+@use 'components/pills';
+@use 'components/check-list';
+@use 'components/area-cards';
+@use 'components/child-rows';
+@use 'components/experience-groups';

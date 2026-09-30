@@ -1,35 +1,77 @@
+@php
+    $c = \App\Support\StepContent::for('experiences');
+    $areas = $registration?->orderedSupportAreas() ?? [];
+    $chosen = old('items', $registration?->experiencesByCategory()->map->pluck('item')->map->all()->all() ?? []);
+
+    // How many statements an area shows before the rest go behind "N more".
+    // Eight tickboxes at once reads as a form; four reads as a question.
+    $shown = 4;
+@endphp
+
 <x-register.shell
-    :heading="$meta['label']"
-    :standfirst="$meta['description']"
-    :private="true"
-    :title="$meta['label'].' — Frith'"
+    :heading="$c->heading()"
+    :standfirst="$c->standfirst()"
+    :private="$c->isPrivate()"
     :step="$stepNumber" :total="$totalSteps" :previous="$previous"
 >
-    {{-- The progress bar above stays on step five for all of these. This is
-         the line that says where you are within them. --}}
-    <p class="wizard__count wizard__count--sub">Area {{ $position }} of {{ $total }}</p>
-
-    <form method="POST" action="{{ route('register.experiences.store', $category) }}">
+    <form class="wizard__form" method="POST" action="{{ route('register.step.store', $step) }}">
         @csrf
+        <x-honeypot />
 
-        <fieldset class="choices choices--compact">
-            <legend class="visually-hidden">{{ $meta['label'] }} — choose anything that sounds like your family.</legend>
+        @if ($areas === [])
+            <p class="experience-groups__empty">{{ $c->help('items') }}</p>
+        @else
+            {{-- An accordion per area they chose. Native <details>, so it
+                 opens with no JavaScript and a screen reader already knows
+                 what a disclosure is. The first one starts open so the screen
+                 does not look empty. --}}
+            <div class="experience-groups">
+                @foreach ($areas as $i => $area)
+                    @php
+                        $meta = \App\Support\Taxonomy::category($area);
+                        $items = \App\Support\Taxonomy::items($area);
+                        $picked = $chosen[$area] ?? [];
+                        $first = array_slice($items, 0, $shown, true);
+                        $rest = array_slice($items, $shown, null, true);
+                        // Anything already ticked has to be on screen, or a
+                        // revisit looks like it lost their answer.
+                        $restIsChosen = array_intersect(array_keys($rest), (array) $picked) !== [];
+                    @endphp
 
-            @foreach ($meta['items'] as $slug => $label)
-                <x-register.choice
-                    name="items[]"
-                    :value="$slug"
-                    :label="$label"
-                    :checked="in_array($slug, $selected, true)"
-                />
-            @endforeach
-        </fieldset>
+                    <details class="experience-groups__item" @if ($i === 0) open @endif>
+                        <summary class="experience-groups__summary">
+                            {{ $meta['label'] }}
+                            <span class="experience-groups__mark" aria-hidden="true"></span>
+                        </summary>
+
+                        <div class="experience-groups__body">
+                            <p class="experience-groups__note">{{ $c->label('privacy_note') }}</p>
+
+                            <x-register.check-list :name="'items['.$area.']'"
+                                                   :options="$first"
+                                                   :chosen="$picked"
+                                                   :legend="$meta['label']" />
+
+                            @if ($rest !== [])
+                                <details class="experience-groups__more" @if ($restIsChosen) open @endif>
+                                    <summary class="experience-groups__more-summary">
+                                        {{ count($rest) }} more
+                                    </summary>
+
+                                    <x-register.check-list :name="'items['.$area.']'"
+                                                           :options="$rest"
+                                                           :chosen="$picked"
+                                                           :legend="'More about '.$meta['label']" />
+                                </details>
+                            @endif
+                        </div>
+                    </details>
+                @endforeach
+            </div>
+        @endif
 
         <div class="wizard__actions">
-            <button class="btn" type="submit" name="action" value="continue">Continue</button>
-            {{-- The source spreadsheet asks for this explicitly, to limit
-                 form-filling fatigue. Full contrast, not greyed out. --}}
-            <button class="btn btn--quiet" type="submit" name="action" value="skip-all">Skip the rest</button>
+            <button class="button button--primary" type="submit">Continue</button>
         </div>
     </form>
 </x-register.shell>

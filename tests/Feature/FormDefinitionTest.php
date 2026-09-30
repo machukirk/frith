@@ -66,6 +66,30 @@ class FormDefinitionTest extends TestCase
     }
 
     #[Test]
+    public function every_screen_in_the_flow_has_words_to_show(): void
+    {
+        // A heading or a standfirst lost in an edit renders as a blank space
+        // rather than an error, so nothing else catches it.
+        foreach (RegistrationFlow::STEPS as $key) {
+            $step = config("frith-forms.".Taxonomy::FORM.".steps.{$key}");
+
+            $this->assertIsArray($step, "{$key} has no content at all");
+            $this->assertNotEmpty($step['heading'] ?? null, "{$key} has no heading");
+            $this->assertNotEmpty($step['standfirst'] ?? null, "{$key} has no standfirst");
+        }
+
+        // And on screen, which is what actually matters.
+        $this->startRegistration();
+
+        foreach (RegistrationFlow::STEPS as $key) {
+            $this->get(route('register.step', $key))
+                ->assertOk()
+                ->assertSee(config("frith-forms.".Taxonomy::FORM.".steps.{$key}.heading"))
+                ->assertSee(config("frith-forms.".Taxonomy::FORM.".steps.{$key}.standfirst"));
+        }
+    }
+
+    #[Test]
     public function seeding_again_never_overwrites_an_editors_wording(): void
     {
         $form = $this->seedForm();
@@ -82,7 +106,7 @@ class FormDefinitionTest extends TestCase
     private function startRegistration(): void
     {
         $this->post(route('register.step.store', 'you'), [
-            'first_name' => 'Sam', 'email' => 'sam@example.com',
+            'first_name' => 'Sam', 'email' => 'sam@example.com', 'postcode_outcode' => 'SS9',
         ]);
     }
 
@@ -92,17 +116,17 @@ class FormDefinitionTest extends TestCase
         $form = $this->seedForm();
         $this->startRegistration();
 
-        $this->get(route('register.step', 'location'))->assertSee('Where are you based?');
+        $this->get(route('register.step', 'family'))->assertSee('Who is part of your family?');
 
-        $form->steps()->where('key', 'location')->sole()->update([
-            'heading' => 'Which part of the country are you in?',
-            'standfirst' => 'Just the first few characters.',
+        $form->steps()->where('key', 'family')->sole()->update([
+            'heading' => 'Who lives with you?',
+            'standfirst' => 'Whatever feels relevant.',
         ]);
 
-        $this->get(route('register.step', 'location'))
-            ->assertSee('Which part of the country are you in?')
-            ->assertSee('Just the first few characters.')
-            ->assertDontSee('Where are you based?');
+        $this->get(route('register.step', 'family'))
+            ->assertSee('Who lives with you?')
+            ->assertSee('Whatever feels relevant.')
+            ->assertDontSee('Who is part of your family?');
     }
 
     #[Test]
@@ -111,11 +135,11 @@ class FormDefinitionTest extends TestCase
         $form = $this->seedForm();
         $this->startRegistration();
 
-        $form->steps()->where('key', 'location')->sole()
+        $form->steps()->where('key', 'you')->sole()
             ->fields()->where('key', 'postcode_outcode')->sole()
             ->update(['label' => 'Your postcode area', 'help' => 'We never ask for the rest.']);
 
-        $this->get(route('register.step', 'location'))
+        $this->get(route('register.step', 'you'))
             ->assertSee('Your postcode area')
             ->assertSee('We never ask for the rest.');
     }
@@ -127,9 +151,9 @@ class FormDefinitionTest extends TestCase
         $form = $this->seedForm();
 
         $this->startRegistration();
-        $this->post(route('register.step.store', 'support'), ['support_areas' => ['identity-belonging']]);
-        $this->post(route('register.experiences.store', 'identity-belonging'), [
-            'action' => 'continue', 'items' => ['masking'],
+        $this->post(route('register.step.store', 'areas'), ['support_areas' => ['identity-belonging']]);
+        $this->post(route('register.step.store', 'experiences'), [
+            'items' => ['identity-belonging' => ['masking']],
         ]);
 
         $form->options()->where('slug', 'masking')->sole()
@@ -148,12 +172,12 @@ class FormDefinitionTest extends TestCase
 
         $this->startRegistration();
 
-        $this->get(route('register.step', 'support'))->assertSee('Identity &amp; Belonging', false);
+        $this->get(route('register.step', 'areas'))->assertSee('Identity &amp; Belonging', false);
 
         $form->options()->where('slug', 'identity-belonging')->whereNull('parent_id')->sole()
             ->update(['archived_at' => now()]);
 
-        $this->get(route('register.step', 'support'))->assertDontSee('Identity &amp; Belonging', false);
+        $this->get(route('register.step', 'areas'))->assertDontSee('Identity &amp; Belonging', false);
     }
 
     #[Test]
@@ -168,7 +192,7 @@ class FormDefinitionTest extends TestCase
         $form->options()->where('slug', 'identity-belonging')->whereNull('parent_id')->sole()
             ->update(['archived_at' => now()]);
 
-        $this->post(route('register.step.store', 'support'), ['support_areas' => ['identity-belonging']])
+        $this->post(route('register.step.store', 'areas'), ['support_areas' => ['identity-belonging']])
             ->assertSessionHasErrors('support_areas.0');
     }
 
@@ -180,9 +204,9 @@ class FormDefinitionTest extends TestCase
         $form = $this->seedForm();
 
         $this->startRegistration();
-        $this->post(route('register.step.store', 'support'), ['support_areas' => ['identity-belonging']]);
-        $this->post(route('register.experiences.store', 'identity-belonging'), [
-            'action' => 'continue', 'items' => ['masking'],
+        $this->post(route('register.step.store', 'areas'), ['support_areas' => ['identity-belonging']]);
+        $this->post(route('register.step.store', 'experiences'), [
+            'items' => ['identity-belonging' => ['masking']],
         ]);
 
         $form->options()->where('slug', 'masking')->sole()->update(['archived_at' => now()]);
@@ -203,9 +227,9 @@ class FormDefinitionTest extends TestCase
         $form = $this->seedForm();
 
         $this->startRegistration();
-        $this->post(route('register.step.store', 'support'), ['support_areas' => ['identity-belonging']]);
-        $this->post(route('register.experiences.store', 'identity-belonging'), [
-            'action' => 'continue', 'items' => ['masking'],
+        $this->post(route('register.step.store', 'areas'), ['support_areas' => ['identity-belonging']]);
+        $this->post(route('register.step.store', 'experiences'), [
+            'items' => ['identity-belonging' => ['masking']],
         ]);
 
         $category = $form->options()->where('slug', 'identity-belonging')->whereNull('parent_id')->sole();
@@ -234,16 +258,109 @@ class FormDefinitionTest extends TestCase
         ]);
 
         $this->startRegistration();
-        $this->post(route('register.step.store', 'support'), ['support_areas' => ['identity-belonging']]);
+        $this->post(route('register.step.store', 'areas'), ['support_areas' => ['identity-belonging']]);
 
-        $this->get(route('register.experiences.show', 'identity-belonging'))
+        $this->get(route('register.step', 'experiences'))
             ->assertSee('We want our child to feel proud of who they are');
 
-        $this->post(route('register.experiences.store', 'identity-belonging'), [
-            'action' => 'continue', 'items' => ['proud-of-who-they-are'],
+        $this->post(route('register.step.store', 'experiences'), [
+            'items' => ['identity-belonging' => ['proud-of-who-they-are']],
         ])->assertSessionHasNoErrors();
 
         $this->assertSame('proud-of-who-they-are', Registration::sole()->experiences->sole()->item);
+    }
+
+    #[Test]
+    public function a_screen_added_after_seeding_still_renders_its_words(): void
+    {
+        // The bug this guards: a site seeded before a screen existed used to
+        // render that screen with an empty heading, because the database
+        // replaced the config rather than sitting on top of it. Nobody would
+        // notice until a family did.
+        $form = $this->seedForm();
+
+        $form->steps()->where('key', 'hopes')->delete();
+        FormDefinition::forget(Taxonomy::FORM);
+
+        $this->startRegistration();
+
+        $this->get(route('register.step', 'hopes'))
+            ->assertOk()
+            ->assertSee(config('frith-forms.founders-registration.steps.hopes.heading'));
+    }
+
+    #[Test]
+    public function a_field_added_after_seeding_still_renders_its_words(): void
+    {
+        $form = $this->seedForm();
+
+        $form->steps()->where('key', 'you')->sole()
+            ->fields()->where('key', 'postcode_outcode')->delete();
+        FormDefinition::forget(Taxonomy::FORM);
+
+        $this->get(route('register.step', 'you'))
+            ->assertOk()
+            ->assertSee(config('frith-forms.founders-registration.steps.you.fields.postcode_outcode.label'));
+    }
+
+    #[Test]
+    public function an_option_added_after_seeding_is_offered_and_accepted(): void
+    {
+        $form = $this->seedForm();
+
+        $form->options()->where('group', 'hopes')->where('slug', 'something-else')->delete();
+        FormDefinition::forget(Taxonomy::FORM);
+
+        $this->startRegistration();
+
+        $this->get(route('register.step', 'hopes'))
+            ->assertOk()
+            ->assertSee(config('frith-taxonomy.hopes.something-else'));
+
+        $this->post(route('register.step.store', 'hopes'), ['hopes' => ['something-else']])
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame(['something-else'], Registration::sole()->hopes);
+    }
+
+    #[Test]
+    public function a_screen_taken_out_of_the_flow_does_not_come_back(): void
+    {
+        // The other half of layering. An old row for a screen that no longer
+        // exists must not put it back on the form or in the editor.
+        $form = $this->seedForm();
+
+        $form->steps()->create([
+            'key' => 'finding',
+            'heading' => 'Finding your Frith',
+            'position' => 99,
+        ]);
+
+        FormDefinition::forget(Taxonomy::FORM);
+
+        $this->assertArrayNotHasKey('finding', FormDefinition::for(Taxonomy::FORM)['steps']);
+        $this->assertSame(RegistrationFlow::STEPS, array_keys(FormDefinition::for(Taxonomy::FORM)['steps']));
+
+        $this->startRegistration();
+        $this->get(route('register.step', 'finding'))->assertNotFound();
+    }
+
+    #[Test]
+    public function an_editors_wording_still_wins_over_the_config(): void
+    {
+        // Layering must not quietly undo an edit — that is the whole point of
+        // the editor.
+        $form = $this->seedForm();
+
+        $form->steps()->where('key', 'hopes')->sole()->update(['heading' => 'What would help most?']);
+        FormDefinition::forget(Taxonomy::FORM);
+
+        $this->startRegistration();
+
+        $this->get(route('register.step', 'hopes'))
+            ->assertOk()
+            ->assertSee('What would help most?')
+            ->assertDontSee(config('frith-forms.founders-registration.steps.hopes.heading'));
     }
 
     #[Test]
@@ -255,8 +372,8 @@ class FormDefinitionTest extends TestCase
 
         FormDefinition::for(Taxonomy::FORM);
 
-        $form->steps()->where('key', 'family')->sole()->update(['heading' => 'Who lives with you?']);
+        $form->steps()->where('key', 'family')->sole()->update(['heading' => 'Who is at home?']);
 
-        $this->assertSame('Who lives with you?', FormDefinition::for(Taxonomy::FORM)['steps']['family']['heading']);
+        $this->assertSame('Who is at home?', FormDefinition::for(Taxonomy::FORM)['steps']['family']['heading']);
     }
 }

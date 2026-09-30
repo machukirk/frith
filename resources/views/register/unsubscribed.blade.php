@@ -1,27 +1,25 @@
-<x-layouts.frith title="You’re off the list" :noindex="true">
+<x-layouts.site title="You’re off the list — Frith" :noindex="true">
 
-    <main class="site-main gutter slim" id="main">
-        <div class="slim__inner">
-            <h1 class="slim__heading">You’re off the list.</h1>
+    <div class="wizard">
+        <h1 class="heading wizard__heading">You’re off the list.</h1>
 
-            <p class="slim__body">
-                We won’t email you about the launch. Nothing you did was wrong, and you’re
-                welcome back whenever you like.
-            </p>
+        <p class="wizard__standfirst">
+            We won’t email you about the launch. Nothing you did was wrong, and you’re
+            welcome back whenever you like.
+        </p>
 
-            <p class="slim__body">
-                If you’d rather we deleted everything you told us as well, write to
-                <a href="mailto:{{ config('frith.company.contact_email') }}">{{ config('frith.company.contact_email') }}</a>
-                and a person will do it.
-            </p>
-
-            {{-- Mail filters follow links, so this page can be reached without
-                 anyone meaning to. Coming back is one tap, same as leaving. --}}
-            <form method="POST" action="{{ $resubscribeUrl }}">
-                @csrf
-                <button class="btn" type="submit">Actually, keep me on the list</button>
-            </form>
+        <div class="note">
+            If you’d rather we deleted everything you told us as well, write to
+            <a href="mailto:{{ config('frith.company.contact_email') }}">{{ config('frith.company.contact_email') }}</a>
+            and a person will do it.
         </div>
-    </main>
 
-</x-layouts.frith>
+        {{-- Mail filters follow links, so this page can be reached without
+             anyone meaning to. Coming back is one tap, same as leaving. --}}
+        <form class="wizard__actions wizard__actions--spaced" method="POST" action="{{ $resubscribeUrl }}">
+            @csrf
+            <button class="button button--primary" type="submit">Actually, keep me on the list</button>
+        </form>
+    </div>
+
+</x-layouts.site>

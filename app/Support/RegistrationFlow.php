@@ -5,25 +5,25 @@ namespace App\Support;
 /**
  * The order of the registration screens, in one place.
  *
- * Six numbered steps, and the form is short on purpose: every extra screen is
- * somewhere a tired person puts the phone down, and the design goal is that
- * putting the phone down still leaves them registered.
+ * Six screens, and each one is a whole question rather than a fragment of one.
+ * The earlier build asked where you live on its own screen and about your
+ * children on another; the hi-fi puts a name, an email and a postcode together
+ * because they are all "who are you", and a household and its children
+ * together because they are both "who is at home".
  *
- * The detail questions are the exception to the numbering. They follow step
- * five and there is one per area of family life the person chose, so counting
- * them would mean the form got longer the more honest somebody was — a form
- * that punishes you for answering it. They deepen step five instead, and the
- * counter stays on five throughout however many of them there are.
+ * The detail questions used to be a screen per area of family life — up to
+ * eight of them — with a counter frozen so the form did not appear to grow the
+ * more somebody told us. They are one screen now, an accordion per area, which
+ * is the same information without the sleight of hand.
  *
- * Interests comes last deliberately. It is the lightest question on the form
- * and the only one purely about what a family likes, so it is the kindest note
- * to end on — and if somebody stops before it, nothing that matters for
- * matching them has been lost.
+ * Every screen is short on purpose. Every extra one is somewhere a tired
+ * person puts the phone down, and the design goal is that putting the phone
+ * down still leaves them registered.
  */
 class RegistrationFlow
 {
     /** @var array<int, string> */
-    public const STEPS = ['you', 'location', 'family', 'children', 'support', 'interests', 'finding'];
+    public const STEPS = ['you', 'family', 'hopes', 'areas', 'experiences', 'interests'];
 
     public static function number(string $step): int
     {
@@ -56,40 +56,11 @@ class RegistrationFlow
         return in_array($step, self::STEPS, true);
     }
 
-    /** The step the detail questions belong to, rather than follow. */
-    public const DETAIL_STEP = 'support';
-
-    /**
-     * Where Back goes from a numbered step, as a URL.
-     *
-     * Not simply the entry before it in STEPS: the detail questions sit
-     * between support and interests, so going back from interests has to land
-     * on the last of them rather than skipping the lot.
-     *
-     * @param  array<int, string>  $chosenAreas
-     */
-    public static function backFromStep(string $step, array $chosenAreas): ?string
+    /** Where Back goes, as a URL, or null on the first screen. */
+    public static function backFrom(string $step): ?string
     {
-        if ($step === 'interests' && $chosenAreas !== []) {
-            return route('register.experiences.show', end($chosenAreas));
-        }
-
         $previous = self::previous($step);
 
         return $previous === null ? null : route('register.step', $previous);
-    }
-
-    /**
-     * Where Back goes from one of the detail screens.
-     *
-     * @param  array<int, string>  $chosenAreas
-     */
-    public static function backFromArea(string $category, array $chosenAreas): string
-    {
-        $position = (int) array_search($category, $chosenAreas, true);
-
-        return $position === 0
-            ? route('register.step', self::DETAIL_STEP)
-            : route('register.experiences.show', $chosenAreas[$position - 1]);
     }
 }

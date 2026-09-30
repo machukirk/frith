@@ -1,0 +1,61 @@
+@use '../abstracts' as *;
+
+// A list of statements you tick. Used for what somebody hopes to find, and
+// for the detail statements under each area.
+.check-list {
+  display: grid;
+  gap: $space-1;
+  padding: 0;
+  margin: 0;
+  border: 0;
+
+  &__item {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+    gap: $space-3;
+    align-items: start;
+    min-height: $target-min;
+    padding-block: $space-2;
+    cursor: pointer;
+
+    input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+  }
+
+  &__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    background: $bg-surface;
+    border: 1.5px solid $linen-300;
+    border-radius: $radius-sm;
+    color: transparent;
+    font-size: 11px;
+    line-height: 1;
+
+    &::after { content: '\2713'; }
+  }
+
+  &__item:has(input:checked) &__mark {
+    background: $action;
+    border-color: $action;
+    color: $linen-050;
+  }
+
+  &__item:has(input:focus-visible) &__mark {
+    outline: 3px solid $action;
+    outline-offset: 2px;
+  }
+
+  &__label {
+    color: $ink-900;
+    @include type((14px, 14.5px), 1.5);
+  }
+}

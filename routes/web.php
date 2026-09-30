@@ -113,13 +113,7 @@ Route::post('/help/contact', [ContactController::class, 'store'])
 Route::prefix('join')->name('register.')->group(function () {
     Route::get('/', [RegistrationController::class, 'start'])->name('start');
 
-    Route::get('/experiences', [RegistrationExperienceController::class, 'start'])->name('experiences');
-    Route::get('/experiences/{category}', [RegistrationExperienceController::class, 'show'])->name('experiences.show');
-    Route::post('/experiences/{category}', [RegistrationExperienceController::class, 'store'])
-        ->middleware('throttle:registration')
-        ->name('experiences.store');
-
-    Route::get('/done', [RegistrationExperienceController::class, 'done'])->name('done');
+    Route::get('/welcome', [RegistrationController::class, 'welcome'])->name('welcome');
 
     /*
      * The links in the Founder email. Signed rather than session-based: the

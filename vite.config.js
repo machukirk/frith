@@ -10,12 +10,6 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/scss/main.scss',
-
-                // The registration wizard has not been rebuilt against the
-                // hi-fi yet and is live taking registrations, so its original
-                // stylesheet ships alongside the new one until it has. It goes
-                // when resources/views/register is redrawn.
-                'resources/css/frith.css',
             ],
             refresh: true,
         }),
