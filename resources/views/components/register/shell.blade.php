@@ -8,7 +8,7 @@
     'title' => null,
 ])
 
-<x-layouts.bare :title="$title ?? $heading.' — Frith'">
+<x-layouts.site :title="$title ?? $heading.' — Frith'" :noindex="true">
 
     <div class="wizard">
         @if ($step && $total)
@@ -42,4 +42,4 @@
         @endif
     </div>
 
-</x-layouts.bare>
+</x-layouts.site>

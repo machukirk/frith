@@ -5,7 +5,7 @@
     $journeys = \App\Support\PageContent::get('home', 'journeys.items', []);
 @endphp
 
-<x-layouts.bare :title="$c['meta']['title']">
+<x-layouts.site :title="$c['meta']['title']" :noindex="true">
 
     <div class="wizard wizard--done">
         <p class="wizard__tick" aria-hidden="true">&#10003;</p>
@@ -54,4 +54,4 @@
         <p class="wizard__hint wizard__footnote">{{ $w['footnote'] }}</p>
     </div>
 
-</x-layouts.bare>
+</x-layouts.site>
