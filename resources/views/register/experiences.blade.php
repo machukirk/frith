@@ -50,7 +50,8 @@
                             <x-register.check-list :name="'items['.$area.']'"
                                                    :options="$first"
                                                    :chosen="$picked"
-                                                   :legend="$meta['label']" />
+                                                   :legend="$meta['label']"
+                                                   variant="statements" />
 
                             @if ($rest !== [])
                                 <details class="experience-groups__more" @if ($restIsChosen) open @endif>
@@ -61,7 +62,8 @@
                                     <x-register.check-list :name="'items['.$area.']'"
                                                            :options="$rest"
                                                            :chosen="$picked"
-                                                           :legend="'More about '.$meta['label']" />
+                                                           :legend="'More about '.$meta['label']"
+                                                           variant="statements" />
                                 </details>
                             @endif
                         </div>

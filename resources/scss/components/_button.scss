@@ -4,7 +4,7 @@
   @include tap-target;
   justify-content: center;
   gap: $space-2;
-  padding: 13px $space-6;
+  padding: 14px 34px;
   border: 1.5px solid transparent;
   border-radius: $radius-pill;
   font-weight: 500;
@@ -31,15 +31,28 @@
     &:hover { background: $coral-200; }
   }
 
+  // Outlined rather than filled — "Add another child" sits under the thing it
+  // adds to and must not compete with Continue.
   &--quiet {
     background: transparent;
+    border-color: $linen-400;
+    color: $action;
+
+    &:hover { background: rgba($action, 0.06); }
+  }
+
+  // Outlined in the brand green. Secondary to a filled button, but still
+  // plainly a button — unlike --quiet, which is the quietest thing on a screen.
+  &--outline {
+    background: transparent;
+    border-color: $action;
     color: $action;
 
     &:hover { background: rgba($action, 0.06); }
   }
 
   &--small {
-    padding: 9px $space-5;
+    padding: 11px 22px;
     min-height: 40px;
     font-size: 14px;
   }

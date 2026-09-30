@@ -11,8 +11,8 @@
   &__item {
     overflow: hidden;
     background: $bg-surface;
-    border: 1px solid $linen-300;
-    border-radius: $radius-lg;
+    border: 1px solid $border-hairline;
+    border-radius: $radius-xl;
   }
 
   &__summary {
@@ -22,7 +22,7 @@
     display: flex;
     justify-content: space-between;
     gap: $space-4;
-    padding-inline: $space-4;
+    padding-inline: $space-5;
     color: $text-heading;
     @include type((14.5px, 15px), 1.4, 600);
     cursor: pointer;
@@ -44,7 +44,7 @@
   &__item[open] &__mark::after { content: '\2212'; }
 
   &__body {
-    padding: 0 $space-4 $space-4;
+    padding: 0 $space-5 $space-4;
     border-top: 1px solid $linen-200;
   }
 
@@ -64,7 +64,7 @@
     &-summary {
       @include tap-target(40px);
       // Lines up under the statement labels rather than under their boxes.
-      padding-left: calc(20px + #{$space-3});
+      padding-left: calc(18px + #{$space-3});
       color: $linen-700;
       @include type((13px, 13px), 1.4);
       cursor: pointer;

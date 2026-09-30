@@ -11,7 +11,7 @@
 
   &__item {
     display: grid;
-    grid-template-columns: 20px minmax(0, 1fr);
+    grid-template-columns: 18px minmax(0, 1fr);
     gap: $space-3;
     align-items: start;
     min-height: $target-min;
@@ -30,14 +30,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     margin-top: 2px;
     background: $bg-surface;
-    border: 1.5px solid $linen-300;
-    border-radius: $radius-sm;
+    border: 1.5px solid $border-control;
+    border-radius: 5px;
     color: transparent;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1;
 
     &::after { content: '\2713'; }
@@ -57,5 +57,13 @@
   &__label {
     color: $ink-900;
     @include type((14px, 14.5px), 1.5);
+  }
+
+  // Inside an area on the detail screen, the statements are supporting detail
+  // under a heading rather than the question itself, and the hi-fi sets them a
+  // shade smaller and lighter to say so.
+  &--statements &__label {
+    color: $text-body;
+    @include type((13.5px, 14px), 1.5);
   }
 }

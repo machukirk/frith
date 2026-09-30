@@ -5,8 +5,15 @@
 .panel {
   padding: $space-5 $space-6;
   background: $bg-surface;
-  border: 1px solid $linen-300;
+  border: 1px solid $border-hairline;
   border-radius: $radius-card;
+
+  // A coral ring, for the one card on a screen that is asking to be acted on.
+  // A shadow rather than a border so it does not move anything by 2px.
+  &--ringed {
+    border-radius: $radius-xl;
+    box-shadow: 0 0 0 2px $action-accent;
+  }
 
   &__label {
     display: block;
@@ -25,7 +32,7 @@
 
   &__body {
     color: $text-body;
-    @include type((13px, 13.5px), 1.6);
+    @include type((13.5px, 14px), 1.62);
   }
 
   // A stack of them, tighter than .prose's default rhythm.

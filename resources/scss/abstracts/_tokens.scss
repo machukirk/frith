@@ -30,6 +30,7 @@ $mustard-900: #573B00;
 // --- Ink ----------------------------------------------------------------------
 $ink-900: #1B2940; // headings
 $ink-600: #4F5B70; // body
+$ink-400: #6A7588; // the outline of a box you type in, and its placeholder
 
 // --- Linen --------------------------------------------------------------------
 $linen-025: #FEFDFB; // the alternate row in a table
@@ -37,7 +38,9 @@ $linen-050: #F8F4EE; // page
 $linen-100: #F0ECE6; // alternate band
 $linen-200: #E7E2DA; // image plate
 $linen-300: #DCD8D3; // the hairline around a white card
+$linen-400: #BDB6AB; // the hi-fi's outline on a control nobody has chosen yet
 $linen-500: #ADA69B;
+$linen-600: #938C81; // the same outline, dark enough to pass — see $border-control
 $linen-700: #5D5A56;
 $white: #FFFFFF;
 
@@ -57,9 +60,20 @@ $text-on-inverse-muted: $euc-200;
 $action: $euc-700;
 $action-accent: $coral-400;
 
+$border-hairline: $linen-300; // around a white card
+$border-input: $ink-400;      // a box you type in
+
+// A box you tick, and a pill. The hi-fi draws these in $linen-400, which is
+// 1.8:1 against the page — under WCAG 1.4.11's 3:1 for the one mark that says
+// whether a control is chosen, and this is a release blocker. So: that colour,
+// darkened until it passes. A card around a control keeps $linen-300, because
+// there the tick inside it is what carries the state.
+$border-control: $linen-600;
+
 // --- Type ---------------------------------------------------------------------
 $font-ui: 'Livvic', -apple-system, 'Segoe UI', Roboto, sans-serif;
 $font-display: 'Caudex', Georgia, serif; // the wordmark only
+$font-mono: ui-monospace, Menlo, Consolas, monospace; // an address read back
 
 // Mobile first: each is (mobile, desktop). Desktop values are the hi-fi's.
 $type-hero: (36px, 58px);
@@ -88,6 +102,7 @@ $space-20: 80px;
 // --- Radii ---------------------------------------------------------------------
 $radius-sm: 4px;
 $radius-md: 8px;
+$radius-control: 10px; // a box you type in
 $radius-lg: 12px;
 $radius-xl: 14px;
 $radius-card: 16px;

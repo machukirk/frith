@@ -5,9 +5,9 @@
     $journeys = \App\Support\PageContent::get('home', 'journeys.items', []);
 @endphp
 
-<x-layouts.site :title="$c['meta']['title']" :noindex="true">
+<x-layouts.wizard :title="$c['meta']['title']">
 
-    <div class="wizard">
+    <div class="wizard wizard--done">
         <p class="wizard__tick" aria-hidden="true">&#10003;</p>
 
         <h1 class="heading wizard__heading">{{ $w['title'] }}</h1>
@@ -15,12 +15,18 @@
         <p class="wizard__standfirst">{{ $w['standfirst'] }}</p>
 
         @if ($registration?->email)
-            <p class="wizard__standfirst">
-                {!! str(e($w['launch_line']))->replace(':email', '<strong>'.e($registration->email).'</strong>') !!}
+            {{-- Set apart, and in a monospace face, because the address is the
+                 one thing on this screen somebody needs to read character by
+                 character. A typo here is why they never hear from us. --}}
+            <p class="wizard__launch">
+                {!! str(e($w['launch_line']))->replace(
+                    ':email',
+                    '<span class="wizard__address">'.e($registration->email).'</span>',
+                ) !!}
             </p>
         @endif
 
-        <div class="panel">
+        <div class="panel panel--ringed">
             <p class="panel__title">{{ $w['journeys_title'] }}</p>
             <p class="panel__body">{{ $w['journeys_body'] }}</p>
 
@@ -35,8 +41,8 @@
             </ul>
 
             <p class="wizard__panel-link">
-                <a class="action-link" href="{{ \App\Support\SiteNavigation::url('journeys') }}">
-                    {{ $w['journeys_link'] }} <span aria-hidden="true">&rarr;</span>
+                <a class="button button--outline button--small" href="{{ \App\Support\SiteNavigation::url('journeys') }}">
+                    {{ $w['journeys_link'] }}
                 </a>
             </p>
         </div>
@@ -48,4 +54,4 @@
         <p class="wizard__hint wizard__footnote">{{ $w['footnote'] }}</p>
     </div>
 
-</x-layouts.site>
+</x-layouts.wizard>

@@ -1,6 +1,6 @@
-@props(['name', 'options', 'chosen' => [], 'legend' => null])
+@props(['name', 'options', 'chosen' => [], 'legend' => null, 'variant' => null])
 
-<fieldset class="check-list">
+<fieldset class="check-list {{ $variant ? 'check-list--'.$variant : '' }}">
     @if ($legend)<legend class="visually-hidden">{{ $legend }}</legend>@endif
 
     @foreach ($options as $slug => $label)

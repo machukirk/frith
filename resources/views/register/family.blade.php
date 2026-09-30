@@ -26,20 +26,22 @@
 
         <div class="wizard__group">
             <p class="wizard__label">{{ $c->label('children', 'Your children') }}</p>
-            <p class="wizard__hint">{{ $c->help('children') }}</p>
+            <p class="wizard__hint wizard__hint--leading">{{ $c->help('children') }}</p>
 
             <div class="child-rows">
                 @foreach ($rows as $i => $row)
                     <fieldset class="child-rows__item">
-                        <div class="child-rows__head">
-                            <legend class="child-rows__label">Child {{ $i + 1 }}</legend>
+                        {{-- Directly inside the fieldset, so it is this group's
+                             accessible name rather than a stray heading. --}}
+                        <legend class="child-rows__label">Child {{ $i + 1 }}</legend>
 
-                            @if (count($rows) > 1)
+                        @if (count($rows) > 1)
+                            <div class="child-rows__head">
                                 <button class="child-rows__remove" type="submit" name="action" value="remove:{{ $i }}">
                                     Remove<span class="visually-hidden"> child {{ $i + 1 }}</span>
                                 </button>
-                            @endif
-                        </div>
+                            </div>
+                        @endif
 
                         <div class="child-rows__fields">
                             <span class="field">

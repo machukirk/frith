@@ -5,13 +5,27 @@
 // loses what was typed — the answers are saved server-side by the time you
 // can press it.
 .wizard {
-  @include container(720px);
+  // 560px in the hi-fi. One question at a time reads better in a narrow
+  // column than a wide one.
+  @include container(560px + ($gutter-lg * 2));
   padding-block: $space-8 $space-16;
 
   @include from(md) { padding-block: $space-12 $space-20; }
 
+  // The screen at the end of the form. Narrower and centred, because there is
+  // nothing left to fill in — it is an announcement, not a question.
+  &--done {
+    text-align: center;
+
+    // Only the announcement is centred. Anything with lines of text in it
+    // still reads left to right.
+    .panel { text-align: left; }
+
+    .wizard__actions { justify-content: center; }
+  }
+
   &__count {
-    margin-bottom: $space-2;
+    margin-bottom: 14px;
     color: $linen-700;
     @include type($type-fine, 1.3);
   }
@@ -33,8 +47,9 @@
   }
 
   &__heading {
-    margin-bottom: $space-3;
-    @include type((26px, 34px), 1.15);
+    margin-bottom: 10px;
+    @include type((26px, 34px), 1.16);
+    letter-spacing: -0.02em;
   }
 
   &__standfirst {
@@ -43,18 +58,28 @@
     @include type((15px, 16px), 1.6);
   }
 
-  &__form { display: grid; gap: $space-8; }
+  // 26px between one field block and the next, which is what the hi-fi sets
+  // on every one of them.
+  &__form { display: grid; gap: 26px; }
 
-  &__group { display: grid; gap: $space-3; }
+  // 8px, because the hi-fi sets a label 7px above what it labels — the same
+  // gap a field label has, so a set of pills reads as one answer.
+  &__group { display: grid; gap: $space-2; }
 
+  // Reads as a field label, because that is what it is — the label for a set
+  // of pills or tickboxes rather than for one box.
   &__label {
     color: $text-heading;
-    @include type((14.5px, 15px), 1.3, 600);
+    @include type((15px, 15px), 1.3, 500);
   }
 
   &__hint {
     color: $linen-700;
-    @include type((13px, 13.5px), 1.55);
+    @include type((13px, 13.5px), 1.5);
+
+    // A hint that introduces what comes after it, rather than explaining what
+    // came before, needs more air beneath it than the group's own gap.
+    &--leading { margin-bottom: $space-2; }
   }
 
   &__actions {
@@ -102,13 +127,31 @@
   &__tick {
     display: grid;
     place-items: center;
-    width: 48px;
-    height: 48px;
-    margin-bottom: $space-5;
-    color: $euc-700;
-    background: $euc-100;
-    border-radius: $radius-pill;
-    @include type((22px, 22px), 1);
+    width: 60px;
+    height: 60px;
+    margin: 0 auto $space-5;
+    color: $euc-600;
+    background: $euc-050;
+    border-radius: $radius-circle;
+    @include type((26px, 26px), 1);
+  }
+
+  // "We will email you at …" — set apart in its own tinted box, because the
+  // address is the one thing on this screen somebody needs to check.
+  &__launch {
+    padding: 18px $space-5;
+    margin-bottom: 28px;
+    background: $linen-100;
+    border: 1px solid $border-hairline;
+    border-radius: $radius-lg;
+    color: $ink-900;
+    text-align: left;
+    @include type((14px, 14.5px), 1.6);
+  }
+
+  &__address {
+    font-family: $font-mono;
+    font-size: 13.5px;
   }
 
   // "Frith Founder #47" — the one place a number is a nice thing to be given.
@@ -135,17 +178,17 @@
   }
 
   &__journey {
-    padding: $space-3;
+    padding: 11px 13px;
     background: $bg-surface;
-    border: 1px solid $linen-300;
-    border-radius: $radius-md;
+    border: 1px solid $border-hairline;
+    border-radius: 11px;
     color: $ink-900;
     @include type((14px, 14px), 1.4);
   }
 
   &__panel-link { margin-top: $space-3; }
 
-  &__footnote { margin-top: $space-3; }
+  &__footnote { margin-top: 18px; }
 
   // "Only ever used to match you" — said where the worry is, not in a policy
   // page nobody opens.
