@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Forms\Pages;
 
 use App\Filament\Resources\Forms\FormResource;
 use App\Models\FormOption;
+use App\Support\SqlOrder;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -276,36 +277,13 @@ class ManageFormOptions extends ManageRelatedRecords
             ->collapsible()
             ->orderQueryUsing(fn (Builder $query) => $query
                 // The lists in the order somebody meets them filling the form in...
-                ->orderByRaw(...static::listOrder($query))
+                ->pipe(fn (Builder $q) => SqlOrder::byList($q, 'group', array_keys(FormOption::GROUPS)))
                 // ...then every area before any of its statements, so the areas
                 // are one block rather than eight headings of one row each...
                 ->orderByRaw('(parent_id IS NULL) DESC')
                 // ...then each area's statements under that area, in its order.
                 ->orderByRaw('COALESCE((SELECT p.position FROM form_options p WHERE p.id = form_options.parent_id), 0)')
                 ->orderBy('position'));
-    }
-
-    /**
-     * A CASE expression ranking the lists, rather than MySQL's FIELD(): the
-     * test suite runs on SQLite, which does not have it.
-     *
-     * @return array{0: string, 1: array<int, string>}
-     */
-    private static function listOrder(Builder $query): array
-    {
-        $groups = array_keys(FormOption::GROUPS);
-        $column = $query->getQuery()->getGrammar()->wrap('group');
-
-        $cases = [];
-
-        foreach (array_keys($groups) as $rank) {
-            $cases[] = "WHEN ? THEN {$rank}";
-        }
-
-        return [
-            'CASE '.$column.' '.implode(' ', $cases).' ELSE '.count($groups).' END',
-            $groups,
-        ];
     }
 
     private static function archiveWarning(FormOption $option): string

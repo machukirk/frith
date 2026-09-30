@@ -28,3 +28,6 @@ Thumbs.db
 
 # Local snapshots and scratch
 /cookies.txt
+
+# Local-only admin credentials. Never committed.
+/.admin-local
