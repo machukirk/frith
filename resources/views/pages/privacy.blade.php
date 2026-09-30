@@ -29,7 +29,15 @@
                     {{-- What we hold, and who sees it ------------------------ --}}
                     <h2>{{ $c['holdings']['title'] }}</h2>
 
-                    <table>
+                    {{-- Scrolls on a phone rather than squashing three columns
+                         into 375px. tabindex so the scroll is reachable from a
+                         keyboard, and labelled so it is announced before you
+                         arrive in it. --}}
+                    <div class="data-table__scroll"
+                         role="region"
+                         aria-label="{{ $c['holdings']['title'] }}"
+                         tabindex="0">
+                        <table class="data-table">
                         <thead>
                             <tr>
                                 <th scope="col">{{ $c['holdings']['columns']['what'] }}</th>
@@ -46,7 +54,8 @@
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>
+                        </table>
+                    </div>
 
                     {{-- The rest of the policy ------------------------------- --}}
                     @foreach ($c['sections'] as $section)

@@ -1,0 +1,61 @@
+@use '../abstracts' as *;
+
+// A table of real tabular data — what we hold, why, and who sees it.
+//
+// Kept as a <table> rather than the design's grid of divs: it is a table, and
+// a screen reader announcing "column 2, Who sees it: Only us" is the whole
+// point of the section. The styling makes it look like the design.
+.data-table {
+  // Three columns will not fit a phone, so the table scrolls inside its own
+  // box. tabindex makes that scroll reachable from a keyboard, and the role
+  // and label mean a screen reader announces what it is before you get there.
+  &__scroll {
+    overflow-x: auto;
+    border: 1px solid $linen-300;
+    border-radius: $radius-xl;
+    -webkit-overflow-scrolling: touch;
+
+    @include focus-ring;
+  }
+
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  text-align: start;
+
+  th,
+  td {
+    padding: $space-3 $space-4;
+    text-align: start;
+    vertical-align: top;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    background: $bg-band;
+    color: $text-body;
+    @include type($type-eyebrow, 1.3, 600);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    background: $bg-surface;
+
+    // Banded, so the eye keeps its place across three columns.
+    &:nth-child(even) { background: $linen-025; }
+
+    & + tr { border-top: 1px solid rgba($ink-900, 0.06); }
+  }
+
+  // The first column is the thing itself; the rest explain it.
+  tbody td:first-child {
+    color: $ink-900;
+    @include type((14px, 14.5px), 1.5);
+  }
+
+  tbody td {
+    color: $text-body;
+    @include type((13px, 13.5px), 1.5);
+  }
+}
