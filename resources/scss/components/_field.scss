@@ -4,7 +4,10 @@
 // anything after it.
 .field {
   display: grid;
-  gap: $space-2;
+  // 7px, which is what the hi-fi puts under every label and over every help
+  // line. Off the 4px grid on purpose: it is the design's own value, and it
+  // repeats twice in every field on the form.
+  gap: 7px;
 
   &__label {
     color: $text-heading;

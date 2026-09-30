@@ -17,6 +17,15 @@
   &--done {
     text-align: center;
 
+    // The hi-fi gives this screen slightly different vertical rhythm from a
+    // form step — it is an announcement, and sits a little tighter.
+    .wizard__heading { margin-bottom: $space-3; }
+
+    .wizard__standfirst {
+      margin-bottom: 26px;
+      line-height: 1.62;
+    }
+
     // Only the announcement is centred. Anything with lines of text in it
     // still reads left to right.
     .panel { text-align: left; }
@@ -188,7 +197,10 @@
 
   &__panel-link { margin-top: $space-3; }
 
-  &__footnote { margin-top: 18px; }
+  &__footnote {
+    margin-top: 18px;
+    line-height: 1.55;
+  }
 
   // "Only ever used to match you" — said where the worry is, not in a policy
   // page nobody opens.
