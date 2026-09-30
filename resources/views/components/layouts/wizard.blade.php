@@ -23,14 +23,14 @@
 
     @vite('resources/scss/main.scss')
 </head>
-<body class="wizard-page">
+<body class="bare-page">
 
     <a class="skip-link" href="#main">Skip to content</a>
 
-    <header class="wizard-header">
-        <div class="wizard-header__inner">
+    <header class="bare-header">
+        <div class="bare-header__inner">
             <a href="{{ route('home') }}">
-                <img class="wizard-header__logo"
+                <img class="bare-header__logo"
                      src="{{ \App\Support\BrandAsset::url('brand/logo/frith-logo-horizontal-fullcolour.svg') }}"
                      alt="Frith — home" width="1152" height="464">
             </a>
@@ -39,8 +39,8 @@
 
     <main id="main">{{ $slot }}</main>
 
-    <footer class="wizard-footer">
-        <div class="wizard-footer__inner">
+    <footer class="bare-footer">
+        <div class="bare-footer__inner">
             <p>&copy; {{ now()->year }} {{ config('frith.company.name') }}</p>
             <a href="mailto:{{ config('frith.company.contact_email') }}">{{ config('frith.company.contact_email') }}</a>
             <a href="{{ \App\Support\SiteNavigation::url('privacy') }}">Privacy</a>

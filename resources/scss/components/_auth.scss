@@ -81,19 +81,3 @@
     a { color: $action; }
   }
 }
-
-// A logo and nothing else, for the screen you land on to log in.
-.bare-header {
-  padding-block: $space-6;
-
-  &__inner {
-    @include container;
-    display: flex;
-    justify-content: center;
-  }
-
-  &__logo {
-    width: 104px;
-    height: auto;
-  }
-}

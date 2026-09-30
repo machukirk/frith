@@ -1,19 +1,23 @@
 @use '../abstracts' as *;
 
-// The header and footer either side of the registration form.
+// Stripped-down chrome, shared by the registration form and the login screen.
 //
-// The hi-fi gives these screens their own chrome: the wordmark alone at the
-// top, and one line of small print at the bottom in place of the dark site
-// footer. Somebody half way through the form should not be sitting under a
-// menu of ways out of it.
-.wizard-page {
+// The hi-fi takes the navigation out of the header on both: somebody half way
+// through registering, or trying to get in, should not be sitting under a menu
+// of ways to leave. What sits at the foot of the page differs — the form gets
+// one line of small print (.bare-footer), login keeps the full site footer —
+// so that is the page's choice, not this file's.
+.bare-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   min-height: 100dvh;
+
+  // Whichever footer the page chose, it sits at the bottom on a short screen.
+  > footer { margin-top: auto; }
 }
 
-.wizard-header {
+.bare-header {
   background: $bg-page;
   border-bottom: 1px solid $border-hairline;
 
@@ -30,8 +34,8 @@
   }
 }
 
-.wizard-footer {
-  margin-top: auto;
+// The registration form's footer: the small print, and nothing to browse.
+.bare-footer {
   border-top: 1px solid $border-hairline;
 
   &__inner {

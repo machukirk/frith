@@ -19,7 +19,7 @@
 
     @vite('resources/scss/main.scss')
 </head>
-<body>
+<body class="bare-page">
     <a class="skip-link" href="#main">Skip to content</a>
 
     <header class="bare-header">
@@ -33,5 +33,10 @@
     </header>
 
     <main id="main">{{ $slot }}</main>
+
+    {{-- The full footer, which the hi-fi does give this screen. Only the
+         header's navigation goes: somebody who cannot get in still needs the
+         help centre and a way to reach a person. --}}
+    <x-site.footer />
 </body>
 </html>
