@@ -28,3 +28,8 @@
   color: $linen-700;
   @include type($type-fine, 1.5);
 }
+
+// On most of the policies the meta line sits outside the article and the two
+// ran straight into each other. Not needed on the guidelines, where the line
+// is inside .prose and already picks up its rhythm.
+.doc-meta + .prose { margin-top: $space-6; }
