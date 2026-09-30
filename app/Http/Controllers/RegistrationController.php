@@ -8,6 +8,7 @@ use App\Support\RegistrationFlow;
 use App\Support\Taxonomy;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -181,6 +182,14 @@ class RegistrationController extends Controller
     /**
      * Sequential, assigned once, never reused — so "Founder #47" stays true
      * for that family even if number 12 later deletes their account.
+     *
+     * Only the first hundred get one. After that a registration is complete
+     * and perfectly normal; it simply has no number, and everything that shows
+     * one already checks for it.
+     *
+     * Counted and written inside one locked transaction, because two families
+     * registering in the same second must not both be told they are number
+     * one hundred.
      */
     private function assignFounderNumber(Registration $registration): void
     {
@@ -188,9 +197,21 @@ class RegistrationController extends Controller
             return;
         }
 
-        $next = (int) Registration::query()->max('founder_number') + 1;
+        DB::transaction(function () use ($registration) {
+            // The high-water mark, not a count of rows: a family who leaves
+            // takes their number with them rather than freeing a place, so the
+            // hundredth Founder is the hundredth number issued.
+            $highest = (int) Registration::query()
+                ->whereNotNull('founder_number')
+                ->lockForUpdate()
+                ->max('founder_number');
 
-        $registration->forceFill(['founder_number' => $next])->save();
+            if ($highest >= (int) config('frith.founders.limit')) {
+                return;
+            }
+
+            $registration->forceFill(['founder_number' => $highest + 1])->save();
+        });
     }
 
     /**

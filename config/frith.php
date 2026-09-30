@@ -63,6 +63,27 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Founders
+    |--------------------------------------------------------------------------
+    |
+    | Only the first hundred families to register are Frith Founders, and a
+    | Founder number is what marks one. Everybody after them registers exactly
+    | the same way and is a perfectly ordinary family — they simply do not get
+    | a number, and nothing downstream should pretend otherwise.
+    |
+    | A number is assigned once and never reused, so "Founder #47" stays true
+    | for that family even if number 12 later deletes their account. That also
+    | means the hundred is a hundred numbers issued, not a hundred rows still
+    | in the table.
+    |
+    */
+
+    'founders' => [
+        'limit' => (int) env('FRITH_FOUNDER_LIMIT', 100),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Registration
     |--------------------------------------------------------------------------
     */

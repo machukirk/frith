@@ -128,6 +128,80 @@ class RegistrationTest extends TestCase
     }
 
     #[Test]
+    public function only_the_first_hundred_registrations_are_founders(): void
+    {
+        config(['frith.founders.limit' => 3]);
+
+        foreach (['a', 'b', 'c'] as $who) {
+            $this->flushSession();
+            $this->openWith(['email' => "{$who}@example.com"]);
+        }
+
+        $this->assertSame(
+            [1, 2, 3],
+            Registration::query()->orderBy('id')->pluck('founder_number')->all(),
+        );
+
+        // The fourth registers exactly as the others did. They are simply not
+        // a Founder, and nothing about the form tells them otherwise.
+        $this->flushSession();
+        $this->post(route('register.step.store', 'you'), [
+            'first_name' => 'Dee',
+            'email' => 'd@example.com',
+            'postcode_outcode' => 'SS9',
+        ])->assertRedirect(route('register.step', 'family'));
+
+        $fourth = Registration::query()->where('email', 'd@example.com')->sole();
+
+        $this->assertNull($fourth->founder_number);
+        $this->assertFalse($fourth->isFounder());
+        $this->assertNotNull($fourth->consented_at, 'they are still registered');
+
+        // …and they can still finish the whole form.
+        $this->post(route('register.step.store', 'interests'), ['interests' => ['animals']])
+            ->assertRedirect(route('register.welcome'));
+
+        $this->assertNotNull($fourth->fresh()->completed_at);
+    }
+
+    #[Test]
+    public function a_family_leaving_does_not_free_up_a_founder_place(): void
+    {
+        // The cap is on numbers issued, not on families still on the list.
+        // Founder 1 leaving must not let somebody else become a Founder, or
+        // the hundred quietly becomes however many have ever registered.
+        config(['frith.founders.limit' => 2]);
+
+        $first = $this->openWith(['email' => 'one@example.com']);
+        $this->flushSession();
+        $this->openWith(['email' => 'two@example.com']);
+
+        $first->delete();
+
+        $this->flushSession();
+        $third = $this->openWith(['email' => 'three@example.com']);
+
+        $this->assertNull($third->founder_number, 'the two numbers are gone, not the two seats');
+    }
+
+    #[Test]
+    public function the_founder_email_drops_the_badge_for_everybody_after_the_hundred(): void
+    {
+        // The mailable already branches on the number, so this is really a
+        // guard that it keeps doing so once there are registrations without
+        // one.
+        config(['frith.founders.limit' => 0]);
+
+        $registration = $this->openWith(['email' => 'late@example.com']);
+
+        $this->assertNull($registration->founder_number);
+
+        $html = (new \App\Mail\FounderWelcome($registration))->render();
+
+        $this->assertStringNotContainsString('Founder #', $html);
+    }
+
+    #[Test]
     public function the_postcode_is_only_ever_the_outcode(): void
     {
         $this->post(route('register.step.store', 'you'), [

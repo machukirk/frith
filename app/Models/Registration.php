@@ -109,6 +109,15 @@ class Registration extends Model implements AuthenticatableContract
         return $this->completed_at !== null;
     }
 
+    /**
+     * One of the first hundred. What a number means, in one place, so nothing
+     * downstream has to know that it is the number that decides.
+     */
+    public function isFounder(): bool
+    {
+        return $this->founder_number !== null;
+    }
+
     public function displayName(): string
     {
         return trim((string) $this->first_name);
