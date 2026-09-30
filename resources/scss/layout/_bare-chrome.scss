@@ -4,16 +4,17 @@
 //
 // The hi-fi takes the navigation out of the header on both: somebody half way
 // through registering, or trying to get in, should not be sitting under a menu
-// of ways to leave. What sits at the foot of the page differs — the form gets
-// one line of small print (.bare-footer), login keeps the full site footer —
-// so that is the page's choice, not this file's.
+// of ways to leave. The site footer stays whole underneath — the designs put a
+// single line of small print under the registration screens, but Matt preferred
+// the full one (2026-09-30), and a person stuck on either of these screens is
+// exactly who needs the help centre and a way to reach somebody.
 .bare-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   min-height: 100dvh;
 
-  // Whichever footer the page chose, it sits at the bottom on a short screen.
+  // The footer sits at the bottom even when the form above it is short.
   > footer { margin-top: auto; }
 }
 
@@ -31,28 +32,5 @@
   &__logo {
     width: 104px;
     height: auto;
-  }
-}
-
-// The registration form's footer: the small print, and nothing to browse.
-.bare-footer {
-  border-top: 1px solid $border-hairline;
-
-  &__inner {
-    @include container;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 22px;
-    align-items: baseline;
-    padding-block: 22px 26px;
-    color: $linen-700;
-    @include type($type-fine, 1.5);
-  }
-
-  a {
-    color: $action;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    @include focus-ring;
   }
 }

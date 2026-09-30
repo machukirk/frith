@@ -1,11 +1,14 @@
 @props(['title' => null, 'description' => null])
 
-{{-- The chrome for the registration form, and only for it.
-     The hi-fi strips the header down to the wordmark here and replaces the
-     dark site footer with one line of small print. That is deliberate: a
-     half-finished form should not be sitting under a menu of ways to leave it,
-     and the one exit somebody might genuinely need — the privacy policy, or
-     how to reach a person — is still there. --}}
+{{-- The chrome for a screen with nothing to click away to: the registration
+     form, and logging in. The hi-fi strips the header to the wordmark on both —
+     somebody half way through registering, or trying to get in, should not be
+     sitting under a menu of ways to leave.
+
+     The footer stays whole. The designs give the registration screens a single
+     line of small print instead, but Matt preferred the full one and it is the
+     kinder choice anyway: a person stuck on either of these screens is exactly
+     who needs the help centre and a way to reach a human. --}}
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -39,14 +42,7 @@
 
     <main id="main">{{ $slot }}</main>
 
-    <footer class="bare-footer">
-        <div class="bare-footer__inner">
-            <p>&copy; {{ now()->year }} {{ config('frith.company.name') }}</p>
-            <a href="mailto:{{ config('frith.company.contact_email') }}">{{ config('frith.company.contact_email') }}</a>
-            <a href="{{ \App\Support\SiteNavigation::url('privacy') }}">Privacy</a>
-            <a href="{{ \App\Support\SiteNavigation::url('reporting') }}">Safeguarding</a>
-        </div>
-    </footer>
+    <x-site.footer />
 
 </body>
 </html>

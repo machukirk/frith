@@ -3,7 +3,7 @@
     $l = $c['login'];
 @endphp
 
-<x-layouts.auth :title="$c['meta']['title']" :description="$c['meta']['description']">
+<x-layouts.bare :title="$c['meta']['title']" :description="$c['meta']['description']">
 
     <section class="auth">
         <div class="auth__inner">
@@ -57,4 +57,4 @@
         </div>
     </section>
 
-</x-layouts.auth>
+</x-layouts.bare>
