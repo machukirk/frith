@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Registration;
 use App\Models\User;
 
 return [
@@ -38,9 +39,17 @@ return [
     */
 
     'guards' => [
+        // The admin panel. A handful of people who look after the site.
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+        ],
+
+        // Families. A separate guard on purpose: a Founder is not a user of
+        // the admin panel and must never be able to become one by accident.
+        'founder' => [
+            'driver' => 'session',
+            'provider' => 'founders',
         ],
     ],
 
@@ -65,6 +74,13 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', User::class),
+        ],
+
+        // Families. Registrations are the accounts — there is no separate
+        // users row for a Founder, and there should not be one.
+        'founders' => [
+            'driver' => 'eloquent',
+            'model' => Registration::class,
         ],
 
         // 'users' => [

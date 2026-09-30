@@ -1,5 +1,6 @@
 @php
     $nav = \App\Support\SiteNavigation::primary();
+    $founder = auth('founder')->user();
 @endphp
 
 {{--
@@ -31,8 +32,16 @@
                 <a class="site-header__panel-link" href="{{ $item['url'] }}">{{ $item['label'] }}</a>
             @endforeach
 
-            <a class="site-header__panel-link" href="{{ \App\Support\SiteNavigation::url('login') }}">Log in</a>
-            <a class="button button--primary button--block" href="{{ route('register.start') }}">Register</a>
+            @if ($founder)
+                <span class="site-header__panel-link site-header__panel-link--name">{{ $founder->displayName() }}</span>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button class="button button--quiet button--block" type="submit">Log out</button>
+                </form>
+            @else
+                <a class="site-header__panel-link" href="{{ route('login') }}">Log in</a>
+                <a class="button button--primary button--block" href="{{ route('register.start') }}">Register</a>
+            @endif
         </div>
     </details>
 
@@ -50,8 +59,16 @@
                 <a class="site-header__link" href="{{ $item['url'] }}">{{ $item['label'] }}</a>
             @endforeach
 
-            <a class="site-header__link site-header__link--strong" href="{{ \App\Support\SiteNavigation::url('login') }}">Log in</a>
-            <a class="button button--primary button--small" href="{{ route('register.start') }}">Register</a>
+            @if ($founder)
+                <span class="site-header__link">{{ $founder->displayName() }}</span>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button class="button button--quiet button--small" type="submit">Log out</button>
+                </form>
+            @else
+                <a class="site-header__link site-header__link--strong" href="{{ route('login') }}">Log in</a>
+                <a class="button button--primary button--small" href="{{ route('register.start') }}">Register</a>
+            @endif
         </nav>
     </div>
 </header>

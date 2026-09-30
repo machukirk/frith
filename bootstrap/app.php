@@ -24,11 +24,13 @@ return Application::configure(basePath: dirname(__DIR__))
         // the proxy for every visitor.
         $middleware->trustProxies(at: '*');
 
-        // There is no site-wide login yet, so the framework's default redirect
-        // target does not exist and an auth-protected route throws rather than
-        // sending anybody anywhere. The admin panel's own login is where they
-        // should end up.
-        $middleware->redirectGuestsTo(fn () => route('filament.admin.auth.login'));
+        // Two guards, two front doors. A family who is not logged in belongs
+        // at the site's log in page; somebody reaching for the admin panel
+        // belongs at its own. Sending a parent to the staff entrance would be
+        // both confusing and a small lie about what Frith is.
+        $middleware->redirectGuestsTo(fn (Request $request) => $request->is('admin', 'admin/*')
+            ? route('filament.admin.auth.login')
+            : route('login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PagePreviewController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RegistrationEmailController;
@@ -51,6 +52,41 @@ Route::withoutMiddleware([
     Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
     Route::get('/site.webmanifest', WebManifestController::class)->name('manifest');
 });
+
+/*
+ * Getting in and back out.
+ *
+ * The emailed link is the front door — registration never asks for a password,
+ * because a parent registering at 1am on a phone will not remember one a
+ * fortnight later. The password path is there for anybody who has set one.
+ */
+Route::middleware('guest:founder')->group(function () {
+    Route::get('/login', [LoginController::class, 'show'])->name('login');
+
+    Route::post('/login', [LoginController::class, 'attempt'])
+        ->middleware([ProtectAgainstSpam::class, 'throttle:6,1'])
+        ->name('login.attempt');
+
+    Route::view('/forgot', 'pages.auth.forgot')->name('forgot');
+
+    Route::post('/login/link', [LoginController::class, 'sendLink'])
+        ->middleware([ProtectAgainstSpam::class, 'throttle:4,1'])
+        ->name('login.send-link');
+
+    Route::view('/link-sent', 'pages.auth.link-sent')->name('link-sent');
+
+    Route::get('/login/link/{registration}/{token}', [LoginController::class, 'consume'])
+        ->middleware('throttle:10,1')
+        ->name('login.link');
+});
+
+Route::view('/verified', 'pages.auth.verified')
+    ->middleware('auth:founder')
+    ->name('verified');
+
+Route::post('/logout', [LoginController::class, 'logout'])
+    ->middleware('auth:founder')
+    ->name('logout');
 
 /*
  * The admin panel's live preview. Behind the panel's own guard, because it

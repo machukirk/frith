@@ -1,0 +1,99 @@
+@use '../abstracts' as *;
+
+// A narrow centred column: log in, ask for a link, the screen that says the
+// link is on its way.
+.auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: $space-10 $space-16;
+
+  @include from(md) { padding-block: $space-14 $space-20; }
+
+  &__inner {
+    width: 100%;
+    max-width: 420px;
+    padding-inline: $gutter;
+  }
+
+  &__title {
+    margin-bottom: $space-2;
+    @include type((26px, 30px), 1.2);
+  }
+
+  &__standfirst {
+    margin-bottom: $space-8;
+    color: $text-body;
+    @include type((14.5px, 14.5px), 1.6);
+  }
+
+  &__form {
+    display: grid;
+    gap: $space-5;
+  }
+
+  // The label row that carries "Forgotten it?" on the right.
+  &__label-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: $space-3;
+  }
+
+  &__aside-link {
+    color: $action;
+    @include type((12px, 12px), 1.3);
+
+    &:hover { text-decoration: underline; }
+  }
+
+  // "or", with a rule either side.
+  &__divider {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    margin-block: $space-2;
+    color: $linen-700;
+    @include type((11.5px, 11.5px), 1.2);
+
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: $linen-300;
+    }
+  }
+
+  &__note {
+    margin-top: $space-2;
+    color: $text-body;
+    @include type((12.5px, 12.5px), 1.6);
+  }
+
+  &__foot {
+    margin-top: $space-8;
+    padding-top: $space-5;
+    border-top: 1px solid $linen-300;
+    color: $text-body;
+    @include type((13.5px, 13.5px), 1.6);
+
+    a { color: $action; }
+  }
+}
+
+// A logo and nothing else, for the screen you land on to log in.
+.bare-header {
+  padding-block: $space-6;
+
+  &__inner {
+    @include container;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__logo {
+    width: 104px;
+    height: auto;
+  }
+}

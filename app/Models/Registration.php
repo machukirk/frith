@@ -4,12 +4,15 @@ namespace App\Models;
 
 use App\Support\Taxonomy;
 use Database\Factories\RegistrationFactory;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Support\Collection;
 
 /**
@@ -19,14 +22,20 @@ use Illuminate\Support\Collection;
  * as far as their postcode and then has to go and deal with something is still
  * registered. That is the whole point of the design: no drop-off.
  */
-class Registration extends Model
+class Registration extends Model implements AuthenticatableContract
 {
+    use Authenticatable;
+    use Authorizable;
+
     /** @use HasFactory<RegistrationFactory> */
     use HasFactory;
 
     use HasUlids;
 
     protected $guarded = [];
+
+    /** Never in an array, a log line or a JSON response. */
+    protected $hidden = ['password', 'remember_token', 'login_token'];
 
     protected function casts(): array
     {
@@ -43,6 +52,8 @@ class Registration extends Model
             'email_verified_at' => 'datetime',
             'verification_sent_at' => 'datetime',
             'unsubscribed_at' => 'datetime',
+            'login_token_expires_at' => 'datetime',
+            'password' => 'hashed',
         ];
     }
 
@@ -79,6 +90,18 @@ class Registration extends Model
     public static function normaliseOutcode(string $outcode): string
     {
         return mb_strtoupper(preg_replace('/\s+/', '', trim($outcode)));
+    }
+
+    /**
+     * Whether they can log in with a password at all.
+     *
+     * Registration never sets one, so this is false for almost everybody. The
+     * login screen says so rather than failing with "wrong password", which
+     * would send somebody looking for a password that does not exist.
+     */
+    public function hasPassword(): bool
+    {
+        return filled($this->password);
     }
 
     public function isComplete(): bool
