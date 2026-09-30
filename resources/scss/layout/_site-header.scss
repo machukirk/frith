@@ -3,6 +3,17 @@
 .site-header {
   background: $bg-page;
 
+  // Pinned on a phone, so the menu is one reach away wherever somebody has
+  // got to. Below the skip link's z-index, which has to stay reachable above
+  // everything when it is focused.
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  // On a desktop the whole bar is already on screen and the links are laid
+  // out along it, so there is nothing to reach for.
+  @include from(md) { position: static; }
+
   // The phone menu slides in underneath this bar rather than over it, so the
   // bar has to be dark before the panel arrives — otherwise the reversed
   // wordmark fades up against a page-coloured background and vanishes for a
