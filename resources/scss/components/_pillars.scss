@@ -1,0 +1,40 @@
+@use '../abstracts' as *;
+
+// The three reasons, on eucalyptus, directly under the hero.
+.pillars {
+  display: grid;
+  gap: $space-8;
+
+  @include from(md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  &__item {
+    @include from(md) {
+      padding-inline: $space-8;
+
+      &:first-child { padding-inline-start: 0; }
+      &:last-child { padding-inline-end: 0; }
+      & + & { border-inline-start: 1px solid rgba($linen-050, 0.14); }
+    }
+  }
+
+  &__icon {
+    width: 28px;
+    height: 28px;
+    margin-bottom: $space-4;
+    color: $coral-200;
+  }
+
+  &__title {
+    margin-bottom: $space-2;
+    color: $text-on-inverse;
+    @include type($type-h3, 1.3, 600);
+  }
+
+  &__body {
+    color: $euc-200;
+    @include type($type-small, 1.65);
+  }
+}

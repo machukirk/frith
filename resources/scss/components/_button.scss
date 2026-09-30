@@ -1,0 +1,66 @@
+@use '../abstracts' as *;
+
+.button {
+  @include tap-target;
+  justify-content: center;
+  gap: $space-2;
+  padding: 13px $space-6;
+  border: 1.5px solid transparent;
+  border-radius: $radius-pill;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+  @include focus-ring;
+
+  &--primary {
+    background: $action;
+    color: $linen-050;
+
+    &:hover { background: $euc-800; }
+  }
+
+  // Coral on the dark bands. The label is ink, never white — white on coral is
+  // 3.23:1 and fails at every size (guidelines §02).
+  &--accent {
+    background: $action-accent;
+    color: $ink-900;
+
+    &:hover { background: $coral-200; }
+  }
+
+  &--quiet {
+    background: transparent;
+    color: $action;
+
+    &:hover { background: rgba($action, 0.06); }
+  }
+
+  &--small {
+    padding: 9px $space-5;
+    min-height: 40px;
+    font-size: 14px;
+  }
+
+  &--block {
+    display: flex;
+    width: 100%;
+  }
+}
+
+// A text link that behaves like an action.
+.action-link {
+  @include tap-target(40px);
+  gap: $space-2;
+  color: $action;
+  font-weight: 500;
+  font-size: 15px;
+  text-decoration: none;
+  @include focus-ring;
+
+  &:hover { text-decoration: underline; }
+
+  &--on-inverse { color: $coral-200; }
+}

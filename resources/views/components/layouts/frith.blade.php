@@ -5,8 +5,8 @@
 ])
 
 @php
-    $meta = \App\Support\PageContent::get('coming-soon', 'meta', []);
-    $copy = \App\Support\PageContent::for('coming-soon');
+    $meta = \App\Support\PageContent::get('home', 'meta', []);
+    $copy = \App\Support\PageContent::for('home');
 
     $pageTitle = $title ?? ($meta['title'] ?? config('frith.coming_soon.meta.title'));
     $pageDescription = $description ?? ($meta['description'] ?? config('frith.coming_soon.meta.description'));
@@ -84,7 +84,7 @@
     @vite('resources/css/frith.css')
 
     @unless ($noindex)
-        <script type="application/ld+json">{!! json_encode(\App\Support\StructuredData::comingSoon(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+        <script type="application/ld+json">{!! json_encode(\App\Support\StructuredData::home(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     @endunless
 </head>
 <body>
@@ -92,7 +92,7 @@
 
     <div class="page">
         <header class="site-header gutter">
-            <a class="site-header__home" href="{{ route('coming-soon') }}">
+            <a class="site-header__home" href="{{ route('home') }}">
                 <img class="site-header__logo"
                      src="{{ \App\Support\BrandAsset::url('brand/logo/frith-logo-horizontal-fullcolour.svg') }}"
                      alt="Frith — home" width="1152" height="464">

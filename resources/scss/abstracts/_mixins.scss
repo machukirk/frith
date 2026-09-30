@@ -1,0 +1,83 @@
+@use 'sass:map';
+@use 'sass:list';
+@use 'tokens' as *;
+
+// Mobile first throughout: every breakpoint is a min-width, so the base styles
+// are the phone and everything wider is an addition.
+@mixin from($name) {
+  $width: map.get($breakpoints, $name);
+
+  @if not $width {
+    @error 'Unknown breakpoint "#{$name}".';
+  }
+
+  @media (min-width: $width) {
+    @content;
+  }
+}
+
+// A (mobile, desktop) pair from the type scale, interpolated between them so
+// the step is gradual rather than a jump at one width.
+@mixin type($scale, $line-height: null, $weight: null) {
+  $small: list.nth($scale, 1);
+  $large: list.nth($scale, 2);
+
+  font-size: $small;
+
+  @if $line-height {
+    line-height: $line-height;
+  }
+
+  @if $weight {
+    font-weight: $weight;
+  }
+
+  @if $large != $small {
+    @include from(md) {
+      font-size: clamp(#{$small}, 4vw, #{$large});
+    }
+
+    @include from(xl) {
+      font-size: $large;
+    }
+  }
+}
+
+// Off screen, still read aloud.
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+// One focus treatment everywhere, and never removed without a replacement.
+@mixin focus-ring($colour: $action) {
+  &:focus-visible {
+    outline: 3px solid $colour;
+    outline-offset: 2px;
+  }
+}
+
+// Anything tappable clears the target floor even when its text is small.
+@mixin tap-target($min: $target-min) {
+  min-height: $min;
+  display: inline-flex;
+  align-items: center;
+}
+
+@mixin container($width: $container) {
+  width: 100%;
+  max-width: $width;
+  margin-inline: auto;
+  padding-inline: $gutter;
+
+  @include from(md) {
+    padding-inline: $gutter-lg;
+  }
+}

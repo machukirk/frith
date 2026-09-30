@@ -19,8 +19,8 @@ class SitemapController extends Controller
     {
         $urls = [
             [
-                'loc' => route('coming-soon'),
-                'lastmod' => Page::query()->where('slug', 'coming-soon')->value('updated_at'),
+                'loc' => route('home'),
+                'lastmod' => Page::query()->where('slug', 'home')->value('updated_at'),
                 'changefreq' => 'weekly',
                 'priority' => '1.0',
             ],

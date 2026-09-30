@@ -33,7 +33,7 @@
                 </div>
             @endunless
 
-            <a class="btn btn--link" href="{{ route('coming-soon') }}">Back to the homepage</a>
+            <a class="btn btn--link" href="{{ route('home') }}">Back to the homepage</a>
         </div>
     </main>
 

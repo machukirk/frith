@@ -58,10 +58,10 @@ class RegistrationTest extends TestCase
     #[Test]
     public function the_homepage_sends_people_to_the_registration(): void
     {
-        $this->get(route('coming-soon'))
+        $this->get(route('home'))
             ->assertOk()
             ->assertSee(route('register.start'), false)
-            ->assertSee(config('frith.coming_soon.cta.button'));
+            ->assertSee(config('frith-content.home.hero.primary_cta'));
     }
 
     #[Test]

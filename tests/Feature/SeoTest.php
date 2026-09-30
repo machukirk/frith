@@ -17,16 +17,16 @@ class SeoTest extends TestCase
     #[Test]
     public function the_page_carries_a_canonical_url_and_is_indexable(): void
     {
-        $this->get(route('coming-soon'))
+        $this->get(route('home'))
             ->assertOk()
-            ->assertSee('<link rel="canonical" href="'.route('coming-soon').'"', false)
+            ->assertSee('<link rel="canonical" href="'.route('home').'"', false)
             ->assertSee('name="robots" content="index, follow', false);
     }
 
     #[Test]
     public function the_open_graph_and_twitter_tags_are_complete(): void
     {
-        $response = $this->get(route('coming-soon'))->assertOk();
+        $response = $this->get(route('home'))->assertOk();
 
         foreach ([
             'og:type', 'og:site_name', 'og:title', 'og:description', 'og:url',
@@ -45,7 +45,7 @@ class SeoTest extends TestCase
     {
         // Pointing twitter:site at a handle nobody owns hands the card's
         // attribution to whoever registers it later.
-        $this->get(route('coming-soon'))
+        $this->get(route('home'))
             ->assertDontSee('twitter:site', false)
             ->assertDontSee('twitter:creator', false);
     }
@@ -55,7 +55,7 @@ class SeoTest extends TestCase
     {
         $this->seed(PageSeeder::class);
 
-        $html = $this->get(route('coming-soon'))->assertOk()->getContent();
+        $html = $this->get(route('home'))->assertOk()->getContent();
 
         preg_match('#<script type="application/ld\+json">(.*?)</script>#s', $html, $m);
         $this->assertNotEmpty($m, 'no JSON-LD block found');
@@ -92,13 +92,13 @@ class SeoTest extends TestCase
     public function the_structured_data_follows_the_content_when_it_is_edited(): void
     {
         $this->seed(PageSeeder::class);
-        $page = Page::query()->where('slug', 'coming-soon')->sole();
+        $page = Page::query()->where('slug', 'home')->sole();
 
         $content = $page->content;
         $content['meta']['description'] = 'A description written in the admin panel.';
         $page->update(['content' => $content]);
 
-        $this->get(route('coming-soon'))
+        $this->get(route('home'))
             ->assertSee('A description written in the admin panel.', false);
     }
 
@@ -125,7 +125,7 @@ class SeoTest extends TestCase
         $xml = $response->getContent();
 
         $this->assertStringStartsWith('<?xml', $xml);
-        $this->assertStringContainsString('<loc>'.route('coming-soon').'</loc>', $xml);
+        $this->assertStringContainsString('<loc>'.route('home').'</loc>', $xml);
         $this->assertStringContainsString('<lastmod>', $xml);
         $this->assertNotFalse(simplexml_load_string($xml), 'sitemap is not well-formed XML');
     }
@@ -171,7 +171,7 @@ class SeoTest extends TestCase
     {
         // Three different spellings of the same page is how a crawler ends up
         // deciding for itself which one is canonical.
-        $home = route('coming-soon');
+        $home = route('home');
         $html = $this->get($home)->assertOk()->getContent();
 
         $this->assertStringContainsString('<link rel="canonical" href="'.$home.'"', $html);
@@ -193,7 +193,7 @@ class SeoTest extends TestCase
         // public/brand is served with a year-long cache under filenames that
         // never change, so replacing the logo on the server is not enough — a
         // returning visitor keeps the old one. The URL has to move with it.
-        $html = $this->get(route('coming-soon'))->assertOk()->getContent();
+        $html = $this->get(route('home'))->assertOk()->getContent();
 
         preg_match_all('#(/brand/[a-z0-9/_.@-]+\.(?:svg|png))(\?v=\d+)?#i', $html, $matches, PREG_SET_ORDER);
 
@@ -215,7 +215,7 @@ class SeoTest extends TestCase
     #[Test]
     public function every_icon_referenced_in_the_head_exists(): void
     {
-        $html = $this->get(route('coming-soon'))->assertOk()->getContent();
+        $html = $this->get(route('home'))->assertOk()->getContent();
 
         preg_match_all('#<link rel="(?:icon|apple-touch-icon)"[^>]*href="([^"]+)"#', $html, $m);
         $this->assertNotEmpty($m[1]);
@@ -229,7 +229,7 @@ class SeoTest extends TestCase
     #[Test]
     public function the_page_has_exactly_one_h1(): void
     {
-        $html = $this->get(route('coming-soon'))->assertOk()->getContent();
+        $html = $this->get(route('home'))->assertOk()->getContent();
 
         $this->assertSame(1, substr_count($html, '<h1'), 'a page should have one h1');
     }

@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Spatie\Honeypot\ProtectAgainstSpam;
 
-// The view reads its own content through App\Support\PageContent, so there is
-// nothing for a controller to do here.
-Route::view('/', 'coming-soon')->name('coming-soon');
+// The pages read their own copy through App\Support\PageContent, so there is
+// nothing for a controller to do. The holding page is gone — this is the site.
+Route::view('/', 'pages.home')->name('home');
 
 /*
  * The sitemap and manifest are public, identical for every visitor, and have no

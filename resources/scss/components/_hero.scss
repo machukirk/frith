@@ -1,0 +1,82 @@
+@use '../abstracts' as *;
+
+.hero {
+  padding-block: $space-8 $space-12;
+
+  @include from(lg) {
+    padding-block: $space-10 $space-14;
+  }
+
+  &__inner {
+    @include container;
+    display: grid;
+    gap: $space-8;
+
+    @include from(lg) {
+      grid-template-columns: minmax(0, 690px) minmax(0, 470px);
+      align-items: center;
+      gap: $space-10;
+    }
+  }
+
+  &__headline {
+    margin-bottom: $space-5;
+  }
+
+  // The full stop is the brand's, and it is coral.
+  &__stop { color: $coral-600; }
+
+  &__standfirst {
+    max-width: 30em;
+    margin-bottom: $space-6;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-3;
+    margin-bottom: $space-4;
+  }
+
+  &__note {
+    max-width: 28em;
+    color: $text-body;
+    @include type($type-fine, 1.55);
+  }
+
+  &__figure {
+    position: relative;
+    margin: 0;
+  }
+
+  &__plate {
+    overflow: hidden;
+    background: $linen-200;
+    border-radius: $radius-xl;
+    aspect-ratio: 461 / 302;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  // The coral dot that breaks the plate's corner.
+  &__dot {
+    position: absolute;
+    top: -14px;
+    right: -6px;
+    width: 33px;
+    height: 33px;
+    background: $action-accent;
+    border-radius: $radius-circle;
+
+    @include from(md) {
+      top: -16px;
+      right: -12px;
+      width: 40px;
+      height: 40px;
+    }
+  }
+}

@@ -1,0 +1,63 @@
+@use '../abstracts' as *;
+
+.heading {
+  color: $text-heading;
+  font-weight: 600;
+  text-wrap: balance;
+
+  &--hero {
+    @include type($type-hero, 1.08);
+    letter-spacing: -0.01em;
+  }
+
+  &--section {
+    @include type($type-h2, 1.2);
+  }
+
+  &--card {
+    @include type($type-h3, 1.3);
+  }
+}
+
+// The small coloured line above a section heading.
+.eyebrow {
+  margin-bottom: $space-3;
+  color: $text-eyebrow;
+  @include type($type-eyebrow, 1.2, 600);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  &--on-inverse { color: $coral-200; }
+  &--positive { color: $euc-600; }
+}
+
+.lead {
+  color: $text-body;
+  @include type($type-lead, 1.6);
+  text-wrap: pretty;
+}
+
+.prose {
+  @include type($type-body, 1.68);
+  text-wrap: pretty;
+
+  a { color: $action; }
+}
+
+.visually-hidden { @include visually-hidden; }
+
+.skip-link {
+  position: absolute;
+  top: $space-2;
+  left: $space-2;
+  z-index: 100;
+  padding: $space-3 $space-4;
+  background: $bg-surface;
+  border-radius: $radius-md;
+  color: $action;
+  font-weight: 500;
+  text-decoration: none;
+  transform: translateY(-200%);
+
+  &:focus-visible { transform: none; }
+}

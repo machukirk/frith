@@ -2,9 +2,7 @@
 
 namespace App\Filament\Resources\Pages\Schemas;
 
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Callout;
@@ -14,163 +12,214 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 
 /**
- * The editing form for the coming soon page.
+ * The editing form for a page.
  *
- * The tabs follow the order things appear on the page, so finding the words you
- * want to change is a matter of scrolling the page and picking the matching tab.
- * Helper text says where each field shows up rather than restating the label.
+ * One tab per section, in the order they appear going down the page, so finding
+ * the words you want to change is a matter of scrolling the page and picking
+ * the tab with the same name. Helper text says where a field shows up rather
+ * than restating its label.
+ *
+ * Structure is not editable — which sections a page has and in what order is
+ * code, because a section is a designed thing rather than a free-form block.
+ * What is editable is every word inside them.
  */
 class PageForm
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
+            Callout::make('Everything here is live')
+                ->description('Visitors see the new wording as soon as you save. The section each tab refers to is named after what you see on the page itself.')
+                ->icon(Heroicon::OutlinedPencilSquare)
+                ->color('info')
+                ->columnSpanFull(),
+
             Tabs::make()->columnSpanFull()->tabs([
 
-                Tabs\Tab::make('Top of the page')->schema([
+                Tabs\Tab::make('Hero')->icon(Heroicon::OutlinedSparkles)->schema([
                     Section::make()->schema([
-                        TextInput::make('content.status_badge')
-                            ->label('Launch badge')
-                            ->helperText('The small pill in the top right corner. Leave empty to hide it.')
-                            ->maxLength(60),
-
-                        TextInput::make('content.eyebrow')
-                            ->label('Small heading above the title')
-                            ->helperText('Shown in capitals. Keep it to a few words.')
+                        TextInput::make('content.hero.eyebrow')
+                            ->label('Small line above the heading')
+                            ->helperText('Shown in capitals, in coral. A few words.')
                             ->maxLength(80),
 
-                        Repeater::make('content.headline')
+                        Repeater::make('content.hero.headline')
                             ->label('Main heading')
-                            ->helperText('One line per row. The full stop at the end is added automatically.')
+                            ->helperText('One line per row. The coral full stop at the end is added for you.')
                             ->simple(TextInput::make('line')->required()->maxLength(60))
-                            ->minItems(1)
-                            ->maxItems(3)
-                            ->defaultItems(2),
+                            ->reorderable()
+                            ->maxItems(3),
 
-                        Textarea::make('content.standfirst')
-                            ->label('Paragraph under the heading')
+                        Textarea::make('content.hero.standfirst')
+                            ->label('Paragraph underneath')
                             ->rows(3)
-                            ->maxLength(300),
-                    ]),
+                            ->maxLength(320),
 
-                    Section::make('Photograph')->schema([
-                        FileUpload::make('content.hero_image')
-                            ->label('Hero photograph')
-                            ->image()
-                            ->imageEditor()
-                            ->directory('hero')
-                            ->disk('public')
-                            ->maxSize(4096)
-                            ->helperText('Landscape works best, around 1600 pixels wide. Leave empty to use the original artwork.'),
-
-                        Textarea::make('content.hero_image_alt')
-                            ->label('Description of the photograph')
-                            ->rows(2)
-                            ->required()
-                            ->maxLength(300)
-                            ->helperText('Read aloud to people using a screen reader, and shown if the image fails to load. Describe what is happening, not that it is a photo.'),
-                    ]),
-                ]),
-
-                Tabs\Tab::make('Call to action')->schema([
-                    Callout::make('This button opens the registration')
-                        ->description('It takes people to the five-screen Founders form. The wording on that form is edited under Forms, not here.')
-                        ->icon(Heroicon::OutlinedCursorArrowRays)
-                        ->color('info')
-                        ->columnSpanFull(),
-
-                    Section::make()->schema([
-                        TextInput::make('content.cta.button')
+                        TextInput::make('content.hero.primary_cta')
                             ->label('Button')
-                            ->maxLength(40)
-                            ->helperText('Keep it short — it should not wrap on a phone.'),
+                            ->maxLength(30),
 
-                        Textarea::make('content.cta.note')
-                            ->label('Line underneath the button')
+                        TextInput::make('content.hero.secondary_cta')
+                            ->label('Link beside the button')
+                            ->maxLength(40),
+
+                        Textarea::make('content.hero.note')
+                            ->label('Small print under the button')
                             ->rows(2)
-                            ->maxLength(300)
-                            ->helperText('Where the offer goes: what a Founder gets, and how long it takes.'),
-                    ]),
+                            ->maxLength(200),
+
+                        Textarea::make('content.hero.image_alt')
+                            ->label('Description of the photograph')
+                            ->helperText('Read aloud to anybody who cannot see it. Describe what is happening, not that it is a photo.')
+                            ->rows(2)
+                            ->maxLength(200)
+                            ->columnSpanFull(),
+                    ])->columns(2),
                 ]),
 
-                Tabs\Tab::make('Three cards')->schema([
-                    Repeater::make('content.cards')
-                        ->label('Cards')
-                        ->helperText('The row of white cards under the heading. Three fits the layout best.')
-                        ->schema([
-                            Select::make('icon')
-                                ->label('Icon')
-                                ->options([
-                                    'people' => 'Two people',
-                                    'leaf' => 'Leaf',
-                                    'heart' => 'Heart',
-                                ])
-                                ->required(),
-                            TextInput::make('heading')->label('Heading')->required()->maxLength(60),
-                            Textarea::make('body')->label('Text')->rows(3)->required()->maxLength(300),
-                        ])
-                        ->columns(1)
-                        ->itemLabel(fn (array $state): ?string => $state['heading'] ?? null)
+                Tabs\Tab::make('The three reasons')->icon(Heroicon::OutlinedSquares2x2)->schema([
+                    Repeater::make('content.pillars')
+                        ->label('')
+                        ->helperText('The green band under the hero.')
+                        ->itemLabel(fn (array $state): ?string => $state['title'] ?? null)
                         ->collapsible()
+                        ->collapsed()
                         ->reorderable()
-                        ->maxItems(4),
+                        ->schema([
+                            TextInput::make('title')->label('Heading')->required()->maxLength(60),
+                            Textarea::make('body')->label('Paragraph')->rows(3)->maxLength(240),
+                        ]),
                 ]),
 
-                Tabs\Tab::make('Green panel')->schema([
+                Tabs\Tab::make('How it works')->icon(Heroicon::OutlinedListBullet)->schema([
                     Section::make()->schema([
-                        TextInput::make('content.status.heading')->label('Heading')->maxLength(60),
-                        Textarea::make('content.status.standfirst')->label('Line under the heading')->rows(2),
-                        TextInput::make('content.status.tagline')
-                            ->label('Tagline under the logo')
-                            ->maxLength(40)
-                            ->helperText('Always title case, always with the full stop.'),
-                    ]),
+                        TextInput::make('content.how_it_works.eyebrow')->label('Small line above')->maxLength(60),
+                        TextInput::make('content.how_it_works.title')->label('Heading')->maxLength(120),
+                        Textarea::make('content.how_it_works.standfirst')->label('Paragraph underneath')->rows(2)->maxLength(300)->columnSpanFull(),
+                    ])->columns(2),
 
-                    Repeater::make('content.status.points')
-                        ->label('Bullet points')
-                        ->schema([
-                            TextInput::make('lead')
-                                ->label('Bold part')
-                                ->required()
-                                ->maxLength(120),
-                            Textarea::make('rest')
-                                ->label('Rest of the sentence')
-                                ->rows(2)
-                                ->maxLength(300),
-                        ])
-                        ->itemLabel(fn (array $state): ?string => $state['lead'] ?? null)
+                    Repeater::make('content.how_it_works.steps')
+                        ->label('The three steps')
+                        ->helperText('Numbered automatically, in this order.')
+                        ->itemLabel(fn (array $state): ?string => $state['title'] ?? null)
                         ->collapsible()
+                        ->collapsed()
                         ->reorderable()
-                        ->maxItems(6),
+                        ->schema([
+                            TextInput::make('title')->label('Heading')->required()->maxLength(80),
+                            Textarea::make('body')->label('Paragraph')->rows(3)->maxLength(260),
+                        ]),
+
+                    TextInput::make('content.how_it_works.note')
+                        ->label('Line underneath the three')
+                        ->maxLength(140),
                 ]),
 
-                Tabs\Tab::make('Purple note')->schema([
-                    Textarea::make('content.note')
-                        ->label('Note at the bottom of the page')
-                        ->rows(4)
-                        ->maxLength(600),
+                Tabs\Tab::make('Journeys')->icon(Heroicon::OutlinedMap)->schema([
+                    Section::make()->schema([
+                        TextInput::make('content.journeys.eyebrow')->label('Small line above')->maxLength(60),
+                        TextInput::make('content.journeys.title')->label('Heading')->maxLength(120),
+                        Textarea::make('content.journeys.standfirst')->label('Paragraph underneath')->rows(2)->maxLength(300)->columnSpanFull(),
+                    ])->columns(2),
+
+                    Repeater::make('content.journeys.items')
+                        ->label('The Journeys shown')
+                        ->helperText('The count is what visitors see on the card. It is illustrative until Journeys are live.')
+                        ->itemLabel(fn (array $state): ?string => $state['title'] ?? null)
+                        ->collapsible()
+                        ->collapsed()
+                        ->reorderable()
+                        ->schema([
+                            TextInput::make('title')->label('Journey')->required()->maxLength(80),
+                            TextInput::make('families')->label('Families')->numeric()->minValue(0)->maxValue(9999),
+                        ])->columns(2),
+
+                    Section::make()->schema([
+                        TextInput::make('content.journeys.note')->label('Line underneath')->maxLength(160),
+                        TextInput::make('content.journeys.link')->label('Link at the end')->maxLength(60),
+                    ])->columns(2),
                 ]),
 
-                Tabs\Tab::make('Search & sharing')->schema([
-                    Callout::make('Not visible on the page itself')
-                        ->description('What Google shows in its results, and what appears when someone shares a link to the page on WhatsApp or Facebook.')
-                        ->icon(Heroicon::OutlinedMagnifyingGlass)
-                        ->color('info')
+                Tabs\Tab::make('What others see')->icon(Heroicon::OutlinedEye)->schema([
+                    Section::make()->schema([
+                        TextInput::make('content.visibility.eyebrow')->label('Small line above')->maxLength(60),
+                        TextInput::make('content.visibility.title')->label('Heading')->maxLength(140),
+                        Textarea::make('content.visibility.standfirst')->label('Paragraph underneath')->rows(2)->maxLength(300)->columnSpanFull(),
+                    ])->columns(2),
+
+                    ...collect([
+                        'shown' => 'The left panel — what other families see',
+                        'hidden' => 'The right panel — what is never shown',
+                    ])->map(fn (string $heading, string $key) => Section::make($heading)
+                        ->collapsible()
+                        ->schema([
+                            TextInput::make("content.visibility.{$key}.title")->label('Panel heading')->maxLength(60),
+                            TextInput::make("content.visibility.{$key}.standfirst")->label('Line underneath')->maxLength(120),
+                            Repeater::make("content.visibility.{$key}.items")
+                                ->label('Rows')
+                                ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
+                                ->collapsible()
+                                ->collapsed()
+                                ->reorderable()
+                                ->columnSpanFull()
+                                ->schema([
+                                    TextInput::make('label')->label('Row')->required()->maxLength(80),
+                                    TextInput::make('detail')->label('Smaller line underneath')->maxLength(140),
+                                ]),
+                        ])->columns(2))->values()->all(),
+                ]),
+
+                Tabs\Tab::make('Call to action')->icon(Heroicon::OutlinedMegaphone)->schema([
+                    Section::make()->schema([
+                        TextInput::make('content.cta.title')->label('Heading')->maxLength(100),
+                        TextInput::make('content.cta.button')->label('Button')->maxLength(30),
+                        Textarea::make('content.cta.body')->label('Paragraph')->rows(3)->maxLength(280)->columnSpanFull(),
+                    ])->columns(2),
+                ]),
+
+                Tabs\Tab::make('Questions')->icon(Heroicon::OutlinedQuestionMarkCircle)->schema([
+                    Section::make()->schema([
+                        TextInput::make('content.faq.eyebrow')->label('Small line above')->maxLength(60),
+                        TextInput::make('content.faq.title')->label('Heading')->maxLength(120),
+                    ])->columns(2),
+
+                    Repeater::make('content.faq.items')
+                        ->label('Questions and answers')
+                        ->helperText('The first one is open when the page loads.')
+                        ->itemLabel(fn (array $state): ?string => $state['question'] ?? null)
+                        ->collapsible()
+                        ->collapsed()
+                        ->reorderable()
+                        ->schema([
+                            TextInput::make('question')->label('Question')->required()->maxLength(140),
+                            Textarea::make('answer')->label('Answer')->rows(4)->maxLength(900),
+                        ]),
+
+                    TextInput::make('content.faq.footer')
+                        ->label('Line at the end')
+                        ->helperText('Write :email where the address should go and it is turned into a link.')
+                        ->maxLength(200),
+                ]),
+
+                Tabs\Tab::make('Search & sharing')->icon(Heroicon::OutlinedGlobeAlt)->schema([
+                    Callout::make('What a search result and a shared link look like')
+                        ->description('Used by Google and by anything that unfurls a link — WhatsApp, Slack, a text message. Not shown on the page itself.')
+                        ->icon(Heroicon::OutlinedInformationCircle)
                         ->columnSpanFull(),
 
                     Section::make()->schema([
                         TextInput::make('content.meta.title')
-                            ->label('Page title')
-                            ->maxLength(60)
-                            ->helperText('Around 60 characters. Longer gets cut off.'),
+                            ->label('Title')
+                            ->helperText('Around 60 characters before Google trims it.')
+                            ->maxLength(70),
+
                         Textarea::make('content.meta.description')
                             ->label('Description')
+                            ->helperText('Around 155 characters before it is trimmed.')
                             ->rows(3)
-                            ->maxLength(160)
-                            ->helperText('Around 155 characters.'),
+                            ->maxLength(180),
                     ]),
                 ]),
-
             ]),
         ]);
     }

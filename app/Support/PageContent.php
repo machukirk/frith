@@ -6,13 +6,15 @@ use App\Models\Page;
 use Illuminate\Support\Facades\Cache;
 
 /**
- * Reads page copy, with the database layered over the defaults in config/frith.php.
+ * Reads page copy, with the database layered over the defaults in config.
  *
  * The config file stays the floor. If the pages table is empty, a key has never
  * been filled in, or a deploy adds a new field before anyone has edited it, the
- * page still renders with sensible words rather than a blank space or an error.
- * That matters more than usual here: this is the only page, and it is the thing
- * people are asked to hand their email address to.
+ * page still renders sensible words rather than a blank space or an error.
+ *
+ * Copy for the site's pages lives in config/frith-content.php, one block per
+ * slug. Structure is not editable — which sections a page has and in what order
+ * is code, because a section is a designed thing rather than a free-form block.
  */
 class PageContent
 {
@@ -25,9 +27,11 @@ class PageContent
     {
         return Cache::rememberForever(self::CACHE_PREFIX.$slug, function () use ($slug) {
             // Slugs are hyphenated because they are URLs; config keys are
-            // snake_case because they are PHP array keys. "coming-soon" reads
-            // from frith.coming_soon.
-            $defaults = config('frith.'.str_replace('-', '_', $slug), []);
+            // snake_case because they are PHP array keys. "how-it-works" reads
+            // from frith-content.how_it_works.
+            $key = str_replace('-', '_', $slug);
+
+            $defaults = config("frith-content.{$key}", []);
 
             // During `migrate:fresh` and on a brand new install the table may not
             // exist yet. Falling back to config keeps artisan usable.
@@ -42,7 +46,7 @@ class PageContent
     }
 
     /**
-     * Dot-notation read, e.g. PageContent::get('coming-soon', 'status.heading').
+     * Dot-notation read, e.g. PageContent::get('home', 'hero.headline').
      */
     public static function get(string $slug, string $key, mixed $default = null): mixed
     {

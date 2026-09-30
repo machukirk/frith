@@ -182,10 +182,10 @@ class Preflight extends Command
             return;
         }
 
-        $page = Page::query()->where('slug', 'coming-soon')->first();
+        $page = Page::query()->where('slug', 'home')->first();
 
         $page
-            ? $this->ok('Coming soon content is in the database', 'Editable at /admin')
+            ? $this->ok('Home page content is in the database', 'Editable at /admin')
             : $this->note('No content row yet', 'The page falls back to config/frith.php, so it still renders. Run: php artisan db:seed');
     }
 

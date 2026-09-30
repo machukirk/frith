@@ -18,7 +18,7 @@ class WebManifestController extends Controller
 {
     public function __invoke(): JsonResponse
     {
-        $copy = PageContent::for('coming-soon');
+        $copy = PageContent::for('home');
 
         return response()->json([
             'name' => $copy['meta']['title'] ?? 'Frith',

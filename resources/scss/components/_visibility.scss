@@ -1,0 +1,79 @@
+@use '../abstracts' as *;
+
+// The two panels: what other families see, and what is never shown.
+.visibility {
+  display: grid;
+  gap: $space-4;
+
+  @include from(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: $space-5;
+  }
+
+  &__panel {
+    padding: $space-6;
+    background: $linen-050;
+    border-radius: $radius-xl;
+  }
+
+  &__title {
+    margin-bottom: $space-2;
+    @include type($type-eyebrow, 1.2, 600);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    &--shown { color: $euc-600; }
+    &--hidden { color: $coral-600; }
+  }
+
+  &__standfirst {
+    margin-bottom: $space-5;
+    color: $text-body;
+    @include type($type-small, 1.55);
+  }
+
+  &__list {
+    display: grid;
+    gap: $space-4;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: $space-3;
+    align-items: start;
+  }
+
+  &__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: $radius-circle;
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 1;
+
+    &--shown {
+      background: $euc-050;
+      color: $euc-600;
+    }
+
+    &--hidden {
+      background: $coral-100;
+      color: $coral-ink;
+    }
+  }
+
+  &__label {
+    color: $text-heading;
+    @include type($type-small, 1.45, 600);
+  }
+
+  &__detail {
+    margin-top: 2px;
+    color: $text-body;
+    @include type($type-fine, 1.5);
+  }
+}

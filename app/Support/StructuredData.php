@@ -17,12 +17,12 @@ use Illuminate\Support\Facades\Storage;
  */
 class StructuredData
 {
-    public static function comingSoon(): array
+    public static function home(): array
     {
         // Same value the canonical tag and the sitemap use, so nothing disagrees.
-        $home = route('coming-soon');
+        $home = route('home');
         $base = rtrim($home, '/');
-        $copy = PageContent::for('coming-soon');
+        $copy = PageContent::for('home');
 
         $organisationId = $base.'/#organisation';
         $websiteId = $base.'/#website';

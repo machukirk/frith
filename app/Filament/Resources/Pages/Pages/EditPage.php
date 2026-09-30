@@ -29,7 +29,7 @@ class EditPage extends EditRecord
             Action::make('view')
                 ->label('View the page')
                 ->icon('heroicon-o-arrow-top-right-on-square')
-                ->url(fn () => route('coming-soon'), shouldOpenInNewTab: true)
+                ->url(fn () => route('home'), shouldOpenInNewTab: true)
                 ->color('gray'),
         ];
     }

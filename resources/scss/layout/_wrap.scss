@@ -1,0 +1,27 @@
+@use '../abstracts' as *;
+
+.wrap { @include container; }
+
+// A full-bleed horizontal band. The colour is the modifier; the padding is
+// shared, because the rhythm between sections should not drift band to band.
+.band {
+  padding-block: $space-12;
+
+  @include from(md) {
+    padding-block: $space-16;
+  }
+
+  &--page { background: $bg-page; }
+  &--alt { background: $bg-band; }
+  &--inverse {
+    background: $bg-inverse;
+    color: $text-on-inverse-muted;
+  }
+  &--deep { background: $bg-deep; }
+
+  &--tight {
+    padding-block: $space-10;
+
+    @include from(md) { padding-block: $space-12; }
+  }
+}

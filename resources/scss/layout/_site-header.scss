@@ -1,0 +1,109 @@
+@use '../abstracts' as *;
+
+.site-header {
+  background: $bg-page;
+
+  // Two headers, one shown at a time: a <details> disclosure on a phone and
+  // the laid-out bar from md up. Cheaper than scripting one into the other,
+  // and the phone one needs no JavaScript at all.
+  &__disclosure {
+    @include from(md) { display: none; }
+  }
+
+  &__bar {
+    @include container;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 64px;
+    cursor: pointer;
+    list-style: none;
+    @include focus-ring;
+
+    &::-webkit-details-marker { display: none; }
+  }
+
+  &__home-slot { display: inline-flex; }
+
+  &__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: $target-min;
+    height: $target-min;
+    margin-inline-end: -12px;
+    color: $ink-900;
+  }
+
+  &__toggle-close { display: none; }
+
+  &__disclosure[open] {
+    .site-header__toggle-open { display: none; }
+    .site-header__toggle-close { display: block; }
+  }
+
+  &__panel {
+    display: grid;
+    gap: $space-1;
+    padding-block: $space-2 $space-6;
+    border-top: 1px solid rgba($ink-900, 0.08);
+  }
+
+  &__panel-link {
+    @include tap-target;
+    color: $ink-900;
+    font-size: 16px;
+    text-decoration: none;
+    @include focus-ring;
+
+    &:hover { color: $action; }
+  }
+
+  &__inner {
+    display: none;
+
+    @include from(md) {
+      @include container;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: $space-4;
+      min-height: 72px;
+    }
+  }
+
+  &__home {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    @include focus-ring;
+  }
+
+  &__logo {
+    width: 104px;
+    height: auto;
+
+    @include from(md) { width: 118px; }
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: $space-6;
+  }
+
+  &__link {
+    @include tap-target(40px);
+    color: $ink-900;
+    @include type($type-small, 1.2);
+    text-decoration: none;
+    @include focus-ring;
+
+    &:hover { color: $action; }
+
+    &--strong {
+      color: $action;
+      font-weight: 500;
+    }
+  }
+}

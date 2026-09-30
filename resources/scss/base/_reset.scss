@@ -1,0 +1,57 @@
+@use '../abstracts' as *;
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: $bg-page;
+  color: $text-body;
+  font-family: $font-ui;
+  @include type($type-body, 1.68);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, p, figure, blockquote, dl, dd { margin: 0; }
+
+ul[class],
+ol[class] {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img,
+picture,
+svg { display: block; max-width: 100%; }
+
+img { height: auto; }
+
+a { color: inherit; }
+
+button,
+input,
+select,
+textarea { font: inherit; color: inherit; }
+
+button { cursor: pointer; }
+
+:target { scroll-margin-top: $space-16; }

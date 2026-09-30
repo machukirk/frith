@@ -1,0 +1,18 @@
+@use '../abstracts' as *;
+
+.section-head {
+  max-width: 780px;
+  margin-bottom: $space-8;
+
+  &__title { margin-bottom: $space-3; }
+
+  &__standfirst {
+    color: $text-body;
+    @include type($type-lead, 1.68);
+  }
+
+  &--on-inverse {
+    .section-head__title { color: $text-on-inverse; }
+    .section-head__standfirst { color: $euc-100; }
+  }
+}

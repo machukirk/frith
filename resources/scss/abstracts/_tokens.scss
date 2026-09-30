@@ -1,0 +1,104 @@
+// =============================================================================
+// Tokens
+//
+// Taken from the hi-fi, which is itself built on the brand guidelines' palette.
+// Everything downstream reads these — no raw hex below this file.
+// =============================================================================
+
+// --- Eucalyptus: the primary --------------------------------------------------
+$euc-900: #03221D; // footer
+$euc-800: #00322F;
+$euc-700: #274B44; // brand
+$euc-600: #006964; // "other families see" accent
+$euc-300: #7F9791; // muted type on dark
+$euc-200: #B8C7C4; // body type on dark
+$euc-100: #D6DFDD; // headings on dark
+$euc-050: #DFF1EF; // tick chip
+
+// --- Coral: the accent --------------------------------------------------------
+$coral-600: #B34328; // eyebrows and type on light
+$coral-400: #E56A4E; // brand
+$coral-200: #FFB19E; // type on dark
+$coral-100: #FFD4C9; // minus chip
+$coral-ink: #963630; // minus glyph
+
+// --- Ink ----------------------------------------------------------------------
+$ink-900: #1B2940; // headings
+$ink-600: #4F5B70; // body
+
+// --- Linen --------------------------------------------------------------------
+$linen-050: #F8F4EE; // page
+$linen-100: #F0ECE6; // alternate band
+$linen-200: #E7E2DA; // image plate
+$linen-500: #ADA69B;
+$linen-700: #5D5A56;
+$white: #FFFFFF;
+
+// --- Roles --------------------------------------------------------------------
+$bg-page: $linen-050;
+$bg-band: $linen-100;
+$bg-inverse: $euc-700;
+$bg-deep: $euc-900;
+$bg-surface: $white;
+
+$text-heading: $ink-900;
+$text-body: $ink-600;
+$text-eyebrow: $coral-600;
+$text-on-inverse: $linen-050;
+$text-on-inverse-muted: $euc-200;
+
+$action: $euc-700;
+$action-accent: $coral-400;
+
+// --- Type ---------------------------------------------------------------------
+$font-ui: 'Livvic', -apple-system, 'Segoe UI', Roboto, sans-serif;
+$font-display: 'Caudex', Georgia, serif; // the wordmark only
+
+// Mobile first: each is (mobile, desktop). Desktop values are the hi-fi's.
+$type-hero: (36px, 58px);
+$type-h2: (26px, 30px);
+$type-h3: (17px, 18px);
+$type-lead: (16px, 18px);
+$type-body: (15px, 16px);
+$type-small: (13px, 14px);
+$type-fine: (12px, 12.5px);
+$type-eyebrow: (11px, 11px);
+
+// --- Spacing: 4px grid ---------------------------------------------------------
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 20px;
+$space-6: 24px;
+$space-8: 32px;
+$space-10: 40px;
+$space-12: 48px;
+$space-14: 56px;
+$space-16: 64px;
+$space-20: 80px;
+
+// --- Radii ---------------------------------------------------------------------
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 12px;
+$radius-xl: 14px;
+$radius-pill: 999px;
+$radius-circle: 50%;
+
+// --- Layout ---------------------------------------------------------------------
+$container: 1140px;
+$gutter: 20px;
+$gutter-lg: 32px;
+
+// The smallest target anyone has to hit. Guidelines §08 — above the 44px floor,
+// because this is read on a cracked phone at 11pm.
+$target-min: 48px;
+
+// --- Breakpoints -----------------------------------------------------------------
+$breakpoints: (
+  sm: 480px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1300px,
+);

@@ -1,0 +1,50 @@
+@use '../abstracts' as *;
+
+// A native <details> list. It opens with no JavaScript, and a screen reader
+// already knows what a disclosure is without being told.
+.faq {
+  border-top: 1px solid rgba($ink-900, 0.1);
+
+  &__item {
+    border-bottom: 1px solid rgba($ink-900, 0.1);
+  }
+
+  &__summary {
+    @include tap-target(56px);
+    justify-content: space-between;
+    gap: $space-4;
+    width: 100%;
+    padding-block: $space-4;
+    color: $text-heading;
+    @include type((16px, 17.5px), 1.4, 600);
+    cursor: pointer;
+    list-style: none;
+    @include focus-ring;
+
+    &::-webkit-details-marker { display: none; }
+  }
+
+  &__mark {
+    flex: none;
+    color: $action;
+    font-size: 17px;
+    line-height: 1;
+
+    &::after { content: '+'; }
+  }
+
+  &__item[open] &__mark::after { content: '\2212'; }
+
+  &__body {
+    padding-bottom: $space-5;
+    max-width: 68ch;
+    color: $text-body;
+    @include type($type-body, 1.7);
+  }
+}
+
+.faq-footer {
+  margin-top: $space-6;
+  color: $text-body;
+  @include type((14px, 15px), 1.65);
+}

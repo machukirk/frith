@@ -80,11 +80,11 @@ class AdminPanelTest extends TestCase
     public function editing_the_page_changes_what_visitors_see(): void
     {
         $this->seed(PageSeeder::class);
-        $page = Page::query()->where('slug', 'coming-soon')->sole();
+        $page = Page::query()->where('slug', 'home')->sole();
 
         // Warm the cache first, so this also proves saving clears it. Without
         // that, an editor saves, reloads the site, sees no change, and saves again.
-        $this->get(route('coming-soon'))->assertSee('A community for families with SEND');
+        $this->get(route('home'))->assertSee('Shared experiences. Real connection.');
 
         $this->actingAs($this->editor());
 
@@ -93,17 +93,20 @@ class AdminPanelTest extends TestCase
             ->fillForm(fn (array $state) => [
                 'content' => [
                     ...$state['content'],
-                    'eyebrow' => 'For every family navigating SEND',
-                    'standfirst' => 'A new paragraph, written in the admin panel.',
+                    'hero' => [
+                        ...$state['content']['hero'],
+                        'eyebrow' => 'For every family navigating SEND',
+                        'standfirst' => 'A new paragraph, written in the admin panel.',
+                    ],
                 ],
             ])
             ->call('save')
             ->assertHasNoFormErrors();
 
-        $this->get(route('coming-soon'))
+        $this->get(route('home'))
             ->assertSee('For every family navigating SEND')
             ->assertSee('A new paragraph, written in the admin panel.')
-            ->assertDontSee('A community for families with SEND');
+            ->assertDontSee('Shared experiences. Real connection.');
     }
 
     #[Test]
@@ -187,7 +190,7 @@ class AdminPanelTest extends TestCase
     public function an_edit_records_who_made_it(): void
     {
         $this->seed(PageSeeder::class);
-        $page = Page::query()->where('slug', 'coming-soon')->sole();
+        $page = Page::query()->where('slug', 'home')->sole();
         $editor = $this->editor();
 
         $this->actingAs($editor);
@@ -201,21 +204,21 @@ class AdminPanelTest extends TestCase
     }
 
     #[Test]
-    public function removing_a_card_actually_removes_it(): void
+    public function removing_a_section_item_actually_removes_it(): void
     {
         // Lists are replaced wholesale rather than merged with the config
-        // defaults. Merging element by element would put the deleted card back.
+        // defaults. Merging element by element would put the deleted one back.
         $this->seed(PageSeeder::class);
-        $page = Page::query()->where('slug', 'coming-soon')->sole();
+        $page = Page::query()->where('slug', 'home')->sole();
 
         $content = $page->content;
-        $content['cards'] = [$content['cards'][0]];
+        $content['pillars'] = [$content['pillars'][0]];
         $page->update(['content' => $content]);
 
-        $copy = PageContent::for('coming-soon');
+        $copy = PageContent::for('home');
 
-        $this->assertCount(1, $copy['cards']);
-        $this->get(route('coming-soon'))->assertDontSee('People who have been there');
+        $this->assertCount(1, $copy['pillars']);
+        $this->get(route('home'))->assertDontSee('People who have been there');
     }
 
     #[Test]
@@ -224,16 +227,19 @@ class AdminPanelTest extends TestCase
         // A deploy can add a field before anyone has opened the admin panel.
         // The page has to keep rendering words rather than blanks.
         Page::query()->create([
-            'slug' => 'coming-soon',
-            'name' => 'Coming soon page',
-            'content' => ['eyebrow' => 'Only this key is set'],
+            'slug' => 'home',
+            'name' => 'Home page',
+            'content' => ['hero' => ['eyebrow' => 'Only this key is set']],
         ]);
 
-        $copy = PageContent::for('coming-soon');
+        $copy = PageContent::for('home');
 
-        $this->assertSame('Only this key is set', $copy['eyebrow']);
-        $this->assertSame(config('frith.coming_soon.cta.button'), $copy['cta']['button']);
-        $this->assertCount(3, $copy['cards']);
+        $this->assertSame('Only this key is set', $copy['hero']['eyebrow']);
+
+        // The key beside it, and whole sections below it, still fall back.
+        $this->assertSame(config('frith-content.home.hero.primary_cta'), $copy['hero']['primary_cta']);
+        $this->assertCount(3, $copy['pillars']);
+        $this->assertCount(9, $copy['faq']['items']);
     }
 
     #[Test]
@@ -241,9 +247,9 @@ class AdminPanelTest extends TestCase
     {
         $this->assertDatabaseCount('pages', 0);
 
-        $this->get(route('coming-soon'))
+        $this->get(route('home'))
             ->assertOk()
-            ->assertSee(config('frith.coming_soon.cta.button'));
+            ->assertSee(config('frith-content.home.hero.primary_cta'));
     }
 
     #[Test]
