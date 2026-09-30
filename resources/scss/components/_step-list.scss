@@ -1,0 +1,52 @@
+@use '../abstracts' as *;
+
+// The long-form numbered steps on How it works — bigger than the home page's
+// three, and each can carry a note.
+.step-list {
+  display: grid;
+  gap: $space-4;
+
+  &__item {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: $space-4;
+    padding: $space-5;
+    background: $bg-surface;
+    border: 1px solid $linen-300;
+    border-radius: $radius-card;
+
+    @include from(md) {
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: $space-5;
+      padding: $space-6 $space-8;
+    }
+  }
+
+  &__number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: $action;
+    border-radius: $radius-circle;
+    color: $linen-050;
+    font-weight: 600;
+    font-size: 16px;
+
+    @include from(md) { width: 40px; height: 40px; }
+  }
+
+  &__title {
+    margin-bottom: $space-2;
+    color: $text-heading;
+    @include type((17px, 19px), 1.3, 600);
+  }
+
+  &__body {
+    color: $text-body;
+    @include type((14px, 15px), 1.65);
+  }
+
+  &__note { margin-top: $space-4; }
+}

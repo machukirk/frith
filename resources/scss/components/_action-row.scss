@@ -1,0 +1,16 @@
+@use '../abstracts' as *;
+
+// A row of buttons at the foot of a section, ruled off from what is above it.
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-3;
+  margin-top: $space-6;
+  padding-top: $space-3;
+  border-top: 1px solid $linen-300;
+
+  &--bare {
+    padding-top: 0;
+    border-top: 0;
+  }
+}

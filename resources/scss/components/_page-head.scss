@@ -1,0 +1,30 @@
+@use '../abstracts' as *;
+
+// The top of every page that is not the home page.
+.page-head {
+  padding-block: $space-10 $space-8;
+
+  @include from(md) { padding-block: $space-14 $space-10; }
+
+  &__inner { @include container; }
+
+  &__title {
+    margin-bottom: $space-4;
+    @include type((30px, 40px), 1.12);
+  }
+
+  &__standfirst {
+    max-width: 62ch;
+    color: $text-body;
+    @include type((16px, 18px), 1.7);
+  }
+
+  &--narrow &__inner { max-width: 820px; }
+}
+
+// "Last updated 9 September 2026 · about 6 minutes to read"
+.doc-meta {
+  margin-top: $space-3;
+  color: $linen-700;
+  @include type($type-fine, 1.5);
+}

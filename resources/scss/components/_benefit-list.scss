@@ -1,0 +1,29 @@
+@use '../abstracts' as *;
+
+// What a Frith+ membership adds. A title and the line that explains it, on the
+// eucalyptus band.
+.benefit-list {
+  display: grid;
+  gap: $space-4;
+  margin-top: $space-5;
+
+  @include from(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: $space-5 $space-8;
+  }
+
+  &__item {
+    display: grid;
+    gap: $space-1;
+  }
+
+  &__title {
+    color: $text-on-inverse;
+    @include type((15px, 16px), 1.35, 600);
+  }
+
+  &__detail {
+    color: $euc-200;
+    @include type((13.5px, 14px), 1.6);
+  }
+}

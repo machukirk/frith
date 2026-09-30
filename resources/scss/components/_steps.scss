@@ -12,7 +12,8 @@
   &__item {
     padding: $space-6;
     background: $bg-surface;
-    border-radius: $radius-xl;
+    border: 1px solid $linen-300;
+    border-radius: $radius-card;
   }
 
   &__number {

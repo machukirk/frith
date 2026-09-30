@@ -16,7 +16,7 @@ return [
     'primary' => [
         ['label' => 'Home', 'route' => 'home'],
         ['label' => 'How it works', 'route' => 'how-it-works'],
-        ['label' => 'Safety', 'route' => 'safety'],
+        ['label' => 'Safety', 'route' => 'meet-up-safety'],
     ],
 
     'footer' => [

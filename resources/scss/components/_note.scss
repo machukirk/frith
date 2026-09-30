@@ -1,0 +1,41 @@
+@use '../abstracts' as *;
+
+// The teal reassurance box. Used inline inside a step, and at panel size at
+// the top of a policy as "the short version".
+.note {
+  padding: $space-4;
+  background: $euc-050;
+  border-radius: 10px;
+  color: $euc-800;
+  @include type((13px, 13.5px), 1.6);
+
+  &--panel {
+    padding: $space-5 $space-6;
+    border-radius: $radius-xl;
+    @include type((15px, 15.5px), 1.6);
+  }
+
+  // Amber, with a rule down the side. This is the 999 box: it has to read as a
+  // different kind of thing from the reassurance panel it usually sits under,
+  // or the one line on the page that is urgent looks like all the calm ones.
+  &--urgent {
+    background: $mustard-100;
+    border-inline-start: 3px solid $mustard-700;
+    border-radius: $radius-sm $radius-xl $radius-xl $radius-sm;
+    color: $mustard-900;
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: $space-2;
+    color: $euc-600;
+    @include type($type-eyebrow, 1.2, 600);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  &--urgent &__label { color: $mustard-700; }
+
+  // A note that follows a block rather than sitting inside one.
+  &--standalone { margin-top: $space-5; }
+}

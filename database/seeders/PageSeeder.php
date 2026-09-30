@@ -37,6 +37,17 @@ class PageSeeder extends Seeder
      */
     public static function pages(): array
     {
-        return ['home' => 'Home page'];
+        return [
+            'home' => 'Home page',
+            'how-it-works' => 'How it works',
+            'about' => 'About',
+            'help' => 'Help centre',
+            'meet-up-safety' => 'Meet-up safety guide',
+            'reporting' => 'Reporting & complaints',
+            'community-guidelines' => 'Community Guidelines',
+            'terms' => 'Terms of Service',
+            'privacy' => 'Privacy Policy',
+            'frith-plus' => 'Frith+',
+        ];
     }
 }

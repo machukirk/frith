@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RegistrationEmailController;
 use App\Http\Controllers\RegistrationExperienceController;
@@ -13,9 +14,26 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Spatie\Honeypot\ProtectAgainstSpam;
 
-// The pages read their own copy through App\Support\PageContent, so there is
-// nothing for a controller to do. The holding page is gone — this is the site.
+/*
+ * The public pages. Each reads its own copy through App\Support\PageContent, so
+ * there is nothing for a controller to do — the slug is the route name is the
+ * content key, and a page is a view plus a file in config/content.
+ */
 Route::view('/', 'pages.home')->name('home');
+
+foreach ([
+    'how-it-works',
+    'about',
+    'help',
+    'meet-up-safety',
+    'reporting',
+    'community-guidelines',
+    'terms',
+    'privacy',
+    'frith-plus',
+] as $page) {
+    Route::view("/{$page}", "pages.{$page}")->name($page);
+}
 
 /*
  * The sitemap and manifest are public, identical for every visitor, and have no
@@ -32,6 +50,15 @@ Route::withoutMiddleware([
     Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
     Route::get('/site.webmanifest', WebManifestController::class)->name('manifest');
 });
+
+/*
+ * The help page's "write to a person" form. Honeypot rather than a CAPTCHA:
+ * somebody writing in about a safeguarding worry should not be asked to
+ * identify fire hydrants first.
+ */
+Route::post('/help/contact', [ContactController::class, 'store'])
+    ->middleware([ProtectAgainstSpam::class, 'throttle:6,1'])
+    ->name('help.contact');
 
 /*
  * Frith Founders registration. Every step is a real POST that saves before it

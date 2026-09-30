@@ -1,0 +1,36 @@
+@use '../abstracts' as *;
+
+// A white card with a hairline. The generic one: a title, some copy, sometimes
+// a small label above. Reach for this before borrowing another block's card.
+.panel {
+  padding: $space-5 $space-6;
+  background: $bg-surface;
+  border: 1px solid $linen-300;
+  border-radius: $radius-card;
+
+  &__label {
+    display: block;
+    margin-bottom: $space-2;
+    color: $coral-600;
+    @include type((12px, 12.5px), 1.2, 600);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    margin-bottom: $space-2;
+    color: $text-heading;
+    @include type((15px, 16px), 1.3, 600);
+  }
+
+  &__body {
+    color: $text-body;
+    @include type((13px, 13.5px), 1.6);
+  }
+
+  // A stack of them, tighter than .prose's default rhythm.
+  &-stack {
+    display: grid;
+    gap: $space-3;
+  }
+}

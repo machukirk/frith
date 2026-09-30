@@ -1,0 +1,50 @@
+@use '../abstracts' as *;
+
+// The help centre's grid of topics.
+.link-cards {
+  display: grid;
+  gap: $space-4;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  // Cards size to their contents rather than stretching to the tallest thing
+  // beside them.
+  align-content: start;
+
+  // For a narrower column — inside .prose, three across needs a lower floor
+  // than the default or it breaks to 2 + 1.
+  &--tight {
+    gap: $space-3;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  }
+
+  &__item {
+    padding: $space-5 $space-6;
+    background: $bg-surface;
+    border: 1px solid $linen-300;
+    border-radius: $radius-card;
+  }
+
+  // The smaller line under a card's title — a response time, an address.
+  &__body {
+    margin-top: $space-1;
+    color: $text-body;
+    @include type($type-fine, 1.5);
+  }
+
+  &__title {
+    margin-bottom: $space-3;
+    color: $text-heading;
+    @include type((15px, 16px), 1.3, 600);
+  }
+
+  &__links { display: grid; }
+
+  &__link {
+    @include tap-target(40px);
+    color: $action;
+    @include type((13.5px, 13.5px), 1.45);
+    text-decoration: none;
+    @include focus-ring;
+
+    &:hover { text-decoration: underline; }
+  }
+}
