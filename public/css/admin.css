@@ -20,6 +20,14 @@
     }
 }
 
+@media (min-width: 1800px) {
+    .page-editor--split {
+        /* Past a point the form stops benefiting from more room and the
+           preview keeps benefiting, so the extra goes to the page. */
+        grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    }
+}
+
 .page-editor__preview {
     position: sticky;
     top: 5rem;

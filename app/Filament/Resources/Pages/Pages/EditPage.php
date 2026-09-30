@@ -7,6 +7,7 @@ use App\Http\Controllers\PagePreviewController;
 use App\Support\SiteNavigation;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Support\Enums\Width;
 use Illuminate\Support\Facades\Auth;
 
 class EditPage extends EditRecord
@@ -15,8 +16,21 @@ class EditPage extends EditRecord
 
     protected string $view = 'filament.pages.edit-page-with-preview';
 
-    /** Widened by the preview toggle; the form alone does not need the room. */
     public bool $showPreview = true;
+
+    /**
+     * Full width, unlike the rest of the panel.
+     *
+     * Two columns of a page each need to be wide enough to read, and the
+     * panel's usual cap leaves the preview too narrow to recognise the page
+     * in. With the preview hidden the form goes back to the normal width,
+     * because a single column of fields stretched across a monitor is worse,
+     * not better.
+     */
+    public function getMaxContentWidth(): Width|string|null
+    {
+        return $this->showPreview ? Width::Full : parent::getMaxContentWidth();
+    }
 
     public function getHeading(): string
     {
