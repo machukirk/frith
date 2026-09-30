@@ -19,11 +19,13 @@
   > * { max-width: var(--measure); }
 
   // Anything that is not a line of text: it is not read at a measure, and
-  // squeezing it to one only makes it harder to follow.
+  // squeezing it to one only makes it harder to follow. 100% rather than
+  // none — free of the measure, but still inside the column, or a wide table
+  // pushes the whole page sideways instead of scrolling within itself.
   > .data-table__scroll,
   > table,
   > figure,
-  > img { max-width: none; }
+  > img { max-width: 100%; }
 
   > * + * { margin-top: $space-5; }
 

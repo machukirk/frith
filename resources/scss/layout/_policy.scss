@@ -11,6 +11,10 @@
   &__inner {
     @include container;
     display: grid;
+    // minmax(0, 1fr) rather than a bare auto column: a grid item's min-width
+    // is its content, so the wide comparison table would stretch the column
+    // past the screen instead of scrolling inside it.
+    grid-template-columns: minmax(0, 1fr);
     gap: $space-8;
     padding-block: $space-8 $space-16;
 
@@ -21,10 +25,17 @@
     }
   }
 
+  // Gone on a phone. It is a list of the other policies and a note about
+  // reaching a person, and the footer already carries both — so on a small
+  // screen it was only something to scroll past before reaching the policy
+  // somebody came for.
   &__aside {
+    display: none;
+
     @include from(lg) {
       position: sticky;
       top: $space-6;
+      display: block;
     }
   }
 
