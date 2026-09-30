@@ -8,6 +8,8 @@
 
     <section class="auth">
         <div class="auth__inner">
+            <p class="auth__badge" aria-hidden="true">&#9993;</p>
+
             <h1 class="heading auth__title">{{ $s['title'] }}</h1>
 
             {{-- Their own address back, if they came straight from the form.
@@ -29,9 +31,9 @@
                 ) !!}
             </p>
 
-            <p class="auth__foot">
-                <a href="{{ route('login') }}">{{ $s['back'] }}</a>
-            </p>
+            <div class="auth__foot auth__foot--action">
+                <a class="button button--outline button--block" href="{{ route('login') }}">{{ $s['back'] }}</a>
+            </div>
         </div>
     </section>
 

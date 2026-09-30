@@ -25,9 +25,9 @@
                 <button class="button button--primary button--block" type="submit">{{ $f['button'] }}</button>
             </form>
 
-            <p class="auth__foot">
-                <a href="{{ route('login') }}">{{ $f['back'] }}</a>
-            </p>
+            <div class="auth__foot auth__foot--action">
+                <a class="button button--outline button--block" href="{{ route('login') }}">{{ $f['back'] }}</a>
+            </div>
         </div>
     </section>
 

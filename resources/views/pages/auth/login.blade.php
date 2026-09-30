@@ -45,7 +45,7 @@
                 <x-honeypot />
                 <input type="hidden" name="email" value="{{ old('email') }}">
 
-                <button class="button button--quiet button--block" type="submit">{{ $l['link_button'] }}</button>
+                <button class="button button--outline button--block" type="submit">{{ $l['link_button'] }}</button>
             </form>
 
             <p class="auth__note">{{ $l['note'] }}</p>
