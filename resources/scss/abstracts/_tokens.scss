@@ -110,7 +110,11 @@ $radius-pill: 999px;
 $radius-circle: 50%;
 
 // --- Layout ---------------------------------------------------------------------
-$container: 1140px;
+// 1440px. The hi-fi is drawn on 1140 inside a 1300px frame, but that leaves a
+// lot of empty page on a real monitor. Every block of running text caps its own
+// measure in ch, so the extra width goes to the layout rather than to line
+// length — see .prose, .page-head, .faq, .cta-band.
+$container: 1440px;
 $gutter: 20px;
 $gutter-lg: 32px;
 
