@@ -34,7 +34,7 @@
 
   &__mark {
     flex: none;
-    color: $action;
+    color: $linen-700;
     font-size: 16px;
     line-height: 1;
 
@@ -49,8 +49,8 @@
   }
 
   &__note {
-    padding-block: $space-3;
-    color: $text-body;
+    padding-block: $space-3 14px;
+    color: $linen-700;
     @include type((12.5px, 13px), 1.55);
   }
 
