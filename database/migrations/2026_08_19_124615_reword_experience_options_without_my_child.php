@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\DB;
  *
  * A family with three children had to read each statement as though it were
  * about one of them. The selection is about the household, so the wording is
- * now subject-free — "Finding the school environment overwhelming" rather than
- * "My child finds the school environment overwhelming" — and uses
+ * now subject-free: "Finding the school environment overwhelming" rather than
+ * "My child finds the school environment overwhelming". The wording uses
  * them/their/themselves wherever a person is needed, which reads the same for
  * one child or four.
  *

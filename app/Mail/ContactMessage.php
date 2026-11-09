@@ -29,7 +29,7 @@ class ContactMessage extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Frith — '.$this->fields['topic'],
+            subject: 'Frith: '.$this->fields['topic'],
             replyTo: [$this->fields['email']],
         );
     }

@@ -1,4 +1,4 @@
-<x-layouts.site :title="'Block '.$other->displayName().' — Frith'" :noindex="true">
+<x-layouts.site :title="'Block '.$other->displayName().' · Frith'" :noindex="true">
 
     <section class="auth">
         <div class="auth__inner">

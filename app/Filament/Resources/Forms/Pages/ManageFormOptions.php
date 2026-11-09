@@ -32,7 +32,7 @@ use Illuminate\Support\Str;
  * One rule governs this screen. What a family selected is stored as a slug, so
  * deleting an option somebody chose leaves them with an answer that resolves to
  * nothing and they quietly stop matching on it. Archiving takes it off the form
- * while every answer already given keeps its meaning — so Archive is what is
+ * while every answer already given keeps its meaning. So Archive is what is
  * offered, and Delete only appears for an option nobody has ever picked.
  */
 class ManageFormOptions extends ManageRelatedRecords
@@ -72,7 +72,7 @@ class ManageFormOptions extends ManageRelatedRecords
     {
         return $schema->components([
             Callout::make('The wording is yours to change, the slug is not')
-                ->description('Reword an option whenever you like — the database stores a short slug underneath, so nobody who already chose it is affected. The slug itself is fixed once the option exists.')
+                ->description('Reword an option whenever you like. The database stores a short slug underneath, so nobody who already chose it is affected. The slug itself is fixed once the option exists.')
                 ->icon(Heroicon::OutlinedLockClosed)
                 ->color('warning')
                 ->columnSpanFull(),
@@ -92,7 +92,7 @@ class ManageFormOptions extends ManageRelatedRecords
             // means to make.
             Select::make('parent_id')
                 ->label('Sits under')
-                ->placeholder('Nothing — this is a top-level choice')
+                ->placeholder('Nothing: this is a top-level choice')
                 ->options(fn () => $this->getOwnerRecord()
                     ->options()
                     ->whereNull('parent_id')
@@ -141,14 +141,14 @@ class ManageFormOptions extends ManageRelatedRecords
             ->recordTitleAttribute('label')
             // reorder() clears the orderBy('position') that Form::options()
             // carries. Without it that runs first, and every list's first
-            // option lands together, then every list's second — which is the
+            // option lands together, then every list's second. That is the
             // pile this screen was in to begin with.
             ->modifyQueryUsing(fn (Builder $query) => $query->with('parent')->reorder())
             ->groups([static::listGrouping()])
             ->defaultGroup('list')
             // No defaultSort: a table sort is applied before the group's own
-            // ordering, which would interleave the lists again — the exact
-            // thing the grouping is here to stop.
+            // ordering, which would interleave the lists again. That is the
+            // exact thing the grouping is here to stop.
             ->columns([
                 TextColumn::make('label')
                     ->label('Option')
@@ -177,7 +177,7 @@ class ManageFormOptions extends ManageRelatedRecords
                     ->label('Chosen by')
                     ->state(fn (FormOption $record) => $record->usageCount())
                     ->formatStateUsing(fn (int $state) => $state === 0
-                        ? '—'
+                        ? '-'
                         : $state.' famil'.($state === 1 ? 'y' : 'ies'))
                     ->color(fn (int $state) => $state > 0 ? 'success' : 'gray'),
 
@@ -262,7 +262,7 @@ class ManageFormOptions extends ManageRelatedRecords
     /**
      * One block per list, in the order somebody meets them filling the form in.
      *
-     * The default sort is by position, which is per-list — so ungrouped, the
+     * The default sort is by position, which is per-list. So ungrouped, the
      * table interleaved every list's first option, then every list's second,
      * and so on. It was unreadable, and no amount of squinting at a badge
      * column was going to fix it.

@@ -24,7 +24,7 @@ class RegistrationsTable
                 TextColumn::make('founder_number')
                     ->label('#')
                     ->sortable()
-                    ->formatStateUsing(fn ($state) => $state ? '#'.$state : '—'),
+                    ->formatStateUsing(fn ($state) => $state ? '#'.$state : '-'),
 
                 TextColumn::make('first_name')
                     ->label('Name')
@@ -37,7 +37,7 @@ class RegistrationsTable
                 TextColumn::make('postcode_outcode')
                     ->label('Area')
                     ->searchable()
-                    ->placeholder('—'),
+                    ->placeholder('-'),
 
                 TextColumn::make('children_count')
                     ->label('Children')

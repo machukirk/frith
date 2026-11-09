@@ -53,8 +53,8 @@
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:alt" content="{{ $shareImageAlt }}">
 
-    {{-- No @site or @creator until those accounts exist — claiming handles
-         that do not is worse than omitting them. --}}
+    {{-- No @site or @creator until those accounts exist. Claiming handles
+         that do not exist is worse than omitting them. --}}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $pageTitle }}">
     <meta name="twitter:description" content="{{ $pageDescription }}">

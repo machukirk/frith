@@ -3,7 +3,7 @@
 return [
 
     'meta' => [
-        'title' => 'Terms of Service — Frith',
+        'title' => 'Terms of Service · Frith',
         'description' => 'The terms you agree to when you use Frith, written to be read rather than survived: who can join, what you agree to, how money works, and how to leave.',
     ],
 
@@ -28,7 +28,7 @@ return [
         [
             'title' => 'Who can use Frith',
             'paragraphs' => [
-                'You must be 18 or over, and you must be a parent, carer, guardian or other adult with a caring role for a child. We verify that you are a real adult before you can message anyone. Verification confirms identity — it is not a character reference, and we do not run DBS checks.',
+                'You must be 18 or over, and you must be a parent, carer, guardian or other adult with a caring role for a child. We verify that you are a real adult before you can message anyone. Verification confirms identity. It is not a character reference, and we do not run DBS checks.',
                 'One account per adult. Do not create an account on someone else’s behalf, and do not share your login with anyone, including your partner. If two adults in a household both want to be here, that is two accounts.',
             ],
         ],
@@ -38,7 +38,7 @@ return [
                 'Be truthful about who you are and about your family.',
                 'Treat other families the way you would want to be treated on a difficult day.',
                 'Keep other families’ information private. What is shared with you on Frith stays on Frith.',
-                'Never share information about someone else’s child — not their name, their diagnosis, their school, or their photograph.',
+                'Never share information about someone else’s child: not their name, their diagnosis, their school, or their photograph.',
                 'Tell us if you see something that worries you.',
             ],
         ],
@@ -56,7 +56,7 @@ return [
         [
             'title' => 'Money',
             'paragraphs' => [
-                'Frith is free to join and always will be for the basics — building a profile, joining the Journeys you choose, connecting with families who ask you too, and messaging them. Frith+ is an optional membership that adds more ways to look. Prices are shown before you pay and renewals are always emailed to you in advance.',
+                'Frith is free to join and always will be for the basics: building a profile, joining the Journeys you choose, connecting with families who ask you too, and messaging them. Frith+ is an optional membership that adds more ways to look. Prices are shown before you pay and renewals are always emailed to you in advance.',
                 'If you registered before we opened, Frith+ is free for your family for good. That is a promise, not an introductory offer.',
             ],
         ],
@@ -64,7 +64,7 @@ return [
             'title' => 'Removing an account',
             'paragraphs' => [
                 'We can suspend or remove an account that breaks these terms. For anything involving a child’s safety we act first and ask questions afterwards, and we will always cooperate with the police or a local authority safeguarding team.',
-                'You can leave at any time from your account. Your profile disappears from Journeys and search straight away. Messages you have already sent stay in the other family’s inbox — we cannot remove words from someone else’s conversation. Everything else is deleted within 30 days.',
+                'You can leave at any time from your account. Your profile disappears from Journeys and search straight away. Messages you have already sent stay in the other family’s inbox. We cannot remove words from someone else’s conversation. Everything else is deleted within 30 days.',
             ],
         ],
         [
@@ -85,5 +85,5 @@ return [
         ],
     ],
 
-    'closing' => 'Something here unclear? Write to :email and we will explain it in plainer words — and probably rewrite this page.',
+    'closing' => 'Something here unclear? Write to :email and we will explain it in plainer words. We will probably rewrite this page too.',
 ];

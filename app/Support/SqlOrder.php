@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
  * "Order by this list, in this order."
  *
  * A CASE expression rather than MySQL's FIELD(), because the test suite runs
- * on SQLite and does not have it — a difference that has now cost two
- * debugging sessions, so it lives in one place.
+ * on SQLite and does not have it. That difference has now cost two debugging
+ * sessions, so it lives in one place.
  */
 class SqlOrder
 {

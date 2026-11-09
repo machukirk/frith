@@ -36,7 +36,7 @@ class FounderOverview extends StatsOverviewWidget
                 ->description($partial > 0 ? 'Still registered, just fewer answers' : 'Everyone finished')
                 ->color($partial > 0 ? 'warning' : 'gray'),
 
-            Stat::make('Busiest area', $topArea?->postcode_outcode ?? '—')
+            Stat::make('Busiest area', $topArea?->postcode_outcode ?? '-')
                 ->description($topArea ? $topArea->n.' families' : 'No postcodes yet')
                 ->color('gray'),
         ];

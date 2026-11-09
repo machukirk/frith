@@ -1,4 +1,4 @@
-<x-layouts.site :title="$other->displayName().' — Frith'" :noindex="true">
+<x-layouts.site :title="$other->displayName().' · Frith'" :noindex="true">
 
     <section class="thread">
         <div class="thread__head">

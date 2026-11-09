@@ -4,7 +4,7 @@
     $founder = auth('founder')->user();
 @endphp
 
-<x-layouts.site :title="$v['title'].' — Frith'" :noindex="true">
+<x-layouts.site :title="$v['title'].' · Frith'" :noindex="true">
 
     <section class="auth">
         <div class="auth__inner">

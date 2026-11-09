@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * Structure is not here. Which screens exist, in what order, and how they
  * behave is code, because this form has real behaviour a generic builder
- * cannot express — saving on every step, the child repeater, section two
+ * cannot express: saving on every step, the child repeater, section two
  * appearing only for the areas somebody picked.
  */
 class FormResource extends Resource
@@ -63,7 +63,7 @@ class FormResource extends Resource
                 TextColumn::make('description')->label('')->color('gray')->wrap(),
                 TextColumn::make('steps_count')->counts('steps')->label('Screens')->alignCenter(),
                 TextColumn::make('updated_at')->label('Last changed')->since()->sortable(),
-                TextColumn::make('updatedBy.name')->label('By')->placeholder('—'),
+                TextColumn::make('updatedBy.name')->label('By')->placeholder('-'),
             ])
             ->recordActions([EditAction::make()->label('Edit wording')])
             ->paginated(false);
@@ -72,7 +72,7 @@ class FormResource extends Resource
     /**
      * The tabs down the side of a form.
      *
-     * Without this the Options page has a route and no way to reach it — it
+     * Without this the Options page has a route and no way to reach it. It
      * was only ever openable by typing the URL, which nobody was going to do.
      *
      * @return array<NavigationItem>

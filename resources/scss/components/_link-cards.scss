@@ -9,7 +9,7 @@
   // beside them.
   align-content: start;
 
-  // For a narrower column — inside .prose, three across needs a lower floor
+  // For a narrower column: inside .prose, three across needs a lower floor
   // than the default or it breaks to 2 + 1.
   &--tight {
     gap: $space-3;
@@ -23,7 +23,7 @@
     border-radius: $radius-card;
   }
 
-  // The smaller line under a card's title — a response time, an address.
+  // The smaller line under a card's title: a response time, an address.
   &__body {
     margin-top: $space-1;
     color: $text-body;

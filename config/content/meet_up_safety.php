@@ -3,8 +3,8 @@
 return [
 
     'meta' => [
-        'title' => 'Meeting another family for the first time — Frith',
-        'description' => 'Meet somewhere public, tell someone where you’ll be, and leave if it doesn’t feel right — plus what Frith checks before an adult can message you.',
+        'title' => 'Meeting another family for the first time · Frith',
+        'description' => 'Meet somewhere public, tell someone where you’ll be, and leave if it doesn’t feel right. Here is what Frith checks before an adult can message you.',
     ],
 
     'head' => [
@@ -15,7 +15,7 @@ return [
 
     'short_version' => [
         'label' => 'The short version',
-        'body' => 'Meet somewhere public. Tell someone where you’ll be. Bring your own transport if you can. You can change your mind at any point, right up to the moment you arrive — and you never owe anyone an explanation.',
+        'body' => 'Meet somewhere public. Tell someone where you’ll be. Bring your own transport if you can. You can change your mind at any point, right up to the moment you arrive, and you never owe anyone an explanation.',
     ],
 
     'intro' => 'Most first meet-ups on Frith are a coffee, a walk, or a play session at a soft-play centre. They are usually unremarkable, which is the point. These are the things we’d ask you to do anyway.',

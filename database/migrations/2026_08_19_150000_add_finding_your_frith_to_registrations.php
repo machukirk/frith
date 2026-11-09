@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::table('registrations', function (Blueprint $table) {
             // Finding your Frith: what they hope for, how they would rather go
             // about it, and who they would like to meet. Nullable for the same
-            // reason as the interests columns — null means never asked, an
+            // reason as the interests columns: null means never asked, an
             // empty array means asked and nothing chosen.
             $table->json('hopes')->nullable()->after('activity_supports');
             $table->json('connection_styles')->nullable()->after('hopes');

@@ -128,7 +128,7 @@
                         <ul class="visibility__list">
                             @foreach ($panel['items'] as $item)
                                 <li class="visibility__row">
-                                    <span class="visibility__mark visibility__mark--{{ $kind }}" aria-hidden="true">{{ $kind === 'shown' ? '✓' : '—' }}</span>
+                                    <span class="visibility__mark visibility__mark--{{ $kind }}" aria-hidden="true">{{ $kind === 'shown' ? '✓' : '✕' }}</span>
                                     <span>
                                         <span class="visibility__label">{{ $item['label'] }}</span>
                                         <span class="visibility__detail">{{ $item['detail'] }}</span>

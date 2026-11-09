@@ -19,7 +19,7 @@ class PagesTable
         return $table
             // Only pages the site actually has. A row left behind by a page
             // that has been removed is not something to offer somebody as
-            // editable — they would be writing into nothing. The row is hidden
+            // editable. They would be writing into nothing. The row is hidden
             // rather than deleted, so the old copy is still there to read.
             ->modifyQueryUsing(fn (Builder $query) => $query->whereIn('slug', array_keys(PageSeeder::pages())))
             // In the order somebody meets them on the site, not alphabetically.

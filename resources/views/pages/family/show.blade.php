@@ -1,6 +1,6 @@
 @php $family = $card->family; @endphp
 
-<x-layouts.site :title="$family->displayName().' — Frith'" :noindex="true">
+<x-layouts.site :title="$family->displayName().' · Frith'" :noindex="true">
 
     <section class="profile">
         @if (session('status'))

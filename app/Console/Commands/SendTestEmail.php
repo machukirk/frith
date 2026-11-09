@@ -14,8 +14,8 @@ use Illuminate\Support\Str;
  * It sends the real Founder email, because the most useful check is the exact
  * message people receive: it proves the from address passes domain
  * verification, the logo resolves over the public URL, and the signed links
- * are built against the right domain. Nothing is written to the database —
- * the registration behind it exists only for the length of the command.
+ * are built against the right domain. Nothing is written to the database.
+ * The registration behind it exists only for the length of the command.
  */
 class SendTestEmail extends Command
 {

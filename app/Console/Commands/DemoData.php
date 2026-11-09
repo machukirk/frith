@@ -10,7 +10,7 @@ use Illuminate\Console\Command;
  * Adds or removes the local demo data.
  *
  * Clearing only ever touches @example.com addresses, which is a reserved
- * domain nobody can receive mail at — so this cannot delete a real family.
+ * domain nobody can receive mail at, so this cannot delete a real family.
  */
 class DemoData extends Command
 {

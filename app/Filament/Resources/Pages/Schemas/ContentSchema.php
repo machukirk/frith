@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
  * Builds a page's editing form from the page's own content.
  *
  * One hand-written form per page would mean ten of them, each free to drift
- * from the file it edits — and a form built for one page's shape, opened on
+ * from the file it edits. And a form built for one page's shape, opened on
  * another, does not merely look wrong: saving it replaces that page's content
  * with its own empty fields. That is how the first version of this lost the
  * Terms page the moment anybody pressed Save on it.
@@ -126,7 +126,7 @@ class ContentSchema
         );
     }
 
-    /** A list: of strings, or of maps — which need not all have the same keys. */
+    /** A list: of strings, or of maps, which need not all have the same keys. */
     private static function repeater(string $path, string $key, array $value): Repeater
     {
         $first = $value[0] ?? null;
@@ -137,7 +137,7 @@ class ContentSchema
             ->collapsible()
             ->collapsed();
 
-        // A list of plain strings — one box per row, no inner labels. The
+        // A list of plain strings: one box per row, no inner labels. The
         // inner field takes a bare name, not a path: a simple repeater stores
         // the scalar itself, and a dotted name makes it write to a key that is
         // not there, so every row comes back null.
@@ -149,7 +149,7 @@ class ContentSchema
 
         // Every key that appears anywhere in the list, not just in its first
         // item. The policies have sections that carry paragraphs, sections that
-        // carry a bullet list, and sections that carry both — reading only the
+        // carry a bullet list, and sections that carry both. Reading only the
         // first item gives the later ones no control, and saving then writes an
         // empty array over whatever they held.
         $shape = self::shapeOf($value);

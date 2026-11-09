@@ -2,9 +2,9 @@
     The edit screen, with the page itself beside it.
 
     The preview is an iframe of the real page rendered from the form's unsaved
-    state — same Blade, same stylesheet — so what an editor looks at is the
-    page rather than a drawing of it. It reloads when they leave a field,
-    which is also when they want to see what they did.
+    state. Same Blade, same stylesheet, so what an editor looks at is the page
+    rather than a drawing of it. It reloads when they leave a field, which is
+    also when they want to see what they did.
 --}}
 <x-filament-panels::page>
 

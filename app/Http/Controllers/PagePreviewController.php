@@ -12,8 +12,8 @@ use Symfony\Component\HttpFoundation\Response as HttpResponse;
  *
  * The same Blade and the same stylesheet as the real page, so what an editor
  * sees while typing is the page, not an approximation of it that can drift
- * from it. The content comes from the session — put there by the edit screen
- * as fields are filled in — rather than the URL, because a page's worth of
+ * from it. The content comes from the session, put there by the edit screen
+ * as fields are filled in, rather than the URL, because a page's worth of
  * copy does not belong in a query string.
  *
  * Behind the admin guard, and noindex: it is somebody's draft.

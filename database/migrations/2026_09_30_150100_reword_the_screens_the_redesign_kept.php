@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
  * The seeder cannot do this: it uses firstOrCreate precisely so that running
  * it again never overwrites what an editor has written. So each change here is
  * conditional on the stored text still being the exact sentence that shipped.
- * If somebody has touched it, theirs stands — a migration that quietly reverts
+ * If somebody has touched it, theirs stands. A migration that quietly reverts
  * an editor's work is worse than one that leaves a screen a version behind.
  */
 return new class extends Migration

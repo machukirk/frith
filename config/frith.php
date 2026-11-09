@@ -13,13 +13,13 @@ return [
     | Which site this is
     |--------------------------------------------------------------------------
     |
-    | Only one host is the real Frith. Anything else running this code — the
-    | staging site, a preview, somebody's copy — is not, and must not turn up
-    | in a search result: a second crawlable copy competes with the real site
-    | and shows people a version nobody is maintaining.
+    | Only one host is the real Frith. Anything else running this code,
+    | whether the staging site, a preview or somebody's copy, is not, and
+    | must not turn up in a search result: a second crawlable copy competes
+    | with the real site and shows people a version nobody is maintaining.
     |
     | Worked out from the host rather than declared, so a new environment is
-    | private without anybody having to remember to make it so — including when
+    | private without anybody having to remember to make it so, including when
     | its APP_URL was copied from production and still says frith.community.
     |
     */
@@ -55,8 +55,8 @@ return [
 
     'consent' => [
         // v1 described an email list. Registration collects considerably more
-        // than an address, so the wording had to say so — and it is now shown
-        // on the screen that takes the email, rather than only recorded.
+        // than an address, so the wording had to say so. It is now shown on
+        // the screen that takes the email, rather than only recorded.
         'version' => '2026-08-19.v2',
         'text' => 'We’ll keep what you tell us so we can introduce you to families like yours, and email you when Frith opens. Nothing else, no ads, and you can ask us to delete it all at any time.',
     ],
@@ -68,7 +68,7 @@ return [
     |
     | Only the first hundred families to register are Frith Founders, and a
     | Founder number is what marks one. Everybody after them registers exactly
-    | the same way and is a perfectly ordinary family — they simply do not get
+    | the same way and is a perfectly ordinary family. They simply do not get
     | a number, and nothing downstream should pretend otherwise.
     |
     | A number is assigned once and never reused, so "Founder #47" stays true
@@ -136,15 +136,15 @@ return [
     |--------------------------------------------------------------------------
     |
     | Everything a non-developer might reasonably want to change lives here.
-    | This is the block that moves into the CMS when the admin panel is built —
-    | keys map straight onto content fields.
+    | This is the block that moves into the CMS when the admin panel is built.
+    | Keys map straight onto content fields.
     |
     */
 
     'coming_soon' => [
 
         'meta' => [
-            'title' => 'Frith — find your village',
+            'title' => 'Frith: find your village',
             'description' => 'Frith connects parents and carers of children with SEND to other families nearby. Free to join. Launching across the UK in autumn 2026.',
         ],
 

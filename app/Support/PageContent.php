@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Cache;
  * page still renders sensible words rather than a blank space or an error.
  *
  * Copy for the site's pages lives in config/frith-content.php, one block per
- * slug. Structure is not editable — which sections a page has and in what order
+ * slug. Structure is not editable: which sections a page has and in what order
  * is code, because a section is a designed thing rather than a free-form block.
  */
 class PageContent
@@ -65,7 +65,7 @@ class PageContent
         // the next visitor to the real page.
         //
         // It layers over the stored page as well as the defaults, because a
-        // draft is only the fields the form has hydrated so far — everything
+        // draft is only the fields the form has hydrated so far. Everything
         // the editor has not scrolled to yet still has to render.
         if (isset(self::$overrides[$slug])) {
             $stored = rescue(
@@ -128,7 +128,7 @@ class PageContent
      *
      * Lists are replaced outright rather than merged element by element. If an
      * editor deletes the third card, an element-wise merge would quietly put the
-     * default third card back — the deletion would look like it failed.
+     * default third card back. The deletion would look like it failed.
      *
      * @param  array<string, mixed>  $defaults
      * @param  array<string, mixed>  $stored

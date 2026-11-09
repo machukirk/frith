@@ -29,7 +29,7 @@ use Spatie\Honeypot\ProtectAgainstSpam;
 
 /*
  * The public pages. Each reads its own copy through App\Support\PageContent, so
- * there is nothing for a controller to do — the slug is the route name is the
+ * there is nothing for a controller to do: the slug is the route name is the
  * content key, and a page is a view plus a file in config/content.
  */
 Route::view('/', 'pages.home')->name('home');
@@ -51,7 +51,7 @@ foreach ([
 /*
  * The sitemap and manifest are public, identical for every visitor, and have no
  * form on them. Left in the web group they start a session and set cookies,
- * and Varnish will not cache a response carrying Set-Cookie — so they opt out.
+ * and Varnish will not cache a response carrying Set-Cookie, so they opt out.
  */
 Route::withoutMiddleware([
     EncryptCookies::class,
@@ -68,7 +68,7 @@ Route::withoutMiddleware([
 /*
  * Getting in and back out.
  *
- * The emailed link is the front door — registration never asks for a password,
+ * The emailed link is the front door. Registration never asks for a password,
  * because a parent registering at 1am on a phone will not remember one a
  * fortnight later. The password path is there for anybody who has set one.
  */

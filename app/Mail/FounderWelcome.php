@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\URL;
  *
  * It does two jobs so nobody has to read two messages: it tells them they are
  * registered and which Founder they are, and it carries the link that proves
- * the address is theirs. Nothing is gated on that link — they are registered
- * either way — but until it is clicked they are not on the list the launch
+ * the address is theirs. Nothing is gated on that link, and they are registered
+ * either way. But until it is clicked they are not on the list the launch
  * email actually goes to.
  *
  * Sent with a delay on purpose. Somebody halfway through the form does not need

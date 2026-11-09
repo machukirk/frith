@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
  * Generates the sitemap from the pages that actually exist.
  *
  * A static XML file would go stale the moment a page is added, and a stale
- * sitemap is worse than none — it tells a crawler to spend its budget on URLs
+ * sitemap is worse than none. It tells a crawler to spend its budget on URLs
  * that have moved. The list comes from the same place the seeder takes it, so
  * a new page appears here by existing rather than by being remembered.
  *

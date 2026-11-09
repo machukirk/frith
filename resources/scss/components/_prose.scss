@@ -9,7 +9,7 @@
 // column, the prose keeps a measure you can actually read, and a table or a
 // figure takes the room it needs.
 .prose {
-  // 72ch lands around 80 characters a line in Livvic — wider than it was,
+  // 72ch lands around 80 characters a line in Livvic. Wider than it was,
   // and still inside what somebody can read paragraph after paragraph.
   --measure: 72ch;
 
@@ -20,7 +20,7 @@
 
   // Anything that is not a line of text: it is not read at a measure, and
   // squeezing it to one only makes it harder to follow. 100% rather than
-  // none — free of the measure, but still inside the column, or a wide table
+  // none: free of the measure, but still inside the column, or a wide table
   // pushes the whole page sideways instead of scrolling within itself.
   > .data-table__scroll,
   > table,

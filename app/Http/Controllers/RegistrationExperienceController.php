@@ -18,10 +18,10 @@ use Illuminate\View\View;
  * form grew the more areas somebody was honest about, so the progress counter
  * stays on five throughout and a smaller line says which area this is.
  *
- * The source spreadsheet is emphatic about this — "give users the ability to
- * SKIP this section to speed up registration / limit form-filling fatigue" —
- * so every screen can be skipped, all of them can be skipped at once, and none
- * of it changes whether they are registered. They already are.
+ * The source spreadsheet is emphatic about this: "give users the ability to
+ * SKIP this section to speed up registration / limit form-filling fatigue".
+ * So every screen can be skipped, all of them can be skipped at once, and
+ * none of it changes whether they are registered. They already are.
  */
 class RegistrationExperienceController extends Controller
 {

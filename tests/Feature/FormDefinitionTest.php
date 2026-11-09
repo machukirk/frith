@@ -348,7 +348,7 @@ class FormDefinitionTest extends TestCase
     #[Test]
     public function an_editors_wording_still_wins_over_the_config(): void
     {
-        // Layering must not quietly undo an edit — that is the whole point of
+        // Layering must not quietly undo an edit. That is the whole point of
         // the editor.
         $form = $this->seedForm();
 

@@ -16,7 +16,7 @@ use Tests\TestCase;
  * Every public page, held to the same standard.
  *
  * Driven off the seeder's list rather than a list written here, so a page added
- * to the site is a page covered by these tests — nobody has to remember.
+ * to the site is a page covered by these tests. Nobody has to remember.
  */
 class MarketingPagesTest extends TestCase
 {

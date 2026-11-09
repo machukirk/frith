@@ -3,15 +3,15 @@
 return [
 
     'meta' => [
-        'title' => 'About Frith — why we built it, and how we pay for it',
+        'title' => 'About Frith: why we built it, and how we pay for it',
         'description' => 'Frith is an old English word for the safety of belonging to a group that looks after its own. Why we built it, what we believe, and how we pay for it.',
     ],
 
     'page_head' => [
         'eyebrow' => 'About Frith',
         'title' => 'There is a moment most parents recognise',
-        'standfirst' => 'You are in a waiting room, or a school car park, or scrolling at 1am, and you realise you are explaining yourself again — to someone who means well and still does not get it.',
-        'body' => 'Frith is an old English word for peace, refuge, the safety of belonging to a group that looks after its own. We built Frith so you can stop explaining. It connects you to families near you who already know — who have sat in that waiting room, filled in that form, had that phone call.',
+        'standfirst' => 'You are in a waiting room, or a school car park, or scrolling at 1am, and you realise you are explaining yourself again to someone who means well and still does not get it.',
+        'body' => 'Frith is an old English word for peace, refuge, the safety of belonging to a group that looks after its own. We built Frith so you can stop explaining. It connects you to families near you who already know, who have sat in that waiting room, filled in that form, had that phone call.',
     ],
 
     'purpose' => [
@@ -22,7 +22,7 @@ return [
         'vision' => [
             'eyebrow' => 'Our vision',
             'title' => 'A UK where no family navigates a hard road alone.',
-            'body' => 'We start with families navigating SEND, because that is where the isolation is sharpest — 93% of carers of disabled children report loneliness. We build for every family, because belonging is not a niche.',
+            'body' => 'We start with families navigating SEND, because that is where the isolation is sharpest: 93% of carers of disabled children report loneliness. We build for every family, because belonging is not a niche.',
         ],
     ],
 

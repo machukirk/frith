@@ -124,7 +124,7 @@ class FormOption extends Model
             return '';
         }
 
-        return 'Step '.RegistrationFlow::number($step).' — '.StepContent::for($step)->heading();
+        return 'Step '.RegistrationFlow::number($step).': '.StepContent::for($step)->heading();
     }
 
     public function isArchived(): bool

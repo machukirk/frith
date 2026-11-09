@@ -32,7 +32,7 @@ echo "  $BACKUP"
 step "Backing up the database"
 # The file backup above no longer covers everything worth keeping: the page
 # copy, the form wording and every option are rows now, and people edit them
-# between deploys. Read-only — this writes a file, never the database.
+# between deploys. Read-only: this writes a file, never the database.
 env_value() { grep -E "^$1=" "$LIVE/.env" | head -1 | cut -d= -f2- | tr -d '"'"'"'\r'; }
 
 DB_DUMP="$HOME/private_html/db-backup-$(date +%Y%m%d-%H%M%S).sql.gz"
@@ -45,8 +45,8 @@ if MYSQL_PWD="$(env_value DB_PASSWORD)" mysqldump \
     echo "  $DB_DUMP  ($(du -h "$DB_DUMP" | cut -f1))"
 else
     rm -f "$DB_DUMP"
-    echo "  ! Could not dump the database. Promoting anyway — this release does"
-    echo "    not migrate — but take one from the Cloudways panel before any"
+    echo "  ! Could not dump the database. Promoting anyway, since this release"
+    echo "    does not migrate. Take one from the Cloudways panel before any"
     echo "    deploy that does."
 fi
 
@@ -87,10 +87,10 @@ php artisan queue:restart
 step "Clearing the Varnish cache"
 # Cloudways puts Varnish in front of nginx. It holds the previous bytes until
 # told otherwise, so without this a deploy goes out and visitors keep getting
-# the old stylesheet — with the old one's Content-Type into the bargain.
+# the old stylesheet, with the old one's Content-Type into the bargain.
 curl -fsS -o /dev/null -X BAN -H "Host: frith.community" http://127.0.0.1/ \
     && echo "  banned" \
-    || echo "  BAN was refused — clear the cache from the Cloudways panel"
+    || echo "  BAN was refused. Clear the cache from the Cloudways panel"
 
 step "Preflight, live"
 php artisan frith:preflight

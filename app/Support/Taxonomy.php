@@ -5,14 +5,14 @@ namespace App\Support;
 /**
  * The experience taxonomy, as the rest of the application sees it.
  *
- * Backed by the database now, with config as the fallback — but the shape of
+ * Backed by the database now, with config as the fallback. But the shape of
  * these methods has not changed, so controllers, views and exports did not
  * have to. See App\Support\FormDefinition for the layering.
  *
  * Two views of the same data, and the difference matters:
  *
- *   categories() / items()     what to offer and what to accept — live only
- *   categoryLabel() / itemLabel()  what to display — archived included
+ *   categories() / items()     what to offer and what to accept, live only
+ *   categoryLabel() / itemLabel()  what to display, archived included
  *
  * An archived option must stop being offered without erasing the answer of
  * every family who already chose it.
@@ -94,7 +94,7 @@ class Taxonomy
      * What families enjoy, as opposed to what they find hard.
      *
      * Carries a description as well as a label, so the choice cards can say
-     * "Parks, walks, gardening" under "Outdoors & Nature" — the examples are
+     * "Parks, walks, gardening" under "Outdoors & Nature". The examples are
      * what make a broad heading mean something to somebody skim-reading.
      *
      * @return array<string, array{label: string, description: ?string}>

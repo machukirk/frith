@@ -12,7 +12,7 @@ namespace App\Support;
  * so that 600 is the brand step and 700 is its hover.
  *
  * Only the values marked below come from Brand Guidelines §03. The steps
- * between them are interpolated for this panel and are not brand tokens — the
+ * between them are interpolated for this panel and are not brand tokens. The
  * public site uses the real ramps in resources/scss/abstracts/_tokens.scss.
  */
 class AdminPalette
@@ -25,14 +25,14 @@ class AdminPalette
         300 => '#9BAFAA',  // guidelines
         400 => '#627E78',  // guidelines (euc 500)
         500 => '#46665F',  // guidelines (euc 600)
-        600 => '#274B44',  // guidelines — brand
+        600 => '#274B44',  // guidelines (brand)
         700 => '#153731',  // guidelines
         800 => '#03221D',  // guidelines
         900 => '#03221D',
         950 => '#03221D',
     ];
 
-    /** Coral. 600 is Coral 700 #992F17 — errors never use Coral 400 (§03). */
+    /** Coral. 600 is Coral 700 #992F17. Errors never use Coral 400 (§03). */
     public const DANGER = [
         50 => '#FFF4F1',
         100 => '#FFD4C9',

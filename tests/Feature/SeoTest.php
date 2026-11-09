@@ -240,7 +240,7 @@ class SeoTest extends TestCase
     public function brand_assets_carry_a_version_so_a_new_logo_actually_reaches_people(): void
     {
         // public/brand is served with a year-long cache under filenames that
-        // never change, so replacing the logo on the server is not enough — a
+        // never change, so replacing the logo on the server is not enough: a
         // returning visitor keeps the old one. The URL has to move with it.
         $html = $this->get(route('home'))->assertOk()->getContent();
 

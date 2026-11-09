@@ -101,7 +101,7 @@ class VillageTest extends TestCase
         $this->assertSame('S', $family->initial());
 
         // TN13 is Sevenoaks. The hi-fi's profile frame labels it "Tonbridge
-        // area", which is the design's own slip — its other screens get it
+        // area", which is the design's own slip. Its other screens get it
         // right. See config/frith-postcodes.
         $this->assertSame('Sevenoaks area', $family->area());
     }

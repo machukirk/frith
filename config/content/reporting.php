@@ -18,7 +18,7 @@
 return [
 
     'meta' => [
-        'title' => 'Reporting & complaints — Frith',
+        'title' => 'Reporting & complaints · Frith',
         'description' => 'Report a family from their profile or your conversation. A person reads every report, usually within 24 hours, and blocking works immediately.',
     ],
 
@@ -80,7 +80,7 @@ return [
 
     'escalation' => [
         'title' => 'If you are still not happy',
-        'body' => 'For a data complaint you can go to the Information Commissioner’s Office. For anything else, tell us and we will keep talking — there is no appeal panel above us, because Frith is small enough that the person who replies is the person who decides.',
+        'body' => 'For a data complaint you can go to the Information Commissioner’s Office. For anything else, tell us and we will keep talking. There is no appeal panel above us, because Frith is small enough that the person who replies is the person who decides.',
     ],
 
     'where_to_write' => [

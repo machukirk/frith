@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('waitlist_signups', function (Blueprint $table) {
             $table->id();
 
-            // Used in confirm/unsubscribe URLs so the row's real id — and with it
-            // the size of the list — never leaves the building.
+            // Used in confirm/unsubscribe URLs so the row's real id, and with it
+            // the size of the list, never leaves the building.
             $table->ulid('public_id')->unique();
 
             $table->string('email')->unique();
@@ -33,7 +33,7 @@ return new class extends Migration
 
             $table->timestamps();
 
-            // "Who do we actually email at launch" — confirmed and not unsubscribed.
+            // "Who do we actually email at launch": confirmed and not unsubscribed.
             $table->index(['confirmed_at', 'unsubscribed_at']);
         });
     }

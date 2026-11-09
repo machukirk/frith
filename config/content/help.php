@@ -2,7 +2,7 @@
 
 /*
 |--------------------------------------------------------------------------
-| Help centre — /help
+| Help centre: /help
 |--------------------------------------------------------------------------
 |
 | Topic links carry a `route` rather than a URL, resolved through
@@ -15,21 +15,21 @@
 return [
 
     'meta' => [
-        'title' => 'Help centre — Frith',
+        'title' => 'Help centre · Frith',
         'description' => 'Getting started, connecting, safety, your account, Frith+ and what to do when something is broken. If your answer is not here, a person will reply.',
     ],
 
     'head' => [
         'eyebrow' => 'Help centre',
         'title' => 'How can we help?',
-        'standfirst' => 'Most answers are here. If yours is not, a person will reply — usually the same day.',
+        'standfirst' => 'Most answers are here. If yours is not, a person will reply, usually the same day.',
         'search_label' => 'Search help',
-        'search_placeholder' => 'Search help — try "block", "postcode" or "cancel"',
+        'search_placeholder' => 'Search help, try "block", "postcode" or "cancel"',
     ],
 
     'search' => [
         'found' => ':count result for “:query”|:count results for “:query”',
-        'empty' => 'Nothing matched “:query”. Try a shorter word, or write to us and a person will reply — usually the same day.',
+        'empty' => 'Nothing matched “:query”. Try a shorter word, or write to us and a person will reply, usually the same day.',
     ],
 
     'topics' => [
@@ -99,7 +99,7 @@ return [
         // the general address stays in one place.
         'form' => [
             'title' => 'Send us a message',
-            'standfirst' => 'We read every one. There is no ticket number — a person replies.',
+            'standfirst' => 'We read every one. There is no ticket number, just a person who replies.',
 
             'name' => 'Your name',
             'email' => 'Your email',
@@ -108,7 +108,7 @@ return [
             'message_help' => 'Tell us what has happened. There is no wrong way to write it.',
             'button' => 'Send',
             'reassurance' => 'We store nothing beyond the email itself, and we never add you to a mailing list.',
-            'sent' => 'Thank you — that has gone to a person, and you will hear back. Usually the same day.',
+            'sent' => 'Thank you. That has gone to a person, and you will hear back. Usually the same day.',
 
             // The value is what gets recorded and routed on, so it is fixed.
             // The label is free to change.

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Schema;
  * records for a thing that no longer exists, and personal data nobody is going
  * to use is personal data nobody should be holding.
  *
- * Anyone on it has to be invited to register properly — their consent was to
+ * Anyone on it has to be invited to register properly. Their consent was to
  * "one email when we launch", which is not consent to the registration.
  */
 return new class extends Migration

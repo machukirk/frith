@@ -1,4 +1,4 @@
-<x-layouts.site title="You’re back on the list — Frith" :noindex="true">
+<x-layouts.site title="You’re back on the list · Frith" :noindex="true">
 
     <div class="wizard">
         <p class="wizard__tick" aria-hidden="true">&#10003;</p>

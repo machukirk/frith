@@ -2,7 +2,7 @@
 // Tokens
 //
 // Taken from the hi-fi, which is itself built on the brand guidelines' palette.
-// Everything downstream reads these — no raw hex below this file.
+// Everything downstream reads these. No raw hex below this file.
 // =============================================================================
 
 // --- Eucalyptus: the primary --------------------------------------------------
@@ -52,7 +52,7 @@ $linen-200: #E7E2DA; // image plate
 $linen-300: #DCD8D3; // the hairline around a white card
 $linen-400: #BDB6AB; // the hi-fi's outline on a control nobody has chosen yet
 $linen-500: #ADA69B;
-$linen-600: #938C81; // the same outline, dark enough to pass — see $border-control
+$linen-600: #938C81; // the same outline, dark enough to pass. See $border-control
 $linen-700: #5D5A56;
 $white: #FFFFFF;
 
@@ -76,10 +76,10 @@ $border-hairline: $linen-300; // around a white card
 $border-input: $ink-400;      // a box you type in
 
 // A box you tick, and a pill. The hi-fi draws these in $linen-400, which is
-// 1.8:1 against the page — under WCAG 1.4.11's 3:1 for the one mark that says
-// whether a control is chosen, and this is a release blocker. So: that colour,
-// darkened until it passes. A card around a control keeps $linen-300, because
-// there the tick inside it is what carries the state.
+// 1.8:1 against the page. That is under WCAG 1.4.11's 3:1 for the one mark
+// that says whether a control is chosen, and this is a release blocker. So:
+// that colour, darkened until it passes. A card around a control keeps
+// $linen-300, because there the tick inside it is what carries the state.
 $border-control: $linen-600;
 
 // --- Type ---------------------------------------------------------------------
@@ -125,12 +125,12 @@ $radius-circle: 50%;
 // 1440px. The hi-fi is drawn on 1140 inside a 1300px frame, but that leaves a
 // lot of empty page on a real monitor. Every block of running text caps its own
 // measure in ch, so the extra width goes to the layout rather than to line
-// length — see .prose, .page-head, .faq, .cta-band.
+// length. See .prose, .page-head, .faq, .cta-band.
 $container: 1440px;
 $gutter: 20px;
 $gutter-lg: 32px;
 
-// The smallest target anyone has to hit. Guidelines §08 — above the 44px floor,
+// The smallest target anyone has to hit. Guidelines §08: above the 44px floor,
 // because this is read on a cracked phone at 11pm.
 $target-min: 48px;
 

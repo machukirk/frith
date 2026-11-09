@@ -24,7 +24,7 @@
     ];
 @endphp
 
-<x-layouts.site :title="$title ?? $heading.' — Frith'" :noindex="true">
+<x-layouts.site :title="$title ?? $heading.' · Frith'" :noindex="true">
 
     <div class="wrap account">
         <nav class="account__rail" aria-label="Your account">

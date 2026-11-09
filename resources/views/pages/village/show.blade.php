@@ -1,4 +1,4 @@
-<x-layouts.site title="Your village — Frith" :noindex="true">
+<x-layouts.site title="Your village · Frith" :noindex="true">
 
     <section class="wrap page-head">
         <div class="page-head__inner">

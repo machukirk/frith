@@ -3,7 +3,7 @@
 return [
 
     'meta' => [
-        'title' => 'How Frith works — from registering to your first coffee',
+        'title' => 'How Frith works: from registering to your first coffee',
         'description' => 'Six steps from registering to your first coffee, and you decide at every one. Nothing happens to you on Frith without you asking for it.',
     ],
 
@@ -15,7 +15,7 @@ return [
 
     /*
      * The six steps, numbered in the order they appear. 'note' is the teal
-     * reassurance line under a step, and is optional — leave it empty and the
+     * reassurance line under a step, and is optional. Leave it empty and the
      * step renders without one.
      */
     'steps' => [
@@ -26,12 +26,12 @@ return [
         ],
         [
             'title' => 'We verify you are a real adult',
-            'body' => 'Before you can message a single family. It is not a character reference and we say so — but it means nobody on Frith is anonymous.',
+            'body' => 'Before you can message a single family. It is not a character reference and we say so, but it means nobody on Frith is anonymous.',
             'note' => null,
         ],
         [
             'title' => 'You choose your Journeys',
-            'body' => 'A Journey is a group of families navigating one thing. Joining one is what makes your profile visible to the families in it — and nowhere else.',
+            'body' => 'A Journey is a group of families navigating one thing. Joining one is what makes your profile visible to the families in it, and nowhere else.',
             'note' => 'You can be in as many as you like, and leave any of them at any time.',
         ],
         [
@@ -53,7 +53,7 @@ return [
 
     'cta' => [
         'title' => 'That is the whole product',
-        'body' => 'No feed, no groups, no swiping, no ranking. If it sounds small, that is because it is — the point is the people, not the software.',
+        'body' => 'No feed, no groups, no swiping, no ranking. If it sounds small, that is because it is. The point is the people, not the software.',
         'button' => 'Register',
     ],
 ];

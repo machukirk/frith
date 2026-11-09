@@ -3,14 +3,14 @@
 return [
 
     'meta' => [
-        'title' => 'Frith — find your people, find your village',
-        'description' => 'Frith helps those raising children connect with others who understand their experiences — matching families around what they have in common, not just where they live.',
+        'title' => 'Frith: find your people, find your village',
+        'description' => 'Frith helps those raising children connect with others who understand their experiences. We match families around what they have in common, not just where they live.',
     ],
 
     'hero' => [
         'eyebrow' => 'Shared experiences. Real connection.',
         'headline' => ['Find your people.', 'Find your village'],
-        'standfirst' => 'Frith helps those raising children connect with others who understand their experiences — matching families around what they have in common, not just where they live.',
+        'standfirst' => 'Frith helps those raising children connect with others who understand their experiences. We match families around what they have in common, not just where they live.',
         'primary_cta' => 'Register',
         'secondary_cta' => 'How it works',
         'note' => 'Register as a First Frith Family and you’ll never pay for Frith+ membership.',
@@ -103,7 +103,7 @@ return [
 
     'cta' => [
         'title' => 'Ready to find your village?',
-        'body' => 'Free to join. Verified adults only. Takes about a minute — and registering before we open makes Frith+ free for your family, for good.',
+        'body' => 'Free to join. Verified adults only. Takes about a minute. Registering before we open makes Frith+ free for your family, for good.',
         'button' => 'Register',
     ],
 
@@ -113,7 +113,7 @@ return [
         'items' => [
             [
                 'question' => 'Is Frith really free?',
-                'answer' => 'Yes. Joining, building your profile, choosing your Journeys, connecting with families who ask you too, and messaging them are all free and always will be. Frith+ is an optional membership that adds more ways to look — and if you register before we open, it stays free for your family for good.',
+                'answer' => 'Yes. Joining, building your profile, choosing your Journeys, connecting with families who ask you too, and messaging them are all free and always will be. Frith+ is an optional membership that adds more ways to look. If you register before we open, it stays free for your family for good.',
             ],
             [
                 'question' => 'What if there is nobody near me yet?',
@@ -148,6 +148,6 @@ return [
                 'answer' => 'At any time, from your account settings, and we delete what we hold. You do not have to give a reason.',
             ],
         ],
-        'footer' => 'Something not answered here? Write to :email — a real person will reply, usually the same day.',
+        'footer' => 'Something not answered here? Write to :email. A real person will reply, usually the same day.',
     ],
 ];

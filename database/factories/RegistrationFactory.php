@@ -39,7 +39,7 @@ class RegistrationFactory extends Factory
         ]);
     }
 
-    /** Address proved to belong to them — the gate on any MailerLite sync. */
+    /** Address proved to belong to them: the gate on any MailerLite sync. */
     public function verified(): static
     {
         return $this->state(fn () => ['email_verified_at' => now()]);

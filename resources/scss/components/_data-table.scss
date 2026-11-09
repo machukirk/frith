@@ -1,6 +1,6 @@
 @use '../abstracts' as *;
 
-// A table of real tabular data — what we hold, why, and who sees it.
+// A table of real tabular data: what we hold, why, and who sees it.
 //
 // Kept as a <table> rather than the design's grid of divs: it is a table, and
 // a screen reader announcing "column 2, Who sees it: Only us" is the whole

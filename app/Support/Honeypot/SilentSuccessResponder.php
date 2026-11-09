@@ -11,9 +11,9 @@ use Spatie\Honeypot\SpamResponder\SpamResponder;
  *
  * Two reasons. A bot learns nothing about whether it was caught, so it has no
  * signal to tune against. And on the rarer occasion the honeypot fires on a
- * real person — a password manager that fills every field it can see, an
- * accessibility tool that submits faster than a human could — they get a normal
- * outcome instead of the blank page the package ships by default.
+ * real person: a password manager that fills every field it can see, an
+ * accessibility tool that submits faster than a human could. The person gets
+ * a normal outcome instead of the blank page the package ships by default.
  *
  * The trade is that a false positive sends a real person back to the first
  * screen with nothing to explain it. The timing check is a full second, which

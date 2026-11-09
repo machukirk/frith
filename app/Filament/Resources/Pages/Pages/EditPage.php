@@ -55,7 +55,7 @@ class EditPage extends EditRecord
      * Keeps the preview in step with the form.
      *
      * Fields are live on blur rather than on every keystroke, so this runs
-     * when somebody leaves a field — which is also when they want to see what
+     * when somebody leaves a field, which is also when they want to see what
      * they have done.
      */
     public function updated(string $property): void
@@ -80,7 +80,7 @@ class EditPage extends EditRecord
      * Hands the form's current state to the preview.
      *
      * Through the form's own getState() rather than the raw $data, because a
-     * repeater keys its items by UUID in there — a list of FAQ entries comes
+     * repeater keys its items by UUID in there: a list of FAQ entries comes
      * out as a map, and a page looping over it prints the map rather than the
      * entries. getState() is what turns that back into the shape the page
      * reads, and it is Filament's job to know.
@@ -145,7 +145,7 @@ class EditPage extends EditRecord
      * this form must never do.
      *
      * A null or an empty list is dropped only where the stored page did not
-     * have one — some pages hold a deliberate null. Empty strings are always
+     * have one. Some pages hold a deliberate null. Empty strings are always
      * kept: a field an editor clears comes back as '', and keeping it is what
      * stops the default quietly reappearing.
      *

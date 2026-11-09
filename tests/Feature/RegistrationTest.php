@@ -40,7 +40,7 @@ class RegistrationTest extends TestCase
     public function a_last_name_is_never_asked_for_or_stored(): void
     {
         // Decided against collecting it. The column is gone, so anything sent
-        // for it has nowhere to land — this guards against it creeping back in
+        // for it has nowhere to land. This guards against it creeping back in
         // via a copied form or a stray fill().
         $this->get(route('register.step', 'you'))
             ->assertOk()
@@ -78,7 +78,7 @@ class RegistrationTest extends TestCase
     {
         // The whole design rests on this: answer one screen, and you are
         // registered whatever happens next. Name, email and postcode are all
-        // on it, because they are all "who are you" — and because it means
+        // on it, because they are all "who are you", and because it means
         // one screen is enough to be matchable.
         $this->post(route('register.step.store', 'you'), [
             'first_name' => 'Sam',
@@ -387,7 +387,7 @@ class RegistrationTest extends TestCase
     #[Test]
     public function the_detail_questions_are_one_screen_with_an_accordion_per_area(): void
     {
-        // They used to be a screen per area — up to eight of them, with the
+        // They used to be a screen per area: up to eight of them, with the
         // counter frozen so the form did not appear to grow the more honest
         // somebody was. One accordion screen is the same information without
         // the sleight of hand.
@@ -484,7 +484,7 @@ class RegistrationTest extends TestCase
 
         $response->assertSee((count($items) - 4).' more');
 
-        // Every statement is on the page — the later ones are behind the
+        // Every statement is on the page. The later ones are behind the
         // disclosure rather than dropped, or they could never be chosen.
         foreach ($items as $slug) {
             $this->assertStringContainsString('value="'.$slug.'"', $html);
@@ -596,7 +596,7 @@ class RegistrationTest extends TestCase
     public function an_answer_under_an_area_they_did_not_choose_is_dropped_quietly(): void
     {
         // The statements arrive keyed by area, which is not a shape a
-        // validation rule expresses well — and throwing the whole screen back
+        // validation rule expresses well, and throwing the whole screen back
         // at somebody over a stray key would be a poor trade. Anything that
         // is not theirs to answer is simply not saved.
         $this->openWith();
@@ -933,7 +933,7 @@ class RegistrationTest extends TestCase
     public function somebody_elses_verified_registration_cannot_be_overwritten(): void
     {
         // Anyone can type anyone's address. Without this, the form is a way to
-        // rewrite another family's answers — and, by behaving differently, a
+        // rewrite another family's answers and, by behaving differently, a
         // way to find out they are registered at all.
         $existing = Registration::query()->create([
             'email' => 'priya@example.com',

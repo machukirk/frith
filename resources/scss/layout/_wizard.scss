@@ -2,7 +2,7 @@
 
 // The frame every registration screen sits in. One question per screen, a
 // progress bar that counts up rather than down, and a back link that never
-// loses what was typed — the answers are saved server-side by the time you
+// loses what was typed. The answers are saved server-side by the time you
 // can press it.
 .wizard {
   // 560px in the hi-fi. One question at a time reads better in a narrow
@@ -13,12 +13,12 @@
   @include from(md) { padding-block: $space-12 $space-20; }
 
   // The screen at the end of the form. Narrower and centred, because there is
-  // nothing left to fill in — it is an announcement, not a question.
+  // nothing left to fill in. It is an announcement, not a question.
   &--done {
     text-align: center;
 
     // The hi-fi gives this screen slightly different vertical rhythm from a
-    // form step — it is an announcement, and sits a little tighter.
+    // form step. It is an announcement, and sits a little tighter.
     .wizard__heading { margin-bottom: $space-3; }
 
     .wizard__standfirst {
@@ -71,11 +71,11 @@
   // on every one of them.
   &__form { display: grid; gap: 26px; }
 
-  // 8px, because the hi-fi sets a label 7px above what it labels — the same
+  // 8px, because the hi-fi sets a label 7px above what it labels, the same
   // gap a field label has, so a set of pills reads as one answer.
   &__group { display: grid; gap: $space-2; }
 
-  // Reads as a field label, because that is what it is — the label for a set
+  // Reads as a field label, because that is what it is: the label for a set
   // of pills or tickboxes rather than for one box.
   &__label {
     color: $text-heading;
@@ -131,7 +131,7 @@
     }
   }
 
-  // The screen at the end. Not a step, so it has no counter — a tick, what
+  // The screen at the end. Not a step, so it has no counter: a tick, what
   // happens next, and one way onward.
   &__tick {
     display: grid;
@@ -145,7 +145,7 @@
     @include type((26px, 26px), 1);
   }
 
-  // "We will email you at …" — set apart in its own tinted box, because the
+  // "We will email you at …", set apart in its own tinted box, because the
   // address is the one thing on this screen somebody needs to check.
   &__launch {
     padding: 18px $space-5;
@@ -163,7 +163,7 @@
     font-size: 13.5px;
   }
 
-  // "Frith Founder #47" — the one place a number is a nice thing to be given.
+  // "Frith Founder #47", the one place a number is a nice thing to be given.
   &__badge {
     display: inline-flex;
     gap: $space-2;
@@ -202,7 +202,7 @@
     line-height: 1.55;
   }
 
-  // "Only ever used to match you" — said where the worry is, not in a policy
+  // "Only ever used to match you", said where the worry is, not in a policy
   // page nobody opens.
   &__private {
     display: flex;

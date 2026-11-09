@@ -13,7 +13,7 @@ class BrandAssetTest extends TestCase
      *
      * An earlier version was rendered by compositing the SVG onto white, which
      * produced a file with an alpha channel where every pixel was opaque. It
-     * looked correct in isolation and wrong in the email — a white rectangle on
+     * looked correct in isolation and wrong in the email: a white rectangle on
      * the Linen background. Nothing else catches that.
      *
      * @return array<string, array<int, string>>
@@ -40,7 +40,7 @@ class BrandAssetTest extends TestCase
         $width = imagesx($image);
         $height = imagesy($image);
 
-        // GD reports alpha 0–127, where 127 is fully transparent.
+        // GD reports alpha 0-127, where 127 is fully transparent.
         $corners = [[0, 0], [$width - 1, 0], [0, $height - 1], [$width - 1, $height - 1]];
 
         foreach ($corners as [$x, $y]) {
@@ -67,7 +67,7 @@ class BrandAssetTest extends TestCase
         $this->assertGreaterThan(
             0.5,
             $transparent / $sampled,
-            "{$file} is mostly opaque — the background is probably baked in",
+            "{$file} is mostly opaque: the background is probably baked in",
         );
     }
 

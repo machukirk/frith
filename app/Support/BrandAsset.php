@@ -5,12 +5,12 @@ namespace App\Support;
 /**
  * A brand asset URL that changes when the file does.
  *
- * Everything under public/brand is served with `cache-control: max-age=31536000`
- * — a year — under a filename that never changes. So the logo can be replaced
- * on the server and every visitor who has been to the site before keeps the old
- * one until their cache expires. That is exactly what happened when the new
- * wordmark went out: the file was right, and browsers went on drawing the old
- * shape.
+ * Everything under public/brand is served with
+ * `cache-control: max-age=31536000`, a year, under a filename that never
+ * changes. So the logo can be replaced on the server and every visitor who
+ * has been to the site before keeps the old one until their cache expires.
+ * That is exactly what happened when the new wordmark went out: the file was
+ * right, and browsers went on drawing the old shape.
  *
  * The built CSS does not have this problem because Vite fingerprints it. This
  * does the same job for hand-managed files, with the modified time as the
@@ -31,7 +31,7 @@ class BrandAsset
         $url = asset($path);
         $full = public_path($path);
 
-        // A missing file is somebody else's error to report — it should still
+        // A missing file is somebody else's error to report. It should still
         // produce a URL rather than blow up mid-render.
         if (! is_file($full)) {
             return $url;

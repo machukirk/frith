@@ -1,11 +1,11 @@
 <!--
   Text outlined, not set. An SVG inside an <img> cannot load a font, so
-  "Caudex" would fall back to Georgia on nearly every machine — which is
+  "Caudex" would fall back to Georgia on nearly every machine, which is
   what the supplied artwork looks like when you open it. Shaped with
   HarfBuzz from Caudex 400, tracked -0.02em to Matt's eye.
 -->
 <svg xmlns="http://www.w3.org/2000/svg" width="1107" height="464" viewBox="35 67 1107 464" role="img">
-<title>Frith — Find your village</title>
+<title>Frith. Find your village</title>
 <g transform="translate(35.0 67.7) scale(0.88)">
 
 <g fill-rule="evenodd">

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('parent_id')->nullable()->constrained('form_options')->cascadeOnDelete();
 
             // What the database stores against a family. Never editable once
-            // it exists — renaming it detaches everyone who chose it.
+            // it exists. Renaming it detaches everyone who chose it.
             $table->string('slug');
 
             $table->string('label', 500);

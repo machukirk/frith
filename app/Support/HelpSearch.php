@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
  *
  * Server-side and case-insensitive, over the same content file the page is
  * built from, so a topic added in the admin panel is searchable the moment it
- * is saved. No index to rebuild and no JavaScript — the form is a GET, which
+ * is saved. No index to rebuild and no JavaScript. The form is a GET, which
  * also means a result page can be linked to and bookmarked.
  */
 class HelpSearch

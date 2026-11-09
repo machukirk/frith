@@ -1,4 +1,4 @@
-<x-layouts.site title="Journeys — Frith" :noindex="true">
+<x-layouts.site title="Journeys · Frith" :noindex="true">
 
     <section class="wrap page-head">
         <div class="page-head__inner">
@@ -20,7 +20,7 @@
                 <span class="visually-hidden">Search Journeys</span>
                 <x-site.icon name="search" class="search__icon" />
                 <input class="search__input" type="search" name="q" value="{{ $search }}"
-                       placeholder='Search Journeys &mdash; try "school" or "sleep"'>
+                       placeholder='Search Journeys, try "school" or "sleep"'>
             </label>
 
             @if ($search !== '')

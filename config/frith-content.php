@@ -2,7 +2,7 @@
 
 /*
 |--------------------------------------------------------------------------
-| Site copy — the floor
+| Site copy: the floor
 |--------------------------------------------------------------------------
 |
 | One file per page in config/content, keyed by its slug with hyphens turned

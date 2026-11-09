@@ -153,7 +153,7 @@ class LoginTest extends TestCase
         $this->founder();
 
         $this->post(route('login.attempt'), ['email' => 'sarah@example.com', 'password' => 'anything'])
-            ->assertSessionHasErrors(['password' => 'You have not set a password. Ask us to email you a link instead — the button is just below.']);
+            ->assertSessionHasErrors(['password' => 'You have not set a password. Ask us to email you a link instead. The button is just below.']);
 
         $this->assertFalse(auth('founder')->check());
     }

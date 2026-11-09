@@ -76,7 +76,7 @@ return [
             'model' => env('AUTH_MODEL', User::class),
         ],
 
-        // Families. Registrations are the accounts — there is no separate
+        // Families. Registrations are the accounts. There is no separate
         // users row for a Founder, and there should not be one.
         'founders' => [
             'driver' => 'eloquent',

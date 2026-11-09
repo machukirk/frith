@@ -175,7 +175,7 @@
     cursor: pointer;
 
     // The input is the control, so it keeps the focus ring rather than being
-    // hidden outright — the pill just draws around it.
+    // hidden outright. The pill just draws around it.
     input {
       position: absolute;
       opacity: 0;

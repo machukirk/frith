@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Runs on the Cloudways server. Called by deploy/push.sh — you shouldn't
+# Runs on the Cloudways server. Called by deploy/push.sh. You shouldn't
 # normally need to run it by hand.
 #
 # Safe to run repeatedly. Never touches .env or the database contents.
@@ -25,7 +25,7 @@ for arg in "$@"; do
     esac
 done
 
-[ -f artisan ] || { echo "Not an application root — no artisan here." >&2; exit 1; }
+[ -f artisan ] || { echo "Not an application root: no artisan here." >&2; exit 1; }
 
 step() { printf '\n\033[1m  %s\033[0m\n' "$1"; }
 

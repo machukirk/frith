@@ -3,7 +3,7 @@
     $f = $c['forgot'];
 @endphp
 
-<x-layouts.site :title="$f['title'].' — Frith'" :noindex="true">
+<x-layouts.site :title="$f['title'].' · Frith'" :noindex="true">
 
     <section class="auth">
         <div class="auth__inner">

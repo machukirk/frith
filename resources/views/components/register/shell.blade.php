@@ -9,7 +9,7 @@
     'editing' => false,
 ])
 
-<x-layouts.site :title="$title ?? $heading.' — Frith'" :noindex="true">
+<x-layouts.site :title="$title ?? $heading.' · Frith'" :noindex="true">
 
     <div class="wizard">
         @if ($step && $total)

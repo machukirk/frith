@@ -68,7 +68,7 @@ class Preflight extends Command
         $key = config('app.key');
 
         $key
-            ? $this->ok('APP_KEY is set', 'Never change it — it signs every confirmation link')
+            ? $this->ok('APP_KEY is set', 'Never change it: it signs every confirmation link')
             : $this->bad('APP_KEY is empty', 'Run: php artisan key:generate');
     }
 

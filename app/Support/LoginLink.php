@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
  * later. So the link is the front door and a password is optional.
  *
  * One use, one hour. Stored hashed, because a readable token in the database
- * is a password for whoever can read it — and this database holds what
+ * is a password for whoever can read it, and this database holds what
  * families have told us about their children.
  */
 class LoginLink

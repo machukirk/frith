@@ -2,7 +2,7 @@
  * Styles for the bits of the admin panel that are ours rather than Filament's.
  *
  * A plain stylesheet, linked from a render hook, because the panel's own CSS
- * is precompiled — utility classes written in a Blade file here would simply
+ * is precompiled: utility classes written in a Blade file here would simply
  * not exist. Kept small on purpose: everything else is Filament's.
  */
 

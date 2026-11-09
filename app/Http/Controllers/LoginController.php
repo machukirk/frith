@@ -17,7 +17,7 @@ use Illuminate\View\View;
  * Getting back in.
  *
  * Two ways: a password, for anybody who has set one, and an emailed link for
- * everybody else — which is almost everybody, because registration never asks
+ * everybody else. That is almost everybody, because registration never asks
  * for a password. The design leads with the link and says why.
  *
  * Neither path ever says whether an address is registered. Being on a list of
@@ -48,7 +48,7 @@ class LoginController extends Controller
         // evening gets wasted.
         if ($registration && ! $registration->hasPassword()) {
             throw ValidationException::withMessages([
-                'password' => 'You have not set a password. Ask us to email you a link instead — the button is just below.',
+                'password' => 'You have not set a password. Ask us to email you a link instead. The button is just below.',
             ]);
         }
 

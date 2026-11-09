@@ -1,7 +1,7 @@
 {{--
     Icons per brand guidelines §05: 24×24 grid, 1.5 stroke at 24px, round caps
     and joins, Eucalyptus 700, at most one coral element and only as a filled
-    dot. Decorative here — the heading beside each one carries the meaning.
+    dot. Decorative here. The heading beside each one carries the meaning.
 --}}
 @props(['name', 'size' => 30])
 

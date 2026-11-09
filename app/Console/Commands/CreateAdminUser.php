@@ -37,7 +37,7 @@ class CreateAdminUser extends Command
         $role = $this->option('role') ?: select(
             label: 'What can they do?',
             options: collect(UserRole::cases())
-                ->mapWithKeys(fn (UserRole $r) => [$r->value => $r->label().' — '.$r->description()])
+                ->mapWithKeys(fn (UserRole $r) => [$r->value => $r->label().' · '.$r->description()])
                 ->all(),
             default: UserRole::Editor->value,
         );

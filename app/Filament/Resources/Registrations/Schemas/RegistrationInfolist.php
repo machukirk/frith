@@ -26,14 +26,14 @@ class RegistrationInfolist
             Section::make()->schema([
                 TextEntry::make('founder_number')
                     ->label('Founder')
-                    ->formatStateUsing(fn ($state) => $state ? '#'.$state : '—')
+                    ->formatStateUsing(fn ($state) => $state ? '#'.$state : '-')
                     ->badge()
                     ->color('warning'),
                 TextEntry::make('name')
                     ->label('Name')
                     ->state(fn (Registration $r) => $r->displayName()),
                 TextEntry::make('email')->copyable(),
-                TextEntry::make('postcode_outcode')->label('Postcode area')->placeholder('—'),
+                TextEntry::make('postcode_outcode')->label('Postcode area')->placeholder('-'),
             ])->columns(4),
 
             Section::make('Their family')->schema([
@@ -66,9 +66,9 @@ class RegistrationInfolist
 
                     TextEntry::make('experiences_summary')
                         ->label('In more detail')
-                        ->placeholder('Skipped — which was fine, it is optional')
+                        ->placeholder('Skipped, which was fine. It is optional.')
                         ->state(fn (Registration $r) => $r->experiences->isEmpty() ? null : $r->experiencesByCategory()
-                            ->map(fn ($group, $cat) => Taxonomy::categoryLabel($cat).' — '
+                            ->map(fn ($group, $cat) => Taxonomy::categoryLabel($cat).': '
                                 .$group->map(fn ($e) => $e->label())->implode('; '))
                             ->values()
                             ->all())
@@ -89,7 +89,7 @@ class RegistrationInfolist
 
                     TextEntry::make('interests_other')
                         ->label('In their own words')
-                        ->placeholder('—')
+                        ->placeholder('-')
                         ->columnSpanFull(),
 
                     TextEntry::make('activity_supports')
@@ -101,7 +101,7 @@ class RegistrationInfolist
                 ]),
 
             Section::make('What they are looking for')
-                ->description('Finding your Frith — the last screen, and optional the whole way down.')
+                ->description('Finding your Frith: the last screen, and optional the whole way down.')
                 ->schema([
                     TextEntry::make('hopes')
                         ->label('Hoping to find')
@@ -134,7 +134,7 @@ class RegistrationInfolist
                         : 'Step '.min($r->furthest_step, RegistrationFlow::total()).' of '.RegistrationFlow::total())
                     ->color(fn (string $state) => $state === 'Finished section one' ? 'success' : 'warning'),
                 TextEntry::make('created_at')->label('Registered')->dateTime('j M Y, H:i'),
-                TextEntry::make('completed_at')->label('Finished')->dateTime('j M Y, H:i')->placeholder('—'),
+                TextEntry::make('completed_at')->label('Finished')->dateTime('j M Y, H:i')->placeholder('-'),
             ])->columns(3),
 
             Section::make('Record of consent')
@@ -144,7 +144,7 @@ class RegistrationInfolist
                     TextEntry::make('consent_text')->label('What they agreed to')->columnSpanFull(),
                     TextEntry::make('consent_version')->label('Wording version'),
                     TextEntry::make('consented_at')->label('Agreed at')->dateTime('j M Y, H:i'),
-                    TextEntry::make('consent_ip')->label('From IP')->placeholder('—'),
+                    TextEntry::make('consent_ip')->label('From IP')->placeholder('-'),
                     TextEntry::make('email_verified_at')->label('Email confirmed')->dateTime('j M Y, H:i')->placeholder('Not yet'),
                 ])->columns(2),
         ]);

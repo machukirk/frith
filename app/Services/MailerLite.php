@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Http;
  *
  * Our database stays the source of truth. MailerLite is a mirror, kept in step
  * so that whoever writes the launch email has an audience to send it to. If
- * this is unconfigured or MailerLite is down, signups carry on working — that
+ * this is unconfigured or MailerLite is down, signups carry on working. That
  * is the whole reason the list lives here first.
  *
  * Only verified addresses are ever sent. Registering does not prove the address
@@ -59,8 +59,8 @@ class MailerLite
             $payload['groups'] = [(string) $group];
         }
 
-        // POST to /subscribers upserts by email, so this is safe to repeat —
-        // which matters, because the queue may retry it.
+        // POST to /subscribers upserts by email, so this is safe to repeat.
+        // That matters, because the queue may retry it.
         $this->request()->post(self::BASE.'/subscribers', $payload)->throw();
     }
 

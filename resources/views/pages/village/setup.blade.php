@@ -1,4 +1,4 @@
-<x-layouts.site title="Before you go in — Frith" :noindex="true">
+<x-layouts.site title="Before you go in · Frith" :noindex="true">
 
     <section class="auth">
         <div class="auth__inner">

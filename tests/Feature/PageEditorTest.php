@@ -19,7 +19,7 @@ use Tests\TestCase;
  * Opening a page and pressing Save without typing anything must leave it
  * exactly as it was. The first version of this form was hand-written for the
  * home page's shape, so doing that to any other page replaced its content with
- * the home page's empty fields — the Terms page was one Save away from being
+ * the home page's empty fields. The Terms page was one Save away from being
  * blank, and nothing would have said so.
  */
 class PageEditorTest extends TestCase
@@ -73,7 +73,7 @@ class PageEditorTest extends TestCase
         $html = Livewire::test(EditPage::class, ['record' => $page->getRouteKey()])->html();
 
         // One tab per top-level section, and no tab for a section this page
-        // does not have — which is exactly what went wrong before.
+        // does not have, which is exactly what went wrong before.
         $this->assertSame(
             count($page->content),
             substr_count($html, 'fi-tabs-item-label'),

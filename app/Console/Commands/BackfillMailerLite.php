@@ -11,7 +11,7 @@ use Illuminate\Console\Command;
  * Pushes everyone who should be in MailerLite into MailerLite.
  *
  * Needed twice: the first time the API key is set, when a backlog of confirmed
- * signups already exists, and any time the mirror drifts — a long outage, a
+ * signups already exists, and any time the mirror drifts: a long outage, a
  * failed batch of jobs, or a group that was recreated by hand.
  *
  * Safe to run repeatedly. The API upserts by email.
@@ -32,7 +32,7 @@ class BackfillMailerLite extends Command
 
         $dryRun = (bool) $this->option('dry-run');
 
-        // Verified only — the same rule the service applies.
+        // Verified only: the same rule the service applies.
         $subscribe = Registration::query()->whereNotNull('email_verified_at')->whereNull('unsubscribed_at');
         $unsubscribe = Registration::query()->whereNotNull('unsubscribed_at');
 
@@ -41,7 +41,7 @@ class BackfillMailerLite extends Command
 
         if ($dryRun) {
             $this->newLine();
-            $this->info('  Dry run — nothing sent.');
+            $this->info('  Dry run. Nothing sent.');
 
             return self::SUCCESS;
         }

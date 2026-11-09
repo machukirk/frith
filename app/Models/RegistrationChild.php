@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
- * Month and year of birth only — never a full date.
+ * Month and year of birth only. Never a full date.
  *
  * It is enough to keep a child's age current and to match families at a
  * similar stage, and it is markedly less than a date of birth to hold about

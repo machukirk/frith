@@ -4,7 +4,7 @@
 // On a phone the list comes first and reads as a contents page.
 .policy {
   // The article fills the column the sidebar leaves it, rather than carrying a
-  // measure of its own on top of that. Matt's call — it reads as one block
+  // measure of its own on top of that. Matt's call. It reads as one block
   // beside the contents list instead of a narrow strip inside a wide column.
   .prose { --measure: none; }
 
@@ -26,7 +26,7 @@
   }
 
   // Gone on a phone. It is a list of the other policies and a note about
-  // reaching a person, and the footer already carries both — so on a small
+  // reaching a person, and the footer already carries both. So on a small
   // screen it was only something to scroll past before reaching the policy
   // somebody came for.
   &__aside {

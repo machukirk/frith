@@ -14,8 +14,8 @@
 return [
 
     'meta' => [
-        'title' => 'Community Guidelines — Frith',
-        'description' => 'What we expect of families on Frith, what is not allowed, and exactly what happens when you report someone — read by a person, usually within 24 hours.',
+        'title' => 'Community Guidelines · Frith',
+        'description' => 'What we expect of families on Frith, what is not allowed, and exactly what happens when you report someone. A person reads every report, usually within 24 hours.',
     ],
 
     'head' => [
@@ -29,7 +29,7 @@ return [
         'body' => 'Frith works because people are kind to each other. Here is what we expect, and what we will do if it does not happen.',
     ],
 
-    'intro' => 'Most families never need this page. It exists so that the few who do know exactly where they stand — and so you know what will happen if you report someone.',
+    'intro' => 'Most families never need this page. It exists so that the few who do know exactly where they stand, and so you know what will happen if you report someone.',
 
     'expect' => [
         'title' => 'What we expect',
@@ -63,7 +63,7 @@ return [
         'items' => [
             'Anything that puts a child at risk, or any attempt to contact a child.',
             'Harassment, threats, abuse, or repeated contact after being asked to stop.',
-            'Sharing another family’s information — including their identity, their child’s details, or their messages.',
+            'Sharing another family’s information, including their identity, their child’s details, or their messages.',
             'Pretending to be someone you are not, or misrepresenting your family.',
             'Selling, advertising, recruiting, fundraising or promoting.',
             'Using Frith to look for dates or partners.',
@@ -76,7 +76,7 @@ return [
         'stages' => [
             [
                 'label' => 'Straight away',
-                'body' => 'The family is blocked. They cannot see you, find you, or message you — whatever we decide about the report, and they are never told you reported them.',
+                'body' => 'The family is blocked. They cannot see you, find you, or message you. The block stays, whatever we decide about the report, and they are never told you reported them.',
             ],
             [
                 'label' => 'Within 24 hours',
@@ -88,7 +88,7 @@ return [
             ],
             [
                 'label' => 'We will tell you',
-                'body' => 'That we have read it and that we have acted. We will not share what we decided about another family — their privacy holds too, and we would protect yours the same way.',
+                'body' => 'That we have read it and that we have acted. We will not share what we decided about another family. Their privacy holds too, and we would protect yours the same way.',
             ],
         ],
     ],
@@ -100,6 +100,6 @@ return [
 
     'appeals' => [
         'title' => 'If we get it wrong',
-        'body' => 'Tell us. We have suspended the wrong account before and we will again. Write to :email and a person — not a form — will look at it again.',
+        'body' => 'Tell us. We have suspended the wrong account before and we will again. Write to :email and a person, not a form, will look at it again.',
     ],
 ];

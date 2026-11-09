@@ -1,7 +1,7 @@
 @use '../abstracts' as *;
 
 // Two things side by side from md up, stacked below it. A layout, not a
-// component — it says nothing about what is inside it.
+// component. It says nothing about what is inside it.
 .split {
   display: grid;
   gap: $space-4;

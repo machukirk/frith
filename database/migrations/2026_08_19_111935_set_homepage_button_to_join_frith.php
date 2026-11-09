@@ -12,7 +12,7 @@ use Illuminate\Database\Migrations\Migration;
  * actually does.
  *
  * Applied only where the wording is still the old default. If anybody has
- * already rewritten it in the admin panel, theirs stands — a migration quietly
+ * already rewritten it in the admin panel, theirs stands. A migration quietly
  * overwriting an editor is the thing the seeder is careful never to do.
  */
 return new class extends Migration

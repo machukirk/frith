@@ -6,10 +6,10 @@ Once only. After this, `./deploy/deploy.sh` is the whole deploy.
 
 These cannot be done over SSH.
 
-1. **PHP 8.4** — Server Management → Settings & Packages. Laravel 13 needs 8.3+.
-2. **Add the domain** — Application → Domain Management.
-3. **SSL** — Application → SSL Certificate. Let's Encrypt is fine.
-4. **Webroot** — Application Settings → Webroot must be `public_html/public`.
+1. **PHP 8.4**: Server Management → Settings & Packages. Laravel 13 needs 8.3+.
+2. **Add the domain**: Application → Domain Management.
+3. **SSL**: Application → SSL Certificate. Let's Encrypt is fine.
+4. **Webroot**: Application Settings → Webroot must be `public_html/public`.
    If it points at `public_html`, the whole codebase including `.env` is served
    over the web. Check this one twice.
 
@@ -89,7 +89,7 @@ Otherwise a cron entry does the same job without needing root. `crontab -e`:
 * * * * * cd /home/master/applications/<app>/public_html && php artisan queue:work --stop-when-empty --max-time=55 >> /dev/null 2>&1
 ```
 
-Either way, confirm it with `php artisan frith:preflight` — it fails loudly if
+Either way, confirm it with `php artisan frith:preflight`. It fails loudly if
 jobs have been sitting in the queue for more than ten minutes.
 
 **5. Accounts.**

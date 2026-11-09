@@ -12,8 +12,8 @@ return new class extends Migration
             $table->id();
 
             // Matched to a controller in code. The structure of a form is
-            // behaviour — saving on every step, the child repeater, section two
-            // appearing only for chosen areas — so it lives in PHP. What lives
+            // behaviour: saving on every step, the child repeater, section two
+            // appearing only for chosen areas. So it lives in PHP. What lives
             // here is everything an editor should be able to change.
             $table->string('slug')->unique();
             $table->string('name');

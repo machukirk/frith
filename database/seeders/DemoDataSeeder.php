@@ -65,7 +65,7 @@ class DemoDataSeeder extends Seeder
                 'family_structures' => collect($structures)->shuffle()->take(rand(1, 2))->values()->all(),
                 'support_areas' => $finished ? $areas : null,
                 // Not everybody who finishes answers the last screen, because
-                // it is optional — so some are deliberately left blank.
+                // it is optional. So some are deliberately left blank.
                 'interests' => $finished && $i % 5 !== 4
                     ? collect($interests)->shuffle()->take(rand(2, 5))->values()->all()
                     : null,
@@ -104,7 +104,7 @@ class DemoDataSeeder extends Seeder
                 ]);
             }
 
-            // Only some fill in section two — it is optional, and the panel
+            // Only some fill in section two. It is optional, and the panel
             // should show what that actually looks like.
             if ($finished && $i % 4 !== 3) {
                 foreach (array_slice($areas, 0, rand(1, 2)) as $category) {

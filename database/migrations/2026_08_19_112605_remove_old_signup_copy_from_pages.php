@@ -10,7 +10,7 @@ use Illuminate\Database\Migrations\Migration;
  * The homepage no longer has a form on it, so the field labels and the three
  * screens people used to land on afterwards have nowhere to appear. Left in
  * place they would sit in the admin panel offering to edit copy that renders
- * nowhere, which is worse than useless — somebody would spend time on it.
+ * nowhere, which is worse than useless. Somebody would spend time on it.
  *
  * The button and its note move to a `cta` block, since "form" is no longer
  * what they belong to.

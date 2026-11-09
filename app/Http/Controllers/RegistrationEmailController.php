@@ -11,8 +11,8 @@ use Illuminate\View\View;
 /**
  * What the links in the Founder email do.
  *
- * Every route here is signed, so the link itself is the proof of identity —
- * there is no session, and somebody guessing a URL gets a 403 rather than
+ * Every route here is signed, so the link itself is the proof of identity.
+ * There is no session, and somebody guessing a URL gets a 403 rather than
  * somebody else's registration.
  */
 class RegistrationEmailController extends Controller

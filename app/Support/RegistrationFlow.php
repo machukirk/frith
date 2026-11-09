@@ -11,8 +11,8 @@ namespace App\Support;
  * because they are all "who are you", and a household and its children
  * together because they are both "who is at home".
  *
- * The detail questions used to be a screen per area of family life — up to
- * eight of them — with a counter frozen so the form did not appear to grow the
+ * The detail questions used to be a screen per area of family life, up to
+ * eight of them, with a counter frozen so the form did not appear to grow the
  * more somebody told us. They are one screen now, an accordion per area, which
  * is the same information without the sleight of hand.
  *

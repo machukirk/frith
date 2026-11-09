@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
  * instead of three unrelated fragments they have to reconcile.
  *
  * Everything here is a claim about Frith that has to stay true. Structured data
- * asserting things the page cannot back up is worse than none — it is what
+ * asserting things the page cannot back up is worse than none. It is what
  * manual spam actions are for.
  */
 class StructuredData

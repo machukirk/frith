@@ -2,7 +2,7 @@
 
 /*
 |--------------------------------------------------------------------------
-| The auth screens — /login, /forgot, /link-sent, /verified
+| The auth screens: /login, /forgot, /link-sent, /verified
 |--------------------------------------------------------------------------
 |
 | Held together in one file because they are one journey, and the wording on
@@ -13,7 +13,7 @@
 return [
 
     'meta' => [
-        'title' => 'Log in — Frith',
+        'title' => 'Log in · Frith',
         'description' => 'Log in to Frith.',
     ],
 
@@ -50,7 +50,7 @@ return [
 
     'verified' => [
         'title' => 'You’re all set',
-        'standfirst' => 'Your email is confirmed and you are logged in — no need to sign in again. We’ll let you know when there’s a connection worth seeing.',
+        'standfirst' => 'Your email is confirmed and you are logged in. No need to sign in again. We’ll let you know when there’s a connection worth seeing.',
         'unfinished' => 'Still need to complete the details in your profile?',
         'unfinished_link' => 'Pick up where you left off',
         'button' => 'Back to the homepage',

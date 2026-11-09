@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 /**
  * Brings the answer options in line with the redesigned registration.
  *
- * Slugs never move — they are what is stored against a family, and renaming
+ * Slugs never move. They are what is stored against a family, and renaming
  * one silently detaches everyone who chose it. Only the wording changes, and
  * only where it is still the wording that shipped: if somebody has already
  * reworded an option in the admin panel, theirs stands.

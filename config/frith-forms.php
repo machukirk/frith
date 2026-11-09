@@ -2,7 +2,7 @@
 
 /*
 |--------------------------------------------------------------------------
-| Form copy — the floor
+| Form copy: the floor
 |--------------------------------------------------------------------------
 |
 | The words on each screen, as they ship. This is seeded into the database on
@@ -11,7 +11,7 @@
 | sentences rather than blanks.
 |
 | Structure is not here. Which screens exist, in what order, and how they
-| behave is code — see App\Support\RegistrationFlow and the controllers.
+| behave is code. See App\Support\RegistrationFlow and the controllers.
 |
 */
 
@@ -52,11 +52,11 @@ return [
                 'fields' => [
                     'family_structures' => [
                         'label' => 'Your household',
-                        'help' => 'Optional — this helps us understand family dynamics, and is never shown on your profile.',
+                        'help' => 'This is optional. It helps us understand family dynamics, and is never shown on your profile.',
                     ],
                     'children' => [
                         'label' => 'Your children',
-                        'help' => 'Month and year only — we never ask for a date of birth.',
+                        'help' => 'We only ask for month and year, never a date of birth.',
                     ],
                 ],
             ],
@@ -75,7 +75,7 @@ return [
 
             'areas' => [
                 'heading' => 'Which areas of family life would you like the most support with?',
-                'standfirst' => 'Choose all that apply. You are registered from here — the more you share, the more meaningful your connections can be.',
+                'standfirst' => 'Choose all that apply. You are registered from here, and the more you share, the more meaningful your connections can be.',
                 'is_private' => false,
                 'fields' => [],
             ],

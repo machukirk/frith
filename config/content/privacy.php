@@ -3,7 +3,7 @@
 return [
 
     'meta' => [
-        'title' => 'Privacy Policy — Frith',
+        'title' => 'Privacy Policy · Frith',
         'description' => 'What Frith holds about your family, why we hold it, who sees it, and how to get a copy or have it removed. We do not sell data, and we never will.',
     ],
 
@@ -46,7 +46,7 @@ return [
             [
                 'what' => 'The first part of your postcode',
                 'why' => 'To introduce you to families nearby',
-                'who' => 'Nobody — we show a place name',
+                'who' => 'Nobody, we show a place name',
             ],
             [
                 'what' => "Your children's month and year of birth",
@@ -56,7 +56,7 @@ return [
             [
                 'what' => 'What your family is navigating',
                 'why' => 'To find you good matches',
-                'who' => 'Nobody directly — but a Journey you join is visible to its families',
+                'who' => 'Nobody directly, but a Journey you join is visible to its families',
             ],
             [
                 'what' => 'Your interests and how you like to meet',
@@ -82,7 +82,7 @@ return [
         [
             'title' => 'Special category data',
             'paragraphs' => [
-                'What your family is navigating may say something about health or disability, which UK data protection law treats as special category data. We hold it only because you have chosen to give it to us, and we use it to find your matches. We never display your answers on your profile. Note that joining a Journey is itself visible to the families in it — a Journey named for a particular experience will tell them something about your family, which is why joining is always your choice and you can leave at any time. You can remove your answers at any point and keep your account.',
+                'What your family is navigating may say something about health or disability, which UK data protection law treats as special category data. We hold it only because you have chosen to give it to us, and we use it to find your matches. We never display your answers on your profile. Note that joining a Journey is itself visible to the families in it. A Journey named for a particular experience will tell them something about your family, which is why joining is always your choice and you can leave at any time. You can remove your answers at any point and keep your account.',
             ],
         ],
         [
@@ -94,7 +94,7 @@ return [
         [
             'title' => 'Who we share it with',
             'paragraphs' => [
-                'Nobody, for money, ever. We use a small number of providers to run Frith — hosting, email delivery, payment processing and identity verification — and they only ever see what they need to do their part. We will disclose information to the police or a safeguarding authority where there is a risk to a child, and we would do so without hesitation.',
+                'Nobody, for money, ever. We use a small number of providers to run Frith: hosting, email delivery, payment processing and identity verification. Those providers only ever see what they need to do their part. We will disclose information to the police or a safeguarding authority where there is a risk to a child, and we would do so without hesitation.',
             ],
         ],
         [
@@ -109,7 +109,7 @@ return [
         [
             'title' => 'Your rights',
             'paragraphs' => [
-                'You can ask for a copy of everything we hold, correct anything wrong, remove anything you have given us, or have your account deleted. Requests are answered within 30 days and usually much sooner — most of it you can do yourself from your account.',
+                'You can ask for a copy of everything we hold, correct anything wrong, remove anything you have given us, or have your account deleted. Requests are answered within 30 days and usually much sooner. Most of it you can do yourself from your account.',
                 'If you are unhappy with how we have handled your information, tell us at :email. You can also complain to the Information Commissioner’s Office, and you do not need to go through us first.',
             ],
         ],

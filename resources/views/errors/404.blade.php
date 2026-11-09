@@ -1,4 +1,4 @@
-<x-layouts.site title="We cannot find that page — Frith" :noindex="true">
+<x-layouts.site title="We cannot find that page · Frith" :noindex="true">
 
     <section class="wrap outcome">
         <span class="outcome__mark outcome__mark--question" aria-hidden="true">?</span>

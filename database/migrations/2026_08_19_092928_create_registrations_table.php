@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('last_name')->nullable();
             $table->string('postcode_outcode', 4)->nullable();
 
-            // "Select all that apply" — families do not fit one box.
+            // "Select all that apply": families do not fit one box.
             $table->json('family_structures')->nullable();
 
             // --- Section 1, private: used for matching, never displayed ---
@@ -41,14 +41,14 @@ return new class extends Migration
             // --- Consent evidence, same shape as the waiting list ---
             $table->string('consent_version');
             $table->text('consent_text');
-            // useCurrent, not a bare NOT NULL: under NO_ZERO_DATE — which
-            // production runs and a stock local MariaDB does not — a NOT NULL
+            // useCurrent, not a bare NOT NULL: under NO_ZERO_DATE, which
+            // production runs and a stock local MariaDB does not, a NOT NULL
             // timestamp with no default is rejected outright at CREATE TABLE.
             $table->timestamp('consented_at')->useCurrent();
             $table->string('consent_ip', 45)->nullable();
             $table->text('consent_user_agent')->nullable();
 
-            // Registration is not gated on this — they are registered the
+            // Registration is not gated on this. They are registered the
             // moment they hit continue. This is about being able to reach them.
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('verification_sent_at')->nullable();

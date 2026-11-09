@@ -11,8 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
  * Sends X-Robots-Tag on every response from a site that is not the real one.
  *
  * The layout's meta tag says the same thing, but only on a page that goes
- * through the layout. This covers the sitemap, the manifest, an error page —
- * anything a crawler can reach. One place, and nothing to remember per route.
+ * through the layout. This covers anything a crawler can reach: the sitemap,
+ * the manifest, an error page. One place, and nothing to remember per route.
  */
 class KeepCopiesOutOfSearch
 {

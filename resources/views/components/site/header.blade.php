@@ -16,7 +16,7 @@
         <a class="menu__home" href="{{ route('home') }}">
             <img class="menu__logo menu__logo--closed"
                  src="{{ \App\Support\BrandAsset::url('brand/logo/frith-logo-horizontal-fullcolour.svg') }}"
-                 alt="Frith — home" width="1152" height="464">
+                 alt="Frith home" width="1152" height="464">
             <img class="menu__logo menu__logo--open"
                  src="{{ \App\Support\BrandAsset::url('brand/logo/frith-logo-horizontal-reversed.svg') }}"
                  alt="" aria-hidden="true" width="1152" height="464">
@@ -91,7 +91,7 @@
         <a class="site-header__home" href="{{ route('home') }}">
             <img class="site-header__logo"
                  src="{{ \App\Support\BrandAsset::url('brand/logo/frith-logo-horizontal-fullcolour.svg') }}"
-                 alt="Frith — home" width="1152" height="464">
+                 alt="Frith home" width="1152" height="464">
         </a>
 
         <nav class="site-header__nav" aria-label="Primary">

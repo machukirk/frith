@@ -3,7 +3,7 @@
 return [
 
     'meta' => [
-        'title' => 'Frith+ — discover more of your village',
+        'title' => 'Frith+: discover more of your village',
         'description' => 'Frith+ is an optional membership that gives you more ways to find and connect with families who feel right for you. Mutual connections are always free.',
     ],
 

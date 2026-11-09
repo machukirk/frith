@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
-    <title>Back in a few minutes — Frith</title>
+    <title>Back in a few minutes · Frith</title>
     @vite('resources/scss/main.scss')
 </head>
 <body>

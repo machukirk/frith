@@ -47,7 +47,7 @@
                             <span class="field">
                                 <label class="field__label" for="child-{{ $i }}-month">Month</label>
                                 <select class="select" id="child-{{ $i }}-month" name="children[{{ $i }}][birth_month]">
-                                    <option value="">—</option>
+                                    <option value="">Choose</option>
                                     @foreach ($months as $m => $name)
                                         <option value="{{ $m + 1 }}" @selected((int) ($row['birth_month'] ?? 0) === $m + 1)>{{ $name }}</option>
                                     @endforeach
@@ -57,7 +57,7 @@
                             <span class="field">
                                 <label class="field__label" for="child-{{ $i }}-year">Year</label>
                                 <select class="select" id="child-{{ $i }}-year" name="children[{{ $i }}][birth_year]">
-                                    <option value="">—</option>
+                                    <option value="">Choose</option>
                                     @for ($y = $thisYear; $y >= $thisYear - 25; $y--)
                                         <option value="{{ $y }}" @selected((int) ($row['birth_year'] ?? 0) === $y)>{{ $y }}</option>
                                     @endfor

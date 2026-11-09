@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
  * Puts the hopes list into the order the design asks for.
  *
  * What somebody wants from other families first, then what they can offer,
- * then the practical — rather than the order the options happened to be
+ * then the practical, rather than the order the options happened to be
  * written in. Archived options go to the end: they are off the form, and
  * leaving them interleaved makes the list in the editor harder to read than
  * the list on the form.

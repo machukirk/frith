@@ -44,7 +44,7 @@ class AdminPanelProvider extends PanelProvider
                 'gray' => Color::Slate,
             ])
             // The guidelines define one palette, for light grounds. Rather than
-            // invent a dark one, the panel stays light — which also keeps the
+            // invent a dark one, the panel stays light, which also keeps the
             // dark green wordmark legible against it.
             ->darkMode(false)
             ->maxContentWidth(Width::SevenExtraLarge)

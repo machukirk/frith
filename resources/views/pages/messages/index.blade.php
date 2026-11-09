@@ -1,4 +1,4 @@
-<x-layouts.site title="Messages — Frith" :noindex="true">
+<x-layouts.site title="Messages · Frith" :noindex="true">
 
     <section class="wrap page-head">
         <div class="page-head__inner">

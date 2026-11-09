@@ -18,7 +18,7 @@ use Illuminate\View\View;
  *
  * Every step is a real POST that saves before it redirects. A visitor who
  * answers the first screen and then has to go and deal with something is
- * registered — which is the entire point, and why this is not a single form
+ * registered. That is the entire point, and why this is not a single form
  * with a submit button at the bottom.
  *
  * It works with no JavaScript at all: each step is its own URL, "add another
@@ -32,7 +32,7 @@ class RegistrationController extends Controller
 
     /**
      * Set when the email already belongs to a verified Founder. Every screen
-     * behaves identically, but nothing is written — so the form can never be
+     * behaves identically, but nothing is written, so the form can never be
      * used to overwrite somebody else's answers, and never reveals that the
      * address is already registered.
      */
@@ -89,7 +89,7 @@ class RegistrationController extends Controller
 
         // "Skip this section" on the areas screen. It clears the areas and
         // their detail statements and goes straight past the screen that asks
-        // about them — there is nothing there to ask once nothing is chosen.
+        // about them. There is nothing there to ask once nothing is chosen.
         if ($step === 'areas' && $request->input('action') === 'skip') {
             $registration = $this->current($request);
 
@@ -178,8 +178,8 @@ class RegistrationController extends Controller
     }
 
     /**
-     * Sequential, assigned once, never reused — so "Founder #47" stays true
-     * for that family even if number 12 later deletes their account.
+     * Sequential, assigned once, never reused: "Founder #47" stays true for
+     * that family even if number 12 later deletes their account.
      *
      * Only the first hundred get one. After that a registration is complete
      * and perfectly normal; it simply has no number, and everything that shows
@@ -217,7 +217,7 @@ class RegistrationController extends Controller
      *
      * Delayed rather than immediate: somebody still filling in the form does
      * not need their phone buzzing at them, and by the time it lands they have
-     * usually either finished or stopped — so one message reads correctly for
+     * usually either finished or stopped. So one message reads correctly for
      * both. The timestamp is written first, so a retry cannot send it twice.
      */
     private function sendWelcome(Registration $registration): void

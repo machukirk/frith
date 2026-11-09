@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
  * Rewords the name screen now that there is only one name field.
  *
  * Only where the wording is still the original. If somebody has already
- * rewritten it in the admin panel, theirs is left alone — a migration quietly
+ * rewritten it in the admin panel, theirs is left alone. A migration quietly
  * overwriting an editor's words is exactly what the seeder is careful not to do.
  */
 return new class extends Migration

@@ -80,7 +80,7 @@ class FounderEmailTest extends TestCase
     public function it_is_delayed_so_it_does_not_arrive_mid_form(): void
     {
         // Asserted against the real queue rather than a fake, because both
-        // Mail::fake() and Queue::fake() drop the delay on the floor — and the
+        // Mail::fake() and Queue::fake() drop the delay on the floor, and the
         // delay is the whole point. If this ever became zero, somebody would
         // get a "thanks for joining" email while still on screen two.
         config(['queue.default' => 'database']);
@@ -159,7 +159,7 @@ class FounderEmailTest extends TestCase
     #[Test]
     public function the_link_verifies_the_address_and_syncs_to_mailerlite(): void
     {
-        // Verification is the gate on the sync — this is the moment an address
+        // Verification is the gate on the sync. This is the moment an address
         // becomes one we are allowed to send a launch email to.
         Bus::fake();
         $registration = Registration::factory()->create();

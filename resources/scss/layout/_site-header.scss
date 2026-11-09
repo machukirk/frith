@@ -15,7 +15,7 @@
   @include from(md) { position: static; }
 
   // The phone menu slides in underneath this bar rather than over it, so the
-  // bar has to be dark before the panel arrives — otherwise the reversed
+  // bar has to be dark before the panel arrives. Otherwise the reversed
   // wordmark fades up against a page-coloured background and vanishes for a
   // quarter of a second on the way in.
   //

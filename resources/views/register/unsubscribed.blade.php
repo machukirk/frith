@@ -1,4 +1,4 @@
-<x-layouts.site title="You’re off the list — Frith" :noindex="true">
+<x-layouts.site title="You’re off the list · Frith" :noindex="true">
 
     <div class="wizard">
         <h1 class="heading wizard__heading">You’re off the list.</h1>

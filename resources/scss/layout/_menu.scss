@@ -5,7 +5,7 @@
 // Three parts, and the split matters. The wordmark is a plain link, the
 // <summary> is only the burger, and the panel is the overlay. It used to be
 // one <details> wrapping the whole bar, which made the wordmark part of the
-// toggle — tapping it opened the menu instead of going home.
+// toggle. Tapping it opened the menu instead of going home.
 //
 // The panel is always in the document, parked off the right of the screen
 // rather than removed. A closed disclosure's contents are not rendered, and an
@@ -105,7 +105,7 @@
   // the content rendered for the length of the close, so the panel inside has
   // something to slide out of; @starting-style supplies the state to slide in
   // FROM, which an element that has never been rendered does not otherwise
-  // have. Browsers without either simply open and close at once — which is
+  // have. Browsers without either simply open and close at once, which is
   // what a <details> does anyway, so nothing breaks.
   &__disclosure::details-content {
     transition: content-visibility 260ms allow-discrete;
@@ -189,8 +189,8 @@
     letter-spacing: -0.015em;
   }
 
-  // Where you already are, said in coral rather than by a highlight — the one
-  // row that is not a place to go.
+  // Where you already are, said in coral rather than by a highlight. It is
+  // the one row that is not a place to go.
   &__row[aria-current='page'] &__label { color: $coral-200; }
 
   &__meta {

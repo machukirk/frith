@@ -55,7 +55,7 @@ step "Uploading to ~/$REMOTE_APP"
 # Permissions are fixed on the server rather than with --chmod here: macOS ships
 # openrsync, which rejects that flag outright. rsync -a otherwise carries the
 # developer machine's own permissions across, and a 600 stylesheet is one nginx
-# cannot read — the site comes up with no CSS at all. remote.sh normalises.
+# cannot read: the site comes up with no CSS at all. remote.sh normalises.
 rsync -az --delete \
     -e "ssh -i $SSH_KEY -o BatchMode=yes" \
     --exclude '.git' \

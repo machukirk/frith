@@ -15,7 +15,7 @@ use Filament\Support\Icons\Heroicon;
 /**
  * One screen per section, in the order a visitor meets them.
  *
- * The key of each screen and field is shown but not editable — it is what ties
+ * The key of each screen and field is shown but not editable. It is what ties
  * the wording to the code that validates and saves it.
  */
 class FormContentSchema
@@ -46,7 +46,7 @@ class FormContentSchema
                         ->label('Screen')
                         ->disabled()
                         ->dehydrated(false)
-                        ->helperText('Set in code — it is what links this wording to the screen that uses it.'),
+                        ->helperText('Set in code: it is what links this wording to the screen that uses it.'),
 
                     TextInput::make('heading')
                         ->label('Heading')
@@ -64,8 +64,8 @@ class FormContentSchema
                         ->helperText('Use this on any screen that asks for something we never show on a profile.'),
 
                     // Only the screens that have their own labelled inputs. The
-                    // ones that are nothing but a list of choices — who is in
-                    // your family, which areas of family life — are edited on
+                    // ones that are nothing but a list of choices (who is in
+                    // your family, which areas of family life) are edited on
                     // the Options tab, and an empty panel here only invites
                     // somebody to go looking for something that is not in it.
                     Section::make('Fields on this screen')

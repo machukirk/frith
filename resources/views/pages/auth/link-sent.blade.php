@@ -4,7 +4,7 @@
     $email = session('link-sent.email');
 @endphp
 
-<x-layouts.site :title="$s['title'].' — Frith'" :noindex="true">
+<x-layouts.site :title="$s['title'].' · Frith'" :noindex="true">
 
     <section class="auth">
         <div class="auth__inner">

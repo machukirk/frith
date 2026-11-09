@@ -22,7 +22,7 @@
     &:hover { background: $euc-800; }
   }
 
-  // Coral on the dark bands. The label is ink, never white — white on coral is
+  // Coral on the dark bands. The label is ink, never white. White on coral is
   // 3.23:1 and fails at every size (guidelines §02).
   &--accent {
     background: $action-accent;
@@ -31,7 +31,7 @@
     &:hover { background: $coral-200; }
   }
 
-  // Outlined rather than filled — "Add another child" sits under the thing it
+  // Outlined rather than filled: "Add another child" sits under the thing it
   // adds to and must not compete with Continue.
   &--quiet {
     background: transparent;
@@ -42,7 +42,7 @@
   }
 
   // Outlined in the brand green. Secondary to a filled button, but still
-  // plainly a button — unlike --quiet, which is the quietest thing on a screen.
+  // plainly a button, unlike --quiet, which is the quietest thing on a screen.
   &--outline {
     background: transparent;
     border-color: $action;

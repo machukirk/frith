@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('registrations', function (Blueprint $table) {
             // Nullable, and expected to stay null for most people. Registration
-            // never asks for one — the emailed link is the way in, because a
+            // never asks for one. The emailed link is the way in, because a
             // parent registering at 1am on a phone will not remember a password
             // a fortnight later. A password is something you may set later.
             $table->string('password')->nullable()->after('email');

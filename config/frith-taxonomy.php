@@ -13,7 +13,7 @@
 | permanent: change the label freely, never the key. Adding is safe.
 |
 | This lives in code rather than the CMS on purpose. The labels are content,
-| but the keys are matching data — an editor renaming a key would quietly
+| but the keys are matching data. An editor renaming a key would quietly
 | break the thing the whole product is for.
 |
 */
@@ -32,7 +32,7 @@ return [
                 'additional-support' => 'Needing extra support or adjustments at school',
                 'homework-exams' => 'Finding homework, exams or assessments difficult',
                 'school-friendships' => 'Finding friendships or belonging at school difficult',
-                'education-options' => 'Exploring other education options — specialist, alternative provision or home education',
+                'education-options' => 'Exploring other education options: specialist, alternative provision or home education',
                 'school-communication' => 'Finding communication with school difficult',
             ],
         ],
@@ -89,7 +89,7 @@ return [
                 'awaiting-assessment' => 'Waiting for assessments, or exploring possible additional needs',
                 'ehcp' => 'Applying for or managing an EHCP',
                 'understanding-send' => 'Trying to understand SEND services and what support exists',
-                'working-with-professionals' => 'Working with professionals — therapists, health or education teams',
+                'working-with-professionals' => 'Working with professionals: therapists, health or education teams',
                 'local-groups' => 'Looking for local activities, groups or community support',
                 'practical-financial-respite' => 'Looking for practical, financial or respite support',
                 'systems-paperwork' => 'Finding systems, paperwork or waiting lists hard to navigate',
@@ -147,7 +147,7 @@ return [
     | those are what is hard, these are what is good, and a match on the second
     | is what turns an introduction into a friendship.
     |
-    | Same slug rule as everything else here — reword freely, never rekey.
+    | Same slug rule as everything else here: reword freely, never rekey.
     */
     'interests' => [
         'outdoors-nature' => [
@@ -202,8 +202,8 @@ return [
 
     /*
     | What makes an activity work for them. Asked alongside the interests
-    | rather than under support, because it is practical rather than personal —
-    | it is what somebody needs to know before suggesting a Saturday.
+    | rather than under support, because it is practical rather than personal.
+    | It is what somebody needs to know before suggesting a Saturday.
     */
     'activity_supports' => [
         'smaller-groups' => 'Smaller groups',
@@ -217,7 +217,7 @@ return [
 
     /*
     | Finding your Frith. What they are hoping for, how they would rather go
-    | about it, and who they would like to meet — the three things that turn
+    | about it, and who they would like to meet: the three things that turn
     | "here are families like yours" into an introduction somebody actually
     | wants. All optional, like everything else on that screen.
     */
@@ -248,7 +248,7 @@ return [
 
     /*
     | No longer asked. The redesigned registration has no screen for it, and
-    | every option is archived — kept here so the answers families already gave
+    | every option is archived, kept here so the answers families already gave
     | still resolve to a label rather than to a slug.
     */
     'family_preferences' => [
