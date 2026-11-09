@@ -109,6 +109,14 @@ class Registration extends Model implements AuthenticatableContract
         return $this->completed_at !== null;
     }
 
+    /** The Journeys this family has joined. */
+    public function journeys(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Journey::class)
+            ->withPivot('joined_at')
+            ->withTimestamps();
+    }
+
     /**
      * One of the first hundred. What a number means, in one place, so nothing
      * downstream has to know that it is the number that decides.

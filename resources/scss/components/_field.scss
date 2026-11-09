@@ -73,7 +73,9 @@
   margin-top: $space-6;
   padding-inline: $space-5;
   background: $bg-surface;
-  border: 1px solid $linen-300;
+  // $border-input, not the card hairline: this is the boundary of a control,
+  // so it needs 3:1 under 1.4.11 rather than the 1.4:1 a hairline gives.
+  border: 1.5px solid $border-input;
   border-radius: $radius-pill;
 
   &:focus-within {

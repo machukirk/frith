@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\JourneyController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PagePreviewController;
 use App\Http\Controllers\RegistrationController;
@@ -89,6 +90,23 @@ Route::view('/verified', 'pages.auth.verified')
 Route::post('/logout', [LoginController::class, 'logout'])
     ->middleware('auth:founder')
     ->name('logout');
+
+/*
+ * The product. Everything behind here needs a family logged in, because all
+ * of it is either about them or about somebody who has agreed to be seen by
+ * them.
+ */
+Route::middleware('auth:founder')->group(function () {
+    Route::get('/journeys', [JourneyController::class, 'index'])->name('journeys');
+
+    Route::post('/journeys/{journey}/join', [JourneyController::class, 'join'])
+        ->middleware('throttle:30,1')
+        ->name('journeys.join');
+
+    Route::post('/journeys/{journey}/leave', [JourneyController::class, 'leave'])
+        ->middleware('throttle:30,1')
+        ->name('journeys.leave');
+});
 
 /*
  * The admin panel's live preview. Behind the panel's own guard, because it

@@ -1,0 +1,103 @@
+@use '../abstracts' as *;
+
+// The nine Journeys, and whether this family is in each one.
+.journey-list {
+  padding-bottom: $space-16;
+
+  &__status {
+    padding: $space-3 $space-4;
+    margin-bottom: $space-5;
+    background: $euc-050;
+    border-radius: $radius-lg;
+    color: $euc-800;
+    @include type((14px, 14px), 1.5);
+  }
+
+  &__filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-3;
+    align-items: center;
+    margin-bottom: $space-5;
+
+    // Fills the row up to its own cap, the way the design draws it.
+    .search {
+      flex: 1;
+      max-width: 420px;
+      margin-top: 0;
+    }
+  }
+
+  // "All nine" when nothing is being searched for, and the way back when
+  // something is.
+  &__count,
+  &__all {
+    @include tap-target(40px);
+    padding-inline: $space-5;
+    border: 1.5px solid $linen-400;
+    border-radius: $radius-pill;
+    color: $action;
+    @include type((13.5px, 13.5px), 1.3, 500);
+    text-decoration: none;
+  }
+
+  &__empty {
+    margin-bottom: $space-5;
+    color: $text-body;
+    @include type((15px, 15px), 1.6);
+  }
+
+  &__items {
+    display: grid;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+}
+
+.journey-row {
+  display: flex;
+  gap: $space-4;
+  align-items: center;
+  padding: 15px 18px;
+  background: $bg-surface;
+  border: 1px solid $border-hairline;
+  border-radius: $radius-xl;
+
+  &__text { flex: 1; min-width: 0; }
+
+  &__title {
+    margin-bottom: 3px;
+    color: $text-heading;
+    @include type((15px, 15px), 1.3, 600);
+  }
+
+  &__meta {
+    color: $text-body;
+    @include type((12px, 12px), 1.4);
+  }
+
+  // Being in a Journey is a state, not a button, so it is drawn as one. It
+  // is still the control that leaves: the label beneath it says so, and the
+  // hover makes it plain before anybody presses it.
+  &__joined {
+    @include tap-target(32px);
+    padding-inline: 11px;
+    background: $euc-050;
+    border: 1.5px solid transparent;
+    border-radius: $radius-pill;
+    color: $euc-600;
+    @include type((11.5px, 11.5px), 1.2, 600);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    @include focus-ring;
+
+    &:hover {
+      border-color: $euc-600;
+
+      span[aria-hidden]::after { content: ' \2715'; }
+    }
+  }
+}
