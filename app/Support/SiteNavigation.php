@@ -12,9 +12,19 @@ namespace App\Support;
 class SiteNavigation
 {
     /** @return array<int, array{label: string, url: string}> */
+    /**
+     * The header's links.
+     *
+     * A family who is logged in gets the product's own set, which is what the
+     * designs show on every screen behind the door. Everybody else gets the
+     * marketing one.
+     */
     public static function primary(): array
     {
-        return self::resolve(config('frith-nav.primary', []));
+        return self::resolve(config(
+            auth('founder')->check() ? 'frith-nav.menu_founder' : 'frith-nav.primary',
+            [],
+        ));
     }
 
     /**

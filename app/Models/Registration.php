@@ -126,9 +126,36 @@ class Registration extends Model implements AuthenticatableContract
         return $this->founder_number !== null;
     }
 
+    /**
+     * What other families see. The name they chose, or their first name until
+     * they have chosen one.
+     */
     public function displayName(): string
     {
-        return trim((string) $this->first_name);
+        return trim((string) ($this->display_name ?: $this->first_name));
+    }
+
+    /** Whether they have been through the village's one-off setup. */
+    public function hasProfile(): bool
+    {
+        return filled($this->display_name);
+    }
+
+    /**
+     * The rough area, which is as much of a location as anybody ever sees.
+     *
+     * The designs render TN13 as "Tonbridge area". Naming the town needs an
+     * outcode lookup we do not have, so this says the outcode until we do.
+     */
+    public function area(): string
+    {
+        return trim((string) $this->postcode_outcode).' area';
+    }
+
+    /** The letter in the circle beside their name. */
+    public function initial(): string
+    {
+        return mb_strtoupper(mb_substr($this->displayName(), 0, 1));
     }
 
     /**

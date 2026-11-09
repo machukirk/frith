@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\JourneyController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\VillageController;
 use App\Http\Controllers\PagePreviewController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RegistrationEmailController;
@@ -97,6 +98,15 @@ Route::post('/logout', [LoginController::class, 'logout'])
  * them.
  */
 Route::middleware('auth:founder')->group(function () {
+    Route::get('/village', [VillageController::class, 'show'])->name('village');
+
+    // Asked once, the first time the village is opened. The village itself
+    // waits until there is an answer.
+    Route::get('/village/setup', [VillageController::class, 'setup'])->name('village.setup');
+    Route::post('/village/setup', [VillageController::class, 'store'])
+        ->middleware('throttle:10,1')
+        ->name('village.setup.store');
+
     Route::get('/journeys', [JourneyController::class, 'index'])->name('journeys');
 
     Route::post('/journeys/{journey}/join', [JourneyController::class, 'join'])

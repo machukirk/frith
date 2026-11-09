@@ -65,6 +65,8 @@
     gap: $space-3;
   }
 
+  &__note { margin-top: $space-6; }
+
   &__aside-link {
     color: $action;
     @include type((12px, 12px), 1.3);
