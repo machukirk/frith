@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
  *
  * The visibility rule, in one place, because it is a promise rather than a
  * feature. The Journeys screen tells a family: "Joining one makes your
- * profile visible to the others in it — and nowhere else." So the pool of
+ * profile visible to the others in it, and nowhere else." So the pool of
  * families anybody can be suggested is exactly the families they share a
  * Journey with. Not everybody nearby, not everybody with similar answers.
  *
@@ -45,7 +45,7 @@ class Suggestions
         $hidden[] = $family->id;
 
         // Anybody already asked, or who has already asked, is not a
-        // suggestion — including a declined one. Somebody who said no once
+        // suggestion, including a declined one. Somebody who said no once
         // should not reappear on the first screen a family opens.
         $spokenFor = Connection::query()
             ->for($family)

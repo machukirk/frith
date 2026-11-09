@@ -116,7 +116,7 @@ class ProfileSections
             'step' => 'interests',
             'title' => 'Interests and how you connect',
             'summary' => $both->isEmpty()
-                ? 'Nothing added — what your family enjoys, and how you like to meet'
+                ? 'Nothing added. What your family enjoys, and how you like to meet'
                 : $both->implode(' · '),
             'complete' => $labels->isNotEmpty(),
             'private' => false,

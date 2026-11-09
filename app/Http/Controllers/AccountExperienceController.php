@@ -11,7 +11,7 @@ use Illuminate\View\View;
  * "Does this still sound like your family?"
  *
  * Asked again every few months, because a diagnosis arrives, a placement
- * settles, a new worry starts — and what a family is navigating is the single
+ * settles, a new worry starts. What a family is navigating is the single
  * thing matching leans on hardest. A profile that quietly goes out of date
  * produces confident, wrong suggestions.
  *

@@ -15,7 +15,7 @@ use Illuminate\Validation\Rule;
  * somebody removes an area of family life.
  *
  * Two copies of that would drift, and the half that drifted would be the
- * account screens — the ones nobody sees until months after launch.
+ * account screens, the ones nobody sees until months after launch.
  *
  * What is NOT here: creating the row, consent, the Founder number and the
  * welcome email. Those happen once, at registration, and belong to it.
@@ -53,7 +53,7 @@ class AnswerSheet
                 'email' => ['required', 'string', $emailFormat, 'max:254'],
                 // Outcode only: the first half of a UK postcode. Between one
                 // and two letters, a digit, then optionally another digit or
-                // letter — SS9, M1, EC1A, W1A.
+                // letter: SS9, M1, EC1A, W1A.
                 'postcode_outcode' => ['required', 'string', 'regex:/^[A-Za-z]{1,2}\d[A-Za-z\d]?$/'],
             ], [
                 'first_name.required' => 'We need something to call you. A first name or a nickname is fine.',
@@ -99,7 +99,7 @@ class AnswerSheet
                 'connection_styles' => ['nullable', 'array'],
                 'connection_styles.*' => [Rule::in(Taxonomy::connectionStyleSlugs())],
             ], [
-                'interests_other.max' => 'That is a little long for this box — could you shorten it a bit?',
+                'interests_other.max' => 'That is a little long for this box. Could you shorten it a bit?',
             ]],
 
             default => [[], []],
@@ -186,8 +186,8 @@ class AnswerSheet
     /**
      * The interests they ticked, plus "Other" if they wrote in the box.
      *
-     * The box is always on screen — the form works with no JavaScript, so it
-     * cannot be revealed by a checkbox — and somebody who fills it in has
+     * The box is always on screen, because the form works with no JavaScript, so it
+     * cannot be revealed by a checkbox. Somebody who fills it in has
      * plainly told us something. Their answer should not turn on whether they
      * also spotted the pill above it.
      *

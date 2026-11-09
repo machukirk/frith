@@ -23,7 +23,7 @@
     margin-top: 1px;
     background: $linen-200;
     // 3:1 against the page, because this mark is the only thing saying
-    // whether the setting is on — WCAG 1.4.11, and a release blocker.
+    // whether the setting is on. WCAG 1.4.11, and a release blocker.
     border: 1px solid $border-control;
     border-radius: $radius-pill;
     transition: background-color 140ms ease;
@@ -69,7 +69,7 @@
   }
 
   // A setting that cannot be changed on this plan. Shown rather than hidden,
-  // so the screen is honest about what it does and does not send — but it is
+  // so the screen is honest about what it does and does not send, but it is
   // a real disabled input, so it cannot be posted either.
   &--locked {
     cursor: default;

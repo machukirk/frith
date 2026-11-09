@@ -166,7 +166,7 @@ Route::middleware('auth:founder')->group(function () {
     /*
      * The account. Their own profile, the settings behind it, and the way
      * out. Editing reuses the registration screens rather than a second set
-     * of forms — see App\Support\AnswerSheet for why.
+     * of forms. See App\Support\AnswerSheet for why.
      */
     Route::get('/account', [AccountController::class, 'show'])->name('account');
 

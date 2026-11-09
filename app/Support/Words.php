@@ -6,7 +6,7 @@ namespace App\Support;
  * Small numbers written out, and lists joined the way a person writes them.
  *
  * The designs say "two children (aged 6, 9)" and "born March 2019 and
- * September 2016" — words for the count, digits for the ages. That is not an
+ * September 2016": words for the count, digits for the ages. That is not an
  * inconsistency: the count is prose and the ages are data, and a parent
  * scanning a card reads the ages and reads past the count.
  *

@@ -33,7 +33,7 @@
                         $others = $journey->members_count - 1;
                         // Up to six dots, then the rest as a number. A row of
                         // dots is how many families are in here, not a count
-                        // of anything unread — there are no unread counts.
+                        // of anything unread. There are no unread counts.
                         $dots = min(6, $journey->members_count);
                         $overflow = $journey->members_count - $dots;
                     @endphp

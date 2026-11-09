@@ -242,7 +242,7 @@ class RegistrationController extends Controller
         }
 
         // The questions, and what happens to an answer, are shared with the
-        // account screens — a family changes these long after registering,
+        // account screens: a family changes these long after registering,
         // and both paths have to agree about every one of them.
         AnswerSheet::apply($registration, $step, $data);
 

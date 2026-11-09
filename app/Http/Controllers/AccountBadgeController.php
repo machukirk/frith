@@ -12,7 +12,7 @@ use Illuminate\View\View;
  *
  * Two things a family can change here, and nothing else: whether they are
  * happy to be asked for advice, and which of their badges show on their
- * profile. There is nothing to claim and nothing to collect — see
+ * profile. There is nothing to claim and nothing to collect. See
  * App\Support\Badges for why that is deliberate.
  */
 class AccountBadgeController extends Controller

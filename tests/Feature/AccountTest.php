@@ -147,7 +147,7 @@ class AccountTest extends TestCase
         $this->seed(FormSeeder::class);
         $family = $this->family();
 
-        // The same words, the same options, the same help text — and a button
+        // The same words, the same options, the same help text, and a button
         // that says Save rather than Continue, because this is not a journey
         // through six screens.
         $this->actingAs($family, 'founder')
@@ -484,7 +484,7 @@ class AccountTest extends TestCase
             $this->actingAs($family, 'founder')->post(route('account.experiences.'.$answer));
 
             // Ignoring it must not be the cheaper answer, or the question
-            // becomes a nag — which the screen promises it is not.
+            // becomes a nag, which the screen promises it is not.
             $this->assertFalse($family->fresh()->load('experiences')->needsExperienceReview());
         }
     }

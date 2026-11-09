@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
  *
  * Read the design copy before changing anything here, because the rules are
  * the point: "Badges are descriptive, not rewards. They exist so a family
- * deciding whether to reach out has a little more to go on — not to encourage
+ * deciding whether to reach out has a little more to go on, not to encourage
  * you to use Frith more."
  *
  * So, deliberately:
@@ -28,7 +28,7 @@ use Illuminate\Support\Collection;
  *
  * Two methods, and the split matters. visible() is what another family sees:
  * a slug and a title, nothing else. all() is the family's own screen, and it
- * carries the explanations — including, for the first connection, who it was
+ * carries the explanations, including, for the first connection, who it was
  * with. That sentence is theirs and must never travel, which is why it is
  * not in the shape that crosses between families.
  */

@@ -811,7 +811,7 @@ class RegistrationTest extends TestCase
 
         $this->post(route('register.step.store', 'interests'), [
             'interests_other' => str_repeat('a', 1001),
-        ])->assertSessionHasErrors(['interests_other' => 'That is a little long for this box — could you shorten it a bit?']);
+        ])->assertSessionHasErrors(['interests_other' => 'That is a little long for this box. Could you shorten it a bit?']);
 
         $this->assertNull(Registration::sole()->interests_other);
     }

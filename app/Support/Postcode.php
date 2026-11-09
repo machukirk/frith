@@ -7,7 +7,7 @@ namespace App\Support;
  *
  * A family's location is the only part of their profile that is deliberately
  * imprecise. We never ask for more than the outcode, and we never show even
- * that if we can show a town instead — "Leigh-on-Sea area" tells another
+ * that if we can show a town instead. "Leigh-on-Sea area" tells another
  * family what they need to know about whether a coffee is realistic, and
  * narrows a household down no further than the outcode already does.
  *

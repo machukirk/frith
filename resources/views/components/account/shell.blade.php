@@ -8,7 +8,7 @@
 
 @php
     // The account's own rail. Two of these lead out to screens that are not
-    // part of the account — Requests and Journeys — because a family looking
+    // part of the account, Requests and Journeys, because a family looking
     // for "what have I asked for" looks here first, and sending them to a
     // dead end to be told it lives elsewhere is worse than a link.
     $sections = [
