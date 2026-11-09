@@ -109,6 +109,42 @@ class Registration extends Model implements AuthenticatableContract
         return $this->completed_at !== null;
     }
 
+    /** Every connection this family is either end of. */
+    public function connections(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Connection::class, 'requester_id');
+    }
+
+    public function blocksMade(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Block::class, 'blocker_id');
+    }
+
+    /**
+     * Whether these two should be kept apart. Deliberately symmetrical: a
+     * block hides each family from the other, so the one who was blocked
+     * stops seeing them too and is never told why.
+     */
+    public function isSeparatedFrom(self $other): bool
+    {
+        return Block::query()
+            ->where(fn ($q) => $q->where('blocker_id', $this->id)->where('blocked_id', $other->id))
+            ->orWhere(fn ($q) => $q->where('blocker_id', $other->id)->where('blocked_id', $this->id))
+            ->exists();
+    }
+
+    /** @return array<int, int> ids this family must never be shown. */
+    public function separatedIds(): array
+    {
+        return Block::query()
+            ->where('blocker_id', $this->id)
+            ->pluck('blocked_id')
+            ->merge(Block::query()->where('blocked_id', $this->id)->pluck('blocker_id'))
+            ->unique()
+            ->values()
+            ->all();
+    }
+
     /** The Journeys this family has joined. */
     public function journeys(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {

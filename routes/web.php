@@ -1,8 +1,12 @@
 <?php
 
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ConnectionController;
+use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\JourneyController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\SafetyController;
 use App\Http\Controllers\VillageController;
 use App\Http\Controllers\PagePreviewController;
 use App\Http\Controllers\RegistrationController;
@@ -116,6 +120,44 @@ Route::middleware('auth:founder')->group(function () {
     Route::post('/journeys/{journey}/leave', [JourneyController::class, 'leave'])
         ->middleware('throttle:30,1')
         ->name('journeys.leave');
+
+    Route::get('/journeys/{journey}', [JourneyController::class, 'show'])->name('journeys.show');
+
+    // Reached by public_id, not by a slug of their name: two families can
+    // both be "Fun House", and a name can change.
+    Route::get('/f/{family}', [FamilyController::class, 'show'])->name('family');
+
+    Route::get('/requests', [ConnectionController::class, 'index'])->name('requests');
+
+    Route::post('/f/{family}/ask', [ConnectionController::class, 'store'])
+        ->middleware('throttle:20,1')
+        ->name('connections.ask');
+
+    Route::post('/requests/{connection}/accept', [ConnectionController::class, 'accept'])
+        ->middleware('throttle:30,1')
+        ->name('connections.accept');
+
+    Route::post('/requests/{connection}/decline', [ConnectionController::class, 'decline'])
+        ->middleware('throttle:30,1')
+        ->name('connections.decline');
+
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages');
+    Route::get('/messages/{connection}', [MessageController::class, 'show'])->name('messages.show');
+    Route::post('/messages/{connection}', [MessageController::class, 'store'])
+        ->middleware([ProtectAgainstSpam::class, 'throttle:60,1'])
+        ->name('messages.send');
+
+    // Blocking needs no reason and tells nobody. Reporting is read by a
+    // person, and blocks as well, because nobody should have to do it twice.
+    Route::get('/f/{family}/block', [SafetyController::class, 'blockForm'])->name('block');
+    Route::post('/f/{family}/block', [SafetyController::class, 'block'])
+        ->middleware('throttle:20,1')
+        ->name('block.store');
+
+    Route::get('/f/{family}/report', [SafetyController::class, 'reportForm'])->name('report');
+    Route::post('/f/{family}/report', [SafetyController::class, 'report'])
+        ->middleware('throttle:10,1')
+        ->name('report.store');
 });
 
 /*

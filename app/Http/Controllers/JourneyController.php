@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Journey;
+use App\Support\FamilyCard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -33,6 +34,36 @@ class JourneyController extends Controller
             'joined' => $family->journeys->pluck('id')->all(),
             'search' => $search,
             'total' => Journey::query()->offered()->count(),
+        ]);
+    }
+
+    /**
+     * Who else is in here, most in common first.
+     *
+     * Only visible to a family who is in it themselves: joining is what makes
+     * you visible to the others, so it is also what lets you see them.
+     */
+    public function show(Request $request, Journey $journey): View
+    {
+        $family = $request->user('founder')->loadMissing(['children', 'experiences']);
+
+        abort_unless($family->journeys->contains($journey), 403);
+
+        $hidden = $family->separatedIds();
+        $hidden[] = $family->id;
+
+        $cards = $journey->members()
+            ->with(['children', 'experiences'])
+            ->whereNotIn('registrations.id', $hidden)
+            ->get()
+            ->map(fn ($other) => FamilyCard::make($family, $other))
+            ->sortByDesc(fn (FamilyCard $card) => [$card->score, $card->inCommon])
+            ->values();
+
+        return view('pages.journeys.show', [
+            'journey' => $journey,
+            'cards' => $cards,
+            'memberCount' => $journey->members()->count(),
         ]);
     }
 

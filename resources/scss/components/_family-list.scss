@@ -1,0 +1,255 @@
+@use '../abstracts' as *;
+
+// Lists of families: who is in a Journey, and who has asked to connect.
+.family-list {
+  padding-bottom: $space-16;
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-3;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: $space-4;
+  }
+
+  &__heading {
+    display: flex;
+    gap: $space-2;
+    align-items: center;
+    margin-bottom: $space-4;
+    color: $text-heading;
+    @include type((16px, 17px), 1.3, 600);
+
+    &--later { margin-top: $space-10; }
+  }
+
+  &__tally {
+    padding: 2px $space-2;
+    background: $linen-100;
+    border-radius: $radius-pill;
+    color: $text-body;
+    @include type($type-fine, 1.3, 600);
+  }
+
+  &__sort {
+    color: $linen-700;
+    @include type((13px, 13px), 1.3);
+  }
+
+  &__empty {
+    padding: $space-5;
+    background: $bg-surface;
+    border: 1px solid $border-hairline;
+    border-radius: $radius-lg;
+    color: $text-body;
+    @include type((14.5px, 14.5px), 1.6);
+  }
+
+  &__items {
+    display: grid;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  &__back {
+    margin-top: $space-8;
+
+    a { color: $action; @include type((14px, 14px), 1.3); }
+  }
+}
+
+.family-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-4;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 18px;
+  background: $bg-surface;
+  border: 1px solid $border-hairline;
+  border-radius: $radius-xl;
+
+  &__who {
+    display: flex;
+    flex: 1;
+    gap: $space-3;
+    align-items: center;
+    min-width: 0;
+    text-decoration: none;
+    @include focus-ring;
+  }
+
+  &__avatar {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    background: $euc-100;
+    border: 1px solid $euc-200;
+    border-radius: $radius-circle;
+    color: $euc-700;
+    @include type((17px, 17px), 1, 600);
+  }
+
+  &__name {
+    display: block;
+    color: $text-heading;
+    @include type((15px, 15px), 1.3, 600);
+  }
+
+  &__meta,
+  &__common {
+    display: block;
+    color: $text-body;
+    @include type((12px, 12px), 1.45);
+  }
+
+  &__common { color: $euc-600; }
+
+  &__action,
+  &__pair { flex: none; }
+
+  &__pair {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+    align-items: center;
+  }
+
+  // Saying no should be as easy to find as saying yes, and should not look
+  // like a mistake somebody is about to make.
+  &__decline {
+    @include tap-target(40px);
+    padding-inline: $space-3;
+    background: none;
+    border: 0;
+    color: $text-body;
+    @include type((13px, 13px), 1.3);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    @include focus-ring;
+
+    &:hover { color: $action; }
+  }
+
+  &__waiting {
+    color: $linen-700;
+    @include type((13px, 13px), 1.3);
+  }
+}
+
+// One family, as another family sees them.
+.profile {
+  @include container(440px + ($gutter-lg * 2));
+  padding-block: $space-12 $space-16;
+
+  &__head {
+    margin-bottom: $space-5;
+    text-align: center;
+  }
+
+  &__avatar {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto $space-3;
+    background: $euc-100;
+    border: 1px solid $euc-200;
+    border-radius: $radius-circle;
+    color: $euc-700;
+    @include type((30px, 30px), 1, 600);
+    letter-spacing: -0.02em;
+  }
+
+  &__name {
+    margin-bottom: 3px;
+    @include type((26px, 26px), 1.15, 600);
+    letter-spacing: -0.02em;
+  }
+
+  &__area {
+    color: $text-body;
+    @include type((13px, 13px), 1.4);
+  }
+
+  // Ink on coral, never white (guidelines §02).
+  &__badge {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    padding: 5px 11px;
+    margin-top: 10px;
+    background: $action-accent;
+    border-radius: $radius-pill;
+    color: $ink-900;
+    @include type((11px, 11px), 1.3, 600);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  &__badge-icon {
+    width: 11px;
+    height: 11px;
+    stroke-width: 2.2;
+  }
+
+  &__label {
+    margin-bottom: 7px;
+    color: $linen-700;
+    @include type((11px, 11px), 1.3, 600);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  &__children {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 0;
+    margin-bottom: $space-5;
+    list-style: none;
+  }
+
+  &__child {
+    padding: 6px 13px;
+    background: $bg-surface;
+    border: 1px solid $border-hairline;
+    border-radius: $radius-pill;
+    color: $ink-900;
+    @include type((12.5px, 12.5px), 1.3);
+  }
+
+  &__common {
+    padding: 14px 16px;
+    margin-bottom: $space-5;
+    background: $euc-050;
+    border-radius: $radius-lg;
+    color: $euc-800;
+    @include type((14px, 14px), 1.5);
+  }
+
+  &__waiting {
+    padding: 14px 16px;
+    background: $linen-100;
+    border-radius: $radius-lg;
+    color: $text-body;
+    @include type((14px, 14px), 1.5);
+    text-align: center;
+  }
+
+  &__report {
+    margin-top: $space-6;
+    text-align: center;
+
+    a {
+      color: $linen-700;
+      @include type((13px, 13px), 1.4);
+    }
+  }
+}

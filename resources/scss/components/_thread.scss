@@ -1,0 +1,135 @@
+@use '../abstracts' as *;
+
+// One conversation.
+.thread {
+  @include container(620px + ($gutter-lg * 2));
+  padding-block: $space-8 $space-16;
+
+  &__head {
+    display: flex;
+    gap: $space-4;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: $space-5;
+    margin-bottom: $space-5;
+    border-bottom: 1px solid $border-hairline;
+  }
+
+  &__who {
+    display: flex;
+    gap: $space-3;
+    align-items: center;
+    text-decoration: none;
+    @include focus-ring;
+  }
+
+  &__safety {
+    color: $action;
+    @include type((13px, 13px), 1.3, 500);
+  }
+
+  &__lines {
+    display: grid;
+    gap: $space-4;
+    padding: 0;
+    margin: 0 0 $space-6;
+    list-style: none;
+  }
+
+  &__line {
+    display: grid;
+    justify-items: start;
+    max-width: 80%;
+
+    // Yours on the right, theirs on the left. Colour alone does not carry
+    // it: every line is named for a screen reader.
+    &--mine {
+      justify-items: end;
+      margin-left: auto;
+    }
+  }
+
+  &__bubble {
+    padding: 11px 14px;
+    background: $bg-surface;
+    border: 1px solid $border-hairline;
+    border-radius: $radius-xl $radius-xl $radius-xl $radius-sm;
+    color: $ink-900;
+    @include type((14.5px, 14.5px), 1.55);
+  }
+
+  &__line--mine &__bubble {
+    background: $euc-050;
+    border-color: $euc-100;
+    border-radius: $radius-xl $radius-xl $radius-sm $radius-xl;
+  }
+
+  &__when {
+    margin-top: 3px;
+    color: $linen-700;
+    @include type($type-fine, 1.3);
+  }
+
+  &__empty {
+    padding: $space-5;
+    background: $bg-surface;
+    border: 1px solid $border-hairline;
+    border-radius: $radius-lg;
+    color: $text-body;
+    @include type((14.5px, 14.5px), 1.6);
+  }
+
+  &__note { margin-bottom: $space-5; }
+
+  &__form {
+    display: grid;
+    gap: $space-4;
+
+    // The box fills the column; only the button sits to the left of it.
+    > .button { justify-self: start; }
+  }
+}
+
+// The block and report screens.
+.safety-list {
+  display: grid;
+  gap: $space-3;
+  padding: 0;
+  margin-bottom: $space-6;
+  list-style: none;
+
+  &__item {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+    gap: $space-3;
+    align-items: start;
+    color: $text-body;
+    @include type((14px, 14px), 1.55);
+  }
+
+  // A statement of what happens, not a choice, so it is drawn as a tick
+  // rather than as an empty box somebody might try to press.
+  &__tick {
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+    background: $euc-050;
+    border-radius: $radius-sm;
+    color: $euc-600;
+    @include type((12px, 12px), 1, 600);
+  }
+}
+
+.safety-actions { margin-top: $space-6; }
+
+.safety-cancel {
+  margin-top: $space-3;
+  text-align: center;
+
+  a {
+    color: $text-body;
+    @include type((14px, 14px), 1.3);
+  }
+}
