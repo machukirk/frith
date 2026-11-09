@@ -6,7 +6,7 @@
         <h1 class="heading wizard__heading">You’re back on the list.</h1>
 
         <p class="wizard__standfirst">
-            We’ll email you when Frith opens. Nothing else changed — everything you
+            We’ll email you when Frith opens. Nothing else changed. Everything you
             told us is exactly as you left it.
         </p>
 

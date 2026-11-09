@@ -15,6 +15,18 @@
     box-shadow: 0 0 0 2px $action-accent;
   }
 
+  // The deep-green card that makes a case for Frith+. Dark so it reads as a
+  // different kind of thing from the white cards above it, which are settings
+  // rather than an offer.
+  &--offer {
+    background: $bg-deep;
+    border-color: transparent;
+    margin-top: $space-8;
+
+    .panel__title { color: $coral-200; }
+    .panel__body { color: $text-on-inverse-muted; margin-bottom: $space-4; }
+  }
+
   &__label {
     display: block;
     margin-bottom: $space-2;
@@ -33,11 +45,17 @@
   &__body {
     color: $text-body;
     @include type((13.5px, 14px), 1.62);
+
+    // The state after an action, rather than the copy before it.
+    &--done { margin-top: $space-3; color: $euc-800; }
   }
 
   // A stack of them, tighter than .prose's default rhythm.
   &-stack {
     display: grid;
     gap: $space-3;
+
+    // A block that follows the stack and is not one of its cards.
+    &__section { margin-top: $space-10; }
   }
 }

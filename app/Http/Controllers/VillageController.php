@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Connection;
 use App\Models\Journey;
+use App\Support\Suggestions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 /**
@@ -14,6 +15,11 @@ use Illuminate\View\View;
  * Registration never asks what other families should call them, because it is
  * no use until there are other families to be called it by. So the village
  * asks once, the first time it is opened, and waits until it has an answer.
+ *
+ * Five blocks, in the order the design puts them, and the order is the
+ * argument: the journeys they chose, then anything waiting on them, then the
+ * families they already have, then who else is there. What somebody owes a
+ * reply to comes before anything new to look at.
  */
 class VillageController extends Controller
 {
@@ -25,11 +31,22 @@ class VillageController extends Controller
             return redirect()->route('village.setup');
         }
 
+        $family->loadMissing(['children', 'experiences']);
+
         $joined = $family->journeys()
             ->offered()
             ->withCount('members')
             ->orderBy('position')
             ->get();
+
+        $hidden = $family->separatedIds();
+
+        $connections = Connection::query()
+            ->for($family)
+            ->with(['requester', 'addressee', 'messages'])
+            ->get()
+            ->reject(fn (Connection $c) => in_array($c->otherThan($family)->id, $hidden, true)
+                || $c->otherThan($family)->hasLeft());
 
         return view('pages.village.show', [
             'family' => $family,
@@ -38,6 +55,27 @@ class VillageController extends Controller
                 ->offered()
                 ->whereNotIn('id', $joined->pluck('id'))
                 ->get(),
+
+            // The two numbers on the requests card, which are different
+            // things: what is waiting on this family, and what they are
+            // waiting on. Only the first is anybody's to act on.
+            'waitingOnYou' => $connections
+                ->filter(fn (Connection $c) => $c->addressee_id === $family->id && $c->status === Connection::PENDING)
+                ->count(),
+            'waitingOnThem' => $connections
+                ->filter(fn (Connection $c) => $c->requester_id === $family->id && $c->status === Connection::PENDING)
+                ->count(),
+
+            'connected' => $connections
+                ->filter(fn (Connection $c) => $c->isAccepted())
+                ->sortByDesc(fn (Connection $c) => $c->messages->last()?->created_at ?? $c->responded_at)
+                ->values(),
+
+            'suggested' => Suggestions::for($family),
+
+            // Asked at most every few months, and saying "not now" is a real
+            // answer rather than a way of putting it off.
+            'review' => $family->needsExperienceReview(),
         ]);
     }
 

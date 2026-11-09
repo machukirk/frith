@@ -12,11 +12,26 @@
             <h1 class="heading profile__name">{{ $family->displayName() }}</h1>
             <p class="profile__area">{{ $family->area() }}</p>
 
-            @if ($family->isFounder())
-                <p class="profile__badge">
-                    <x-site.icon name="star" class="profile__badge-icon" />
-                    First Frith Family
-                </p>
+            {{-- Only the badges they have chosen to show. What a badge means
+                 to them, and who their first connection was with, stays on
+                 their own screen. --}}
+            @foreach ($card->badges() as $badge)
+                @if ($badge['slug'] === 'first-frith-family')
+                    <p class="profile__badge">
+                        <x-site.icon name="star" class="profile__badge-icon" />
+                        {{ $badge['title'] }}
+                    </p>
+                @endif
+            @endforeach
+
+            @php $others = $card->badges()->where('slug', '!=', 'first-frith-family'); @endphp
+
+            @if ($others->isNotEmpty())
+                <ul class="badge-row profile__badges">
+                    @foreach ($others as $badge)
+                        <li class="badge-row__item">{{ $badge['title'] }}</li>
+                    @endforeach
+                </ul>
             @endif
         </div>
 
@@ -41,7 +56,7 @@
 
                 @case('respond')
                     <a class="button button--primary button--block" href="{{ route('requests') }}">
-                        They asked you &mdash; answer in Requests
+                        They asked you. Answer in Requests
                     </a>
                     @break
 

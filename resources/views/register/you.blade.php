@@ -5,7 +5,7 @@
     :standfirst="$c->standfirst()"
     :step="$stepNumber" :total="$totalSteps" :previous="$previous"
 >
-    <form class="wizard__form" method="POST" action="{{ route('register.step.store', $step) }}">
+    <form class="wizard__form" method="POST" action="{{ $editing ?? false ? route('account.edit.store', $step) : route('register.step.store', $step) }}">
         @csrf
         <x-honeypot />
 
@@ -44,7 +44,7 @@
         <p class="wizard__hint">{{ config('frith.consent.text') }}</p>
 
         <div class="wizard__actions">
-            <button class="button button--primary" type="submit">Continue</button>
+            <button class="button button--primary" type="submit">{{ ($editing ?? false) ? 'Save' : 'Continue' }}</button>
         </div>
     </form>
 </x-register.shell>

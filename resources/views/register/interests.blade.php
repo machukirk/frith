@@ -13,7 +13,7 @@
     :standfirst="$c->standfirst()"
     :step="$stepNumber" :total="$totalSteps" :previous="$previous"
 >
-    <form class="wizard__form" method="POST" action="{{ route('register.step.store', $step) }}">
+    <form class="wizard__form" method="POST" action="{{ $editing ?? false ? route('account.edit.store', $step) : route('register.step.store', $step) }}">
         @csrf
         <x-honeypot />
 
@@ -54,7 +54,7 @@
         @endforeach
 
         <div class="wizard__actions">
-            <button class="button button--primary" type="submit">Finish</button>
+            <button class="button button--primary" type="submit">{{ ($editing ?? false) ? 'Save' : 'Finish' }}</button>
         </div>
     </form>
 </x-register.shell>

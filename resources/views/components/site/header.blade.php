@@ -38,8 +38,10 @@
                     <span class="menu__avatar" aria-hidden="true">{{ Str::upper(Str::substr($founder->displayName(), 0, 1)) }}</span>
                     <span>
                         <span class="menu__name">{{ $founder->displayName() }}</span>
-                        @if ($founder->postcode_outcode)
-                            <span class="menu__area">{{ $founder->postcode_outcode }} area</span>
+                        @if ($founder->area())
+                            {{-- The town, not the outcode: it is the same
+                                 thing other families are shown about them. --}}
+                            <span class="menu__area">{{ $founder->area() }}</span>
                         @endif
                     </span>
                 </div>
@@ -98,7 +100,9 @@
             @endforeach
 
             @if ($founder)
-                <span class="site-header__link">{{ $founder->displayName() }}</span>
+                {{-- Their own name is the way into their account, which is
+                     where every design puts it. It used to be plain text. --}}
+                <a class="site-header__link" href="{{ route('account') }}">{{ $founder->displayName() }}</a>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button class="button button--quiet button--small" type="submit">Log out</button>

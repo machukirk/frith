@@ -2,13 +2,25 @@
 
     <section class="thread">
         <div class="thread__head">
-            <a class="thread__who" href="{{ route('family', $other->public_id) }}">
-                <span class="family-card__avatar" aria-hidden="true">{{ $other->initial() }}</span>
-                <span>
-                    <span class="family-card__name">{{ $other->displayName() }}</span>
-                    <span class="family-card__meta">{{ $other->area() }}</span>
-                </span>
-            </a>
+            {{-- Not a link once they have gone: there is no profile at the
+                 other end of it any more. --}}
+            @if ($canReply)
+                <a class="thread__who" href="{{ route('family', $other->public_id) }}">
+                    <span class="family-card__avatar" aria-hidden="true">{{ $other->initial() }}</span>
+                    <span>
+                        <span class="family-card__name">{{ $other->displayName() }}</span>
+                        <span class="family-card__meta">{{ $other->area() }}</span>
+                    </span>
+                </a>
+            @else
+                <div class="thread__who">
+                    <span class="family-card__avatar" aria-hidden="true">&middot;</span>
+                    <span>
+                        <span class="family-card__name">{{ $other->displayName() }}</span>
+                        <span class="family-card__meta">What was said is still here</span>
+                    </span>
+                </div>
+            @endif
 
             <a class="thread__safety" href="{{ \App\Support\SiteNavigation::url('meet-up-safety') }}">Safety</a>
         </div>
@@ -36,7 +48,16 @@
             @endforelse
         </ol>
 
+        @unless ($canReply)
+            <p class="note thread__note">
+                This family has left Frith. You can read what was said, and nothing
+                you wrote has gone anywhere, but there is nobody at the other end
+                to read a reply now.
+            </p>
+        @endunless
+
         {{-- Guidelines §07: said where the worry is. --}}
+        @if ($canReply)
         <p class="note thread__note">
             Meeting in person? Choose somewhere public and tell somebody where you
             are going. <a href="{{ \App\Support\SiteNavigation::url('meet-up-safety') }}">The meet-up safety guide</a>
@@ -58,6 +79,7 @@
 
             <button class="button button--primary" type="submit">Send</button>
         </form>
+        @endif
 
         <p class="family-list__back"><a href="{{ route('messages') }}">&larr; All messages</a></p>
     </section>

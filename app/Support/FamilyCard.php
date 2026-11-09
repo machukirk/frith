@@ -4,6 +4,8 @@ namespace App\Support;
 
 use App\Models\Connection;
 use App\Models\Registration;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 /**
  * What one family is shown about another, worked out once.
@@ -39,6 +41,10 @@ class FamilyCard
         return $this->family->children->map(fn ($child) => $child->age())->all();
     }
 
+    /**
+     * "two children (aged 6, 9)". Words for the count, digits for the ages:
+     * the count is prose and the ages are the thing being scanned for.
+     */
     public function childSummary(): string
     {
         $ages = $this->childAges();
@@ -49,10 +55,15 @@ class FamilyCard
 
         $count = count($ages);
 
-        return \Illuminate\Support\Str::of((string) $count)
-            ->append(' ', \Illuminate\Support\Str::plural('child', $count))
-            ->append(' (aged ', implode(', ', $ages), ')')
-            ->value();
+        return Words::count($count)
+            .' '.Str::plural('child', $count)
+            .' (aged '.implode(', ', $ages).')';
+    }
+
+    /** The badges this family shows. Hidden ones never reach here. */
+    public function badges(): Collection
+    {
+        return Badges::visible($this->family);
     }
 
     public function commonality(): string

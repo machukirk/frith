@@ -46,6 +46,27 @@
     }
   }
 
+  // A postcode outcode is four characters. A full-width box invites somebody
+  // to type the whole postcode into it, which we do not want and do not take.
+  &__control--short {
+    max-width: 10ch;
+    // Not font-mono: a postcode read back is monospaced, a postcode being
+    // typed is not, and this one is being typed.
+    text-transform: uppercase;
+  }
+
+  // Something we hold and are showing back rather than asking for. It is not
+  // a disabled input: a greyed-out box looks like a field somebody has failed
+  // to fill in, and this is a fact with a reason beside it.
+  &__static {
+    padding: 13px $space-4;
+    background: $linen-100;
+    border-radius: $radius-control;
+    color: $ink-900;
+    @include type((15px, 15px), 1.4);
+    font-family: $font-mono;
+  }
+
   // A textarea needs room, and only ever grows downwards.
   &__control--multiline {
     min-height: 7em;

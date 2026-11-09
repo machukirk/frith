@@ -32,15 +32,29 @@ return [
         ['label' => 'Frith+', 'route' => 'frith-plus'],
     ],
 
-    // The same menu for a family who is logged in. The designs put a count
-    // beside Journeys and Messages; those wait until there is something true
-    // to count, because a menu that says "1 new" when nothing is new is worse
-    // than one that says nothing.
-    'menu_founder' => [
+    /*
+     * The top bar for a family who is logged in. Shorter than the phone menu
+     * on purpose: the bar has room for four, and their own name beside it is
+     * the way into the account, so "Your profile" would be the same place
+     * twice on one line.
+     */
+    'primary_founder' => [
         ['label' => 'Home', 'route' => 'home'],
         ['label' => 'Your village', 'route' => 'village'],
         ['label' => 'Journeys', 'route' => 'journeys'],
         ['label' => 'Messages', 'route' => 'messages'],
+    ],
+
+    // The phone menu for the same family. The designs put a count
+    // beside Journeys and Messages; those wait until there is something true
+    // to count, because a menu that says "1 new" when nothing is new is worse
+    // than one that says nothing.
+    'menu_founder' => [
+        ['label' => 'Your village', 'route' => 'village', 'meta' => 'Back to your families'],
+        ['label' => 'Journeys', 'route' => 'journeys'],
+        ['label' => 'Requests', 'route' => 'requests', 'meta' => 'Who has asked, and who you asked'],
+        ['label' => 'Messages', 'route' => 'messages'],
+        ['label' => 'Your profile', 'route' => 'account', 'meta' => 'What other families see'],
     ],
 
     // Under the buttons, for somebody who is not logged in.
@@ -50,11 +64,13 @@ return [
         ['label' => 'Safeguarding', 'route' => 'reporting'],
     ],
 
-    // …and for somebody who is.
+    // …and for somebody who is. No "Your account" here: it is "Your profile"
+    // in the list above, and the same place twice in one menu reads as two
+    // different places.
     'menu_foot_founder' => [
-        ['label' => 'Your account', 'route' => 'account'],
         ['label' => 'Frith+ membership', 'route' => 'frith-plus'],
         ['label' => 'Help centre', 'route' => 'help'],
+        ['label' => 'Safeguarding', 'route' => 'reporting'],
     ],
 
     'footer' => [

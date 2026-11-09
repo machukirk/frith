@@ -84,6 +84,37 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Keeping a profile current
+    |--------------------------------------------------------------------------
+    |
+    | How often we ask a family whether what they are navigating still sounds
+    | like them. Three months because that is roughly the pace at which an
+    | assessment, a placement or a new worry actually arrives, and because
+    | the design promises "we will ask again in about three months".
+    |
+    */
+
+    'review' => [
+        'months' => (int) env('FRITH_REVIEW_MONTHS', 3),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Leaving
+    |--------------------------------------------------------------------------
+    |
+    | A family who deletes their account disappears from journeys and search
+    | at once. The rest is removed on a timer, which is what the screen says
+    | and what gives somebody who changed their mind a way back.
+    |
+    */
+
+    'deletion' => [
+        'grace_days' => (int) env('FRITH_DELETION_GRACE_DAYS', 30),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Registration
     |--------------------------------------------------------------------------
     */

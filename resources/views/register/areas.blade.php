@@ -9,7 +9,7 @@
     :private="$c->isPrivate()"
     :step="$stepNumber" :total="$totalSteps" :previous="$previous"
 >
-    <form class="wizard__form" method="POST" action="{{ route('register.step.store', $step) }}">
+    <form class="wizard__form" method="POST" action="{{ $editing ?? false ? route('account.edit.store', $step) : route('register.step.store', $step) }}">
         @csrf
         <x-honeypot />
 
@@ -30,11 +30,15 @@
         </fieldset>
 
         <div class="wizard__actions">
-            <button class="button button--primary" type="submit" name="action" value="continue">Continue</button>
+            <button class="button button--primary" type="submit" name="action" value="continue">{{ ($editing ?? false) ? 'Save' : 'Continue' }}</button>
 
             {{-- A submit, not a link, because skipping has to clear anything
-                 chosen on an earlier visit as well as move them on. --}}
-            <button class="wizard__skip" type="submit" name="action" value="skip">Skip this section</button>
+                 chosen on an earlier visit as well as move them on. Editing
+                 from the account says what it does instead: there is nothing
+                 to skip past, and pressing it deletes answers. --}}
+            <button class="wizard__skip" type="submit" name="action" value="skip">
+                {{ ($editing ?? false) ? 'Remove all of these' : 'Skip this section' }}
+            </button>
         </div>
     </form>
 </x-register.shell>

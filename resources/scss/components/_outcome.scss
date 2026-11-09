@@ -1,0 +1,60 @@
+@use '../abstracts' as *;
+
+// A page that is only a message: a 404, a server error, a dead end.
+//
+// The order is fixed across all of them, and it is the order the design sets
+// out: the cause, then the action, then the reassurance. Frith takes the
+// blame; the family is never at fault.
+.outcome {
+  @include container(560px + ($gutter-lg * 2));
+  padding-block: $space-16 $space-20;
+  text-align: center;
+
+  &__mark {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto $space-5;
+    background: $linen-100;
+    border-radius: $radius-circle;
+    color: $euc-700;
+    @include type((26px, 26px), 1, 600);
+
+    &--question { background: $euc-050; }
+  }
+
+  &__title {
+    margin-bottom: $space-3;
+    @include type($type-h2, 1.15, 600);
+    letter-spacing: -0.02em;
+  }
+
+  &__body {
+    color: $text-body;
+    @include type((15px, 16px), 1.6);
+  }
+
+  &__note {
+    margin-top: $space-5;
+    text-align: start;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-4;
+    align-items: center;
+    justify-content: center;
+    margin-top: $space-6;
+  }
+
+  &__quiet {
+    @include tap-target(44px);
+    color: $linen-700;
+    @include type((14px, 14px), 1.3);
+    @include focus-ring;
+
+    &:hover { color: $action; }
+  }
+}

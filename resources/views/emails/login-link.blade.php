@@ -9,7 +9,7 @@
 <x-mail.layout
     title="Your link to log in to Frith"
     preview="One tap and you are in. The link works once, for the next hour."
-    footnote="You are getting this because somebody asked for a link to log in to {{ config('frith.company.contact_email') }}'s Frith account. If that was not you, ignore this email — nobody can get in without the link, and it expires on its own."
+    footnote="You are getting this because somebody asked for a link to log in to {{ config('frith.company.contact_email') }}'s Frith account. If that was not you, ignore this email. Nobody can get in without the link, and it expires on its own."
     :unsubscribe-url="route('home')"
 >
 

@@ -7,6 +7,7 @@ use App\Models\Registration;
 use App\Models\Report;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 /**
@@ -49,7 +50,7 @@ class SafetyController extends Controller
         $other = $this->other($request, $publicId);
 
         $data = $request->validate([
-            'reason' => ['required', 'string', \Illuminate\Validation\Rule::in(array_keys(config('frith-safety.reasons')))],
+            'reason' => ['required', 'string', Rule::in(array_keys(config('frith-safety.reasons')))],
             'note' => ['nullable', 'string', 'max:2000'],
         ], [
             'reason.required' => 'Please choose the closest one. It helps us know where to start.',
@@ -86,7 +87,7 @@ class SafetyController extends Controller
         $family = $request->user('founder');
         $other = Registration::query()->where('public_id', $publicId)->firstOrFail();
 
-        abort_if($other->is($family), 404);
+        abort_if($other->is($family) || $other->hasLeft(), 404);
 
         return $other;
     }

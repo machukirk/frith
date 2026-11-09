@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Connection;
 use App\Models\Message;
+use App\Models\Registration;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -26,6 +27,9 @@ class MessageController extends Controller
             ->where('status', Connection::ACCEPTED)
             ->with(['requester', 'addressee', 'messages'])
             ->get()
+            // A family who has left is still listed here. Their words are in
+            // this inbox and the leaving screen says we cannot take them out,
+            // so hiding the conversation would do it by the back door.
             ->reject(fn (Connection $c) => in_array($c->otherThan($family)->id, $hidden, true))
             ->sortByDesc(fn (Connection $c) => $c->messages->last()?->created_at ?? $c->responded_at)
             ->values();
@@ -52,12 +56,17 @@ class MessageController extends Controller
             'other' => $other,
             'connection' => $connection,
             'messages' => $connection->messages()->with('sender')->get(),
+            // Readable, but there is nobody at the other end to read a reply.
+            'canReply' => ! $other->hasLeft(),
         ]);
     }
 
     public function store(Request $request, Connection $connection): RedirectResponse
     {
         $family = $this->mine($request, $connection);
+
+        // Nothing to send it to.
+        abort_if($connection->otherThan($family)->hasLeft(), 410);
 
         $data = $request->validate([
             'body' => ['required', 'string', 'max:2000'],
@@ -76,7 +85,7 @@ class MessageController extends Controller
     }
 
     /** Theirs to read, and still open. */
-    private function mine(Request $request, Connection $connection): \App\Models\Registration
+    private function mine(Request $request, Connection $connection): Registration
     {
         $family = $request->user('founder');
 

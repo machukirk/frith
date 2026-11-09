@@ -23,8 +23,8 @@
             <div class="panel">
                 <p class="panel__title">Want to add a bit more?</p>
                 <p class="panel__body">
-                    You stopped part-way through the questions, which is completely fine —
-                    you are registered as you are. The more you tell us, the better we can
+                    You stopped part-way through the questions, which is completely fine.
+                    You are registered as you are. The more you tell us, the better we can
                     match you when we open.
                 </p>
 

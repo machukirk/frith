@@ -24,6 +24,15 @@ $coral-200: #FFB19E; // type on dark
 $coral-100: #FFD4C9; // minus chip
 $coral-ink: #963630; // minus glyph
 
+// --- Violet: one block, and only one ------------------------------------------
+// The nudge that asks whether a family's answers are still current. A fourth
+// colour is a cost, and it is paid here on purpose: the nudge is the only
+// thing on the village that Frith is asking for rather than offering, and in
+// coral it would read as a thing waiting on them. 6:1 either way round.
+$violet-050: #EDEAFF; // the nudge's own background
+$violet-600: #5D4C97; // its mark, and the outline on its button
+$violet-900: #2D1C57; // its type
+
 // --- Mustard: warnings, and only warnings -------------------------------------
 $mustard-100: #FCEACF;
 $mustard-700: #785300;

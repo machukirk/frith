@@ -6,6 +6,7 @@
     'previous' => null,
     'private' => false,
     'title' => null,
+    'editing' => false,
 ])
 
 <x-layouts.site :title="$title ?? $heading.' — Frith'" :noindex="true">
@@ -38,7 +39,11 @@
         @endif
 
         @if ($previous)
-            <p class="wizard__back"><a href="{{ $previous }}">&larr; Back</a></p>
+            <p class="wizard__back">
+                <a href="{{ $previous }}">
+                    &larr; {{ $editing ? 'Back to your profile without saving' : 'Back' }}
+                </a>
+            </p>
         @endif
     </div>
 

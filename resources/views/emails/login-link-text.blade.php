@@ -9,7 +9,7 @@ for another from the log in page.
 
 --
 You are getting this because somebody asked for a link to log in to this
-address. If that was not you, ignore this email — nobody can get in without
+address. If that was not you, ignore this email. Nobody can get in without
 the link, and it expires on its own.
 
 {{ config('frith.company.contact_email') }}

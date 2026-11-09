@@ -71,7 +71,7 @@ class FormDefinitionTest extends TestCase
         // A heading or a standfirst lost in an edit renders as a blank space
         // rather than an error, so nothing else catches it.
         foreach (RegistrationFlow::STEPS as $key) {
-            $step = config("frith-forms.".Taxonomy::FORM.".steps.{$key}");
+            $step = config('frith-forms.'.Taxonomy::FORM.".steps.{$key}");
 
             $this->assertIsArray($step, "{$key} has no content at all");
             $this->assertNotEmpty($step['heading'] ?? null, "{$key} has no heading");
@@ -84,8 +84,8 @@ class FormDefinitionTest extends TestCase
         foreach (RegistrationFlow::STEPS as $key) {
             $this->get(route('register.step', $key))
                 ->assertOk()
-                ->assertSee(config("frith-forms.".Taxonomy::FORM.".steps.{$key}.heading"))
-                ->assertSee(config("frith-forms.".Taxonomy::FORM.".steps.{$key}.standfirst"));
+                ->assertSee(config('frith-forms.'.Taxonomy::FORM.".steps.{$key}.heading"))
+                ->assertSee(config('frith-forms.'.Taxonomy::FORM.".steps.{$key}.standfirst"));
         }
     }
 

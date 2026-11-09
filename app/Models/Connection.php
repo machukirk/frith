@@ -18,7 +18,9 @@ class Connection extends Model
     protected $guarded = [];
 
     public const PENDING = 'pending';
+
     public const ACCEPTED = 'accepted';
+
     public const DECLINED = 'declined';
 
     protected function casts(): array
@@ -55,6 +57,38 @@ class Connection extends Model
     public function otherThan(Registration $family): Registration
     {
         return $this->requester_id === $family->id ? $this->addressee : $this->requester;
+    }
+
+    /**
+     * The line under a connected family's name.
+     *
+     * Three different facts, and the middle one is the one worth getting
+     * right: a family who said hello and has had no answer should be told
+     * that, plainly, rather than shown a date they have to work out for
+     * themselves. It is also the nudge that is actually useful, because the
+     * other family may simply not have looked yet.
+     */
+    public function lastSpokeLabel(Registration $family): string
+    {
+        $last = $this->messages->last();
+
+        if ($last === null) {
+            return 'No messages yet';
+        }
+
+        if ($this->messages->every(fn (Message $message) => $message->sender_id === $family->id)) {
+            return 'You said hello, no reply yet';
+        }
+
+        $when = $last->created_at;
+
+        return match (true) {
+            $when->isToday() => 'Last spoke today',
+            $when->isYesterday() => 'Last spoke yesterday',
+            $when->greaterThan(now()->subWeek()) => 'Last spoke '.$when->format('l'),
+            $when->isCurrentYear() => 'Last spoke in '.$when->format('F'),
+            default => 'Last spoke in '.$when->format('F Y'),
+        };
     }
 
     public function involves(Registration $family): bool

@@ -99,7 +99,21 @@ class VillageTest extends TestCase
 
         $this->assertSame('Sarah', $family->displayName());
         $this->assertSame('S', $family->initial());
-        $this->assertSame('TN13 area', $family->area());
+
+        // TN13 is Sevenoaks. The hi-fi's profile frame labels it "Tonbridge
+        // area", which is the design's own slip — its other screens get it
+        // right. See config/frith-postcodes.
+        $this->assertSame('Sevenoaks area', $family->area());
+    }
+
+    #[Test]
+    public function an_area_we_cannot_name_says_the_outcode_rather_than_guessing(): void
+    {
+        // The outcode table is deliberately incomplete, because naming a
+        // family's town wrongly is worse than not naming it. Anything not in
+        // it falls back rather than inventing a place.
+        $this->assertSame('Leigh-on-Sea area', $this->family(['postcode_outcode' => 'SS9'])->area());
+        $this->assertSame('ZZ99 area', $this->family(['postcode_outcode' => 'ZZ99', 'email' => 'other@example.com'])->area());
     }
 
     #[Test]

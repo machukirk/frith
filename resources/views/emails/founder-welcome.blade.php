@@ -12,7 +12,7 @@
 <x-mail.layout
     :title="$number ? 'You’re Frith Founder #'.$number : 'You’re a Frith Founder'"
     preview="You're registered. One tap confirms your email."
-    footnote="You’re getting this because you registered at frith.community. If that wasn’t you, ignore this email and nothing happens — or unsubscribe below and we’ll delete what we hold."
+    footnote="You’re getting this because you registered at frith.community. If that wasn’t you, ignore this email and nothing happens. Or unsubscribe below and we’ll delete what we hold."
     :unsubscribe-url="$unsubscribeUrl"
 >
 
@@ -29,7 +29,7 @@
     </h1>
 
     <p style="margin:0 0 20px 0; font-family:{{ $font }}; font-size:16px; line-height:1.6; color:{{ $inkSecondary }};">
-        You’re registered, and you’re in from the beginning — which means Frith’s premium
+        You’re registered, and you’re in from the beginning, which means Frith’s premium
         features stay free for your family for good.
     </p>
 
@@ -52,7 +52,7 @@
 
     @unless ($registration->isComplete())
         <p style="margin:0 0 24px 0; padding:14px 16px; background:#F0ECE6; border-radius:10px; font-family:{{ $font }}; font-size:15px; line-height:1.6; color:{{ $inkSecondary }};">
-            You stopped part-way through the questions, which is completely fine — you’re
+            You stopped part-way through the questions, which is completely fine. You’re
             registered as you are. If you’d like to finish them,
             <a href="{{ $finishUrl }}" style="color:{{ $euc }};">pick up where you left off</a>.
         </p>

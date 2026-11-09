@@ -8,10 +8,22 @@
 
     <section class="wrap family-list">
         @if ($conversations->isEmpty())
-            <p class="family-list__empty">
-                No conversations yet. They start when another family says hello back.
-                <a href="{{ route('journeys') }}">Have a look at your Journeys</a>.
-            </p>
+            <div class="village__empty">
+                <p class="village__empty-title">Nothing here yet</p>
+                <p>
+                    When you say hello to someone and they say hello back, your
+                    conversations will show up here. There is no rush, and nobody is
+                    waiting on you.
+                </p>
+                <p class="village__empty-action">
+                    <a class="button button--primary button--small" href="{{ route('village') }}">
+                        Find families near you
+                    </a>
+                    <a class="button button--quiet button--small" href="{{ route('journeys') }}">
+                        Browse Journeys
+                    </a>
+                </p>
+            </div>
         @else
             <ul class="family-list__items">
                 @foreach ($conversations as $connection)

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Mail\FounderWelcome;
 use App\Models\FormOption;
 use App\Models\Registration;
 use App\Support\FormDefinition;
@@ -196,7 +197,7 @@ class RegistrationTest extends TestCase
 
         $this->assertNull($registration->founder_number);
 
-        $html = (new \App\Mail\FounderWelcome($registration))->render();
+        $html = (new FounderWelcome($registration))->render();
 
         $this->assertStringNotContainsString('Founder #', $html);
     }

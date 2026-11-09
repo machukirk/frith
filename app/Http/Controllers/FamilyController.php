@@ -26,8 +26,13 @@ class FamilyController extends Controller
             ->firstOrFail();
 
         // A blocked family is not findable, and the block is silent: this is
-        // the same 404 somebody would get for a name that never existed.
-        abort_if($family->is($viewer) || $viewer->isSeparatedFrom($family), 404);
+        // the same 404 somebody would get for a name that never existed. A
+        // family who has asked to leave gets the same treatment, from the
+        // moment they press the button rather than when the row goes.
+        abort_if(
+            $family->is($viewer) || $family->hasLeft() || $viewer->isSeparatedFrom($family),
+            404,
+        );
 
         return view('pages.family.show', [
             'card' => FamilyCard::make($viewer->loadMissing(['children', 'experiences']), $family),

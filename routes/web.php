@@ -1,19 +1,23 @@
 <?php
 
-use App\Http\Controllers\ContactController;
+use App\Http\Controllers\AccountBadgeController;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AccountDataController;
+use App\Http\Controllers\AccountExperienceController;
+use App\Http\Controllers\AccountNotificationController;
 use App\Http\Controllers\ConnectionController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\JourneyController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\SafetyController;
-use App\Http\Controllers\VillageController;
 use App\Http\Controllers\PagePreviewController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\RegistrationEmailController;
-use App\Http\Controllers\RegistrationExperienceController;
 use App\Http\Controllers\RobotsController;
+use App\Http\Controllers\SafetyController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\VillageController;
 use App\Http\Controllers\WebManifestController;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -158,6 +162,57 @@ Route::middleware('auth:founder')->group(function () {
     Route::post('/f/{family}/report', [SafetyController::class, 'report'])
         ->middleware('throttle:10,1')
         ->name('report.store');
+
+    /*
+     * The account. Their own profile, the settings behind it, and the way
+     * out. Editing reuses the registration screens rather than a second set
+     * of forms — see App\Support\AnswerSheet for why.
+     */
+    Route::get('/account', [AccountController::class, 'show'])->name('account');
+
+    Route::prefix('account')->name('account.')->group(function () {
+        Route::get('/edit/{step}', [AccountController::class, 'edit'])->name('edit');
+        Route::post('/edit/{step}', [AccountController::class, 'update'])
+            ->middleware([ProtectAgainstSpam::class, 'throttle:30,1'])
+            ->name('edit.store');
+
+        // "Does this still sound like your family?" Both answers buy the same
+        // quiet, so neither is the cheap one.
+        Route::get('/experiences/review', [AccountExperienceController::class, 'review'])->name('experiences.review');
+        Route::post('/experiences/review', [AccountExperienceController::class, 'confirm'])
+            ->middleware('throttle:30,1')
+            ->name('experiences.confirm');
+        Route::post('/experiences/snooze', [AccountExperienceController::class, 'snooze'])
+            ->middleware('throttle:30,1')
+            ->name('experiences.snooze');
+
+        Route::get('/badges', [AccountBadgeController::class, 'show'])->name('badges');
+        Route::post('/badges', [AccountBadgeController::class, 'update'])
+            ->middleware('throttle:30,1')
+            ->name('badges.update');
+
+        Route::get('/notifications', [AccountNotificationController::class, 'show'])->name('notifications');
+        Route::post('/notifications', [AccountNotificationController::class, 'update'])
+            ->middleware('throttle:30,1')
+            ->name('notifications.update');
+
+        Route::get('/data', [AccountDataController::class, 'show'])->name('data');
+        Route::post('/data/request', [AccountDataController::class, 'request'])
+            ->middleware('throttle:6,1')
+            ->name('data.request');
+
+        // Leaving is its own screen with its own confirmation, because what
+        // it does to messages already sent cannot be undone.
+        Route::get('/leave', [AccountDataController::class, 'confirmDelete'])->name('delete');
+        Route::post('/leave', [AccountDataController::class, 'delete'])
+            ->middleware('throttle:6,1')
+            ->name('delete.store');
+
+        Route::get('/blocked/{family}', [AccountDataController::class, 'blocked'])->name('blocked');
+        Route::post('/blocked/{family}/unblock', [AccountDataController::class, 'unblock'])
+            ->middleware('throttle:20,1')
+            ->name('unblock');
+    });
 });
 
 /*

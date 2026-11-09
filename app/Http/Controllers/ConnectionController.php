@@ -29,7 +29,8 @@ class ConnectionController extends Controller
             ->with(['requester.children', 'requester.experiences', 'addressee.children', 'addressee.experiences', 'journey'])
             ->latest('id')
             ->get()
-            ->reject(fn (Connection $c) => in_array($c->otherThan($family)->id, $hidden, true));
+            ->reject(fn (Connection $c) => in_array($c->otherThan($family)->id, $hidden, true)
+                || $c->otherThan($family)->hasLeft());
 
         return view('pages.requests.index', [
             'family' => $family,
@@ -45,7 +46,7 @@ class ConnectionController extends Controller
         $family = $request->user('founder');
         $other = Registration::query()->where('public_id', $publicId)->firstOrFail();
 
-        abort_if($other->is($family) || $family->isSeparatedFrom($other), 404);
+        abort_if($other->is($family) || $other->hasLeft() || $family->isSeparatedFrom($other), 404);
 
         if (Connection::between($family, $other)) {
             return back()->with('status', 'That is already in hand.');

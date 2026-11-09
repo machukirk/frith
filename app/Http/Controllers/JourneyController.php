@@ -55,6 +55,7 @@ class JourneyController extends Controller
         $cards = $journey->members()
             ->with(['children', 'experiences'])
             ->whereNotIn('registrations.id', $hidden)
+            ->present()
             ->get()
             ->map(fn ($other) => FamilyCard::make($family, $other))
             ->sortByDesc(fn (FamilyCard $card) => [$card->score, $card->inCommon])

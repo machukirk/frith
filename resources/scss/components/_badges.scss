@@ -1,0 +1,109 @@
+@use '../abstracts' as *;
+
+// A row of badges on a card or a profile. Small, quiet, and never counted.
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 0;
+  margin-top: 9px;
+  list-style: none;
+
+  &__item {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    padding: 5px 11px;
+    background: $bg-surface;
+    border: 1px solid $border-hairline;
+    border-radius: $radius-pill;
+    color: $ink-900;
+    @include type((11.5px, 12px), 1.3, 500);
+
+    // The Founder badge is the one in brand colour, because it is the one
+    // that can never be got again. Ink on coral, never white.
+    &--founder {
+      background: $action-accent;
+      border-color: transparent;
+      @include type((10.5px, 11px), 1.3, 600);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+  }
+}
+
+// The badges screen itself.
+.badge-group {
+  margin-top: $space-8;
+
+  &__title {
+    margin-bottom: 3px;
+    color: $text-heading;
+    @include type((16px, 17px), 1.3, 600);
+  }
+
+  &__blurb {
+    margin-bottom: $space-4;
+    color: $text-body;
+    @include type((13px, 13.5px), 1.55);
+  }
+}
+
+.badge-list {
+  display: grid;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  &__item {
+    padding: $space-4 $space-5;
+    background: $bg-surface;
+    border: 1px solid $border-hairline;
+    border-radius: $radius-xl;
+
+    // A badge nobody has yet is drawn down rather than greyed out: there is
+    // no deadline on any of these and nothing is being withheld.
+    &--not-yet { background: transparent; border-style: dashed; }
+  }
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-3;
+    align-items: center;
+    margin-bottom: $space-2;
+  }
+
+  &__title {
+    color: $text-heading;
+    @include type((14.5px, 15px), 1.3, 600);
+  }
+
+  &__state {
+    padding: 3px 10px;
+    background: $linen-100;
+    border-radius: $radius-pill;
+    color: $linen-700;
+    @include type((10.5px, 11px), 1.2, 600);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+
+    &--held { background: $euc-050; color: $euc-800; }
+  }
+
+  &__what {
+    max-width: 68ch;
+    color: $text-body;
+    @include type((13.5px, 14px), 1.6);
+  }
+
+  &__note {
+    max-width: 68ch;
+    margin-top: $space-2;
+    color: $linen-700;
+    @include type((12.5px, 13px), 1.55);
+  }
+
+  .switch { margin-top: $space-3; }
+}

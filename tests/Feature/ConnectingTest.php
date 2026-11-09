@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Block;
 use App\Models\Connection;
 use App\Models\Journey;
 use App\Models\Message;
@@ -10,6 +9,7 @@ use App\Models\Registration;
 use App\Models\Report;
 use Database\Seeders\JourneySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -20,7 +20,7 @@ class ConnectingTest extends TestCase
     private function family(string $name, array $overrides = []): Registration
     {
         $family = Registration::query()->create(array_merge([
-            'email' => \Illuminate\Support\Str::slug($name).'@example.com',
+            'email' => Str::slug($name).'@example.com',
             'first_name' => $name,
             'display_name' => $name,
             'postcode_outcode' => 'TN13',
@@ -84,7 +84,8 @@ class ConnectingTest extends TestCase
             ->assertOk();
 
         $response->assertSee('The Ahmeds')
-            ->assertSee('TN13 area')
+            // The post town, not the outcode. TN13 is Sevenoaks.
+            ->assertSee('Sevenoaks area')
             ->assertSee('Aged '.$theirs->children->first()->age())
             ->assertSee('First Frith Family')
             ->assertSee('things in common');

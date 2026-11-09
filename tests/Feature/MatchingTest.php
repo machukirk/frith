@@ -52,7 +52,7 @@ class MatchingTest extends TestCase
         // every score is quietly on the wrong scale.
         $shape = [
             ['support_areas' => ['learning-education'], 'interests' => ['animals'],
-             'hopes' => ['local-families'], 'connection_styles' => ['one-to-one']],
+                'hopes' => ['local-families'], 'connection_styles' => ['one-to-one']],
             [[3, 2017]],
             [['learning-education', 'school-attendance']],
         ];

@@ -22,7 +22,7 @@ class SiteNavigation
     public static function primary(): array
     {
         return self::resolve(config(
-            auth('founder')->check() ? 'frith-nav.menu_founder' : 'frith-nav.primary',
+            auth('founder')->check() ? 'frith-nav.primary_founder' : 'frith-nav.primary',
             [],
         ));
     }

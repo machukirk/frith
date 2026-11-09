@@ -11,6 +11,16 @@
                 {{ $family->area() }}@if ($card->childSummary()) &middot; {{ $card->childSummary() }}@endif
             </span>
             <span class="family-card__common">{{ $card->commonality() }}</span>
+
+            @if ($card->badges()->isNotEmpty())
+                <span class="badge-row">
+                    @foreach ($card->badges() as $badge)
+                        <span class="badge-row__item @if ($badge['slug'] === 'first-frith-family') badge-row__item--founder @endif">
+                            {{ $badge['title'] }}
+                        </span>
+                    @endforeach
+                </span>
+            @endif
         </span>
     </a>
 

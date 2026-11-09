@@ -90,7 +90,9 @@ class MobileMenuTest extends TestCase
         $html = $response->getContent();
 
         $response->assertSee('Sarah')
-            ->assertSee('TN13 area')
+            // The same area another family is shown, rather than the raw
+            // outcode: one thing, said the same way everywhere.
+            ->assertSee('Sevenoaks area')
             ->assertSee('Your village')
             ->assertSee('Messages')
             ->assertSee('Log out');
