@@ -78,6 +78,27 @@ return [
     |
     */
 
+    /*
+    |--------------------------------------------------------------------------
+    | Mail on a copy of the site
+    |--------------------------------------------------------------------------
+    |
+    | A staging site runs against a copy of the database, which is full of real
+    | families' addresses. Give it a working mail service with no guard and the
+    | first test registration emails somebody who never asked to hear from a
+    | staging server.
+    |
+    | Set FRITH_MAIL_CATCH on any copy and every message goes to that one
+    | address instead, whoever it was addressed to. It has no effect on
+    | frith.community, which is decided by host rather than by a flag, so this
+    | cannot be used to silence the real site.
+    |
+    */
+
+    'mail' => [
+        'catch' => env('FRITH_MAIL_CATCH'),
+    ],
+
     'founders' => [
         'limit' => (int) env('FRITH_FOUNDER_LIMIT', 100),
     ],

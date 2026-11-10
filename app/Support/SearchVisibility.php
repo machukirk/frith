@@ -23,6 +23,19 @@ class SearchVisibility
             return filter_var($override, FILTER_VALIDATE_BOOLEAN);
         }
 
+        return self::isRealSite($request);
+    }
+
+    /**
+     * Whether this is frith.community itself, by host and nothing else.
+     *
+     * Unlike indexable(), no config override can turn this on. Anything that
+     * decides whether real people get emailed, or whether real money moves,
+     * asks this one: a flag somebody set to preview a page must not be able to
+     * make a copy of the site behave as the original.
+     */
+    public static function isRealSite(?Request $request = null): bool
+    {
         return self::host($request) === self::canonicalHost();
     }
 
