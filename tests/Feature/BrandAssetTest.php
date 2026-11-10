@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Support\BrandAsset;
+use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -79,5 +81,59 @@ class BrandAssetTest extends TestCase
 
         $this->assertStringContainsString('frith-logo-horizontal-fullcolour-email.png', $template);
         $this->assertStringNotContainsString('.svg', $template);
+    }
+
+    #[Test]
+    public function an_email_image_points_at_the_real_site_from_a_copy(): void
+    {
+        // An image in an email is fetched by Gmail's proxy or by the
+        // recipient's client, with none of our credentials. A copy of the site
+        // sits behind basic auth, so that fetch 401s and the logo silently
+        // does not appear. Found by Matt on 2026-11-10: the staging Founder
+        // email arrived with no logo.
+        config([
+            'frith.site.canonical_host' => 'frith.community',
+            'app.url' => 'https://frith.community',
+        ]);
+
+        $this->app->instance('request', Request::create('https://staging.example.com/'));
+        BrandAsset::forget();
+
+        $url = BrandAsset::forMail('brand/logo/png/frith-logo-horizontal-fullcolour-email.png');
+
+        $this->assertStringStartsWith('https://frith.community/brand/logo/png/', $url);
+        $this->assertStringContainsString('?v=', $url);
+    }
+
+    #[Test]
+    public function the_real_site_serves_its_own_email_images(): void
+    {
+        config([
+            'frith.site.canonical_host' => 'frith.community',
+            'app.url' => 'https://frith.community',
+        ]);
+
+        $this->app->instance('request', Request::create('https://frith.community/'));
+        BrandAsset::forget();
+
+        $this->assertSame(
+            BrandAsset::url('brand/logo/png/frith-logo-horizontal-fullcolour-email.png'),
+            BrandAsset::forMail('brand/logo/png/frith-logo-horizontal-fullcolour-email.png'),
+        );
+    }
+
+    #[Test]
+    public function the_email_layout_uses_an_image_an_email_client_can_fetch(): void
+    {
+        // The whole email system has exactly one image. If it ever gains
+        // another, it has to go through forMail() too.
+        $layout = file_get_contents(resource_path('views/components/mail/layout.blade.php'));
+
+        $this->assertSame(1, substr_count($layout, '<img'));
+        $this->assertStringContainsString('BrandAsset::forMail(', $layout);
+        $this->assertStringNotContainsString('BrandAsset::url(', $layout);
+
+        // And it must stay a PNG: no major client renders SVG in email.
+        $this->assertStringContainsString('.png', $layout);
     }
 }

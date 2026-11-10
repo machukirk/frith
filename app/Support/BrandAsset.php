@@ -26,6 +26,42 @@ class BrandAsset
         return self::$resolved[$path] ??= self::build($path);
     }
 
+    /**
+     * The same asset, but reachable by an email client.
+     *
+     * An image in an email is fetched by somebody else: Gmail's proxy, or the
+     * recipient's client, with none of our cookies and none of our
+     * credentials. A copy of the site usually sits behind basic auth, so that
+     * fetch gets a 401 and the logo silently does not appear. The email is
+     * fine; the host is not reachable.
+     *
+     * So from anything that is not frith.community, email images are pointed
+     * at frith.community, which is public and carries the same file. It means
+     * a test email looks exactly like a real one, which is most of the reason
+     * for sending one.
+     *
+     * The ?v= fingerprint is still taken from the local file, so if a copy is
+     * carrying a newer logo than production the email shows production's. That
+     * is the right way round: the email has to load for whoever receives it.
+     */
+    public static function forMail(string $path): string
+    {
+        $url = self::url($path);
+
+        if (SearchVisibility::isRealSite()) {
+            return $url;
+        }
+
+        $host = SearchVisibility::canonicalHost();
+
+        if ($host === '') {
+            return $url;
+        }
+
+        return 'https://'.$host.'/'.ltrim((string) parse_url($url, PHP_URL_PATH), '/')
+            .(($query = parse_url($url, PHP_URL_QUERY)) ? '?'.$query : '');
+    }
+
     private static function build(string $path): string
     {
         $url = asset($path);
