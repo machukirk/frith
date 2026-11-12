@@ -51,6 +51,21 @@ class RegistrationFlow
         return $index > 0 ? self::STEPS[$index - 1] : null;
     }
 
+    /**
+     * The screen a family should come back to.
+     *
+     * furthest_step is recorded as the number of the screen AFTER the last
+     * one answered, so it is already the one to resume at. Clamped, because a
+     * family who finished holds a number past the end of the list, and the
+     * form the number was written against may since have lost a screen.
+     */
+    public static function resumeAt(int $furthestStep): string
+    {
+        $index = max(0, min($furthestStep - 1, count(self::STEPS) - 1));
+
+        return self::STEPS[$index];
+    }
+
     public static function exists(string $step): bool
     {
         return in_array($step, self::STEPS, true);

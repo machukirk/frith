@@ -38,9 +38,47 @@ class RegistrationController extends Controller
      */
     private const SESSION_SHADOW = 'registration.shadow';
 
-    public function start(): RedirectResponse
+    /**
+     * "Pick up where you left off", and the front door for everybody else.
+     *
+     * Two things were wrong here, and they compounded.
+     *
+     * It always went to screen one, although furthest_step has been recorded
+     * all along, so a family who stopped at the fifth screen was asked the
+     * first four questions again.
+     *
+     * Worse, it ignored who was signed in. The wizard reads a registration id
+     * out of the session, and a family arriving from the confirm link has no
+     * such id. Screen one would then look their address up, find a VERIFIED
+     * account, and quite correctly put them into shadow mode, which writes
+     * nothing. They would answer every question, watch each screen accept it,
+     * and reach an end that told them they were now a First Frith Family. The
+     * protection against somebody overwriting another family's answers was
+     * being applied to that family themselves.
+     *
+     * So: a signed-in family resumes their own registration, at their own
+     * screen. Everybody else gets screen one.
+     */
+    public function start(Request $request): RedirectResponse
     {
-        return redirect()->route('register.step', RegistrationFlow::STEPS[0]);
+        $family = $request->user('founder');
+
+        if ($family === null) {
+            return redirect()->route('register.step', RegistrationFlow::STEPS[0]);
+        }
+
+        if ($family->isComplete()) {
+            return redirect()->route('village');
+        }
+
+        // Their own row, so nothing here is shadowed and every answer saves.
+        $request->session()->put(self::SESSION_ID, $family->id);
+        $request->session()->forget(self::SESSION_SHADOW);
+
+        return redirect()->route(
+            'register.step',
+            RegistrationFlow::resumeAt((int) $family->furthest_step),
+        );
     }
 
     /**
