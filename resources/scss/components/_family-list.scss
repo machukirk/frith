@@ -245,13 +245,23 @@
     text-align: center;
   }
 
+  // This used to be one anchor, so styling the anchor styled the lot. It is a
+  // sentence with two links in it now, and leaving the rule on the child made
+  // the links 13px and the words between them inherit the body size.
   &__report {
     margin-top: $space-6;
+    max-width: 46ch;
+    margin-inline: auto;
+    color: $linen-700;
+    @include type((13px, 13px), 1.6);
     text-align: center;
 
     a {
       color: $linen-700;
-      @include type((13px, 13px), 1.4);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+
+      &:hover { color: $action; }
     }
   }
 }

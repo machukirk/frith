@@ -5,9 +5,14 @@
 | Site navigation
 |--------------------------------------------------------------------------
 |
-| Header and footer links. A `route` that does not exist yet renders as a
-| dead anchor rather than throwing, so the footer can carry the whole
-| designed sitemap while the pages behind it are still being built.
+| Header and footer links. A `route` that does not exist yet resolves to '#'
+| rather than throwing, which stops a half-built sitemap taking the whole
+| site down with it.
+|
+| That is a safety net, not a licence. Anything listed here renders on every
+| page, error pages included, so an entry whose route is not registered is a
+| dead link in front of every visitor. Add the entry when the page exists.
+| tests/Feature/FooterLinksTest.php holds this to it.
 |
 */
 
@@ -81,7 +86,16 @@ return [
                 ['label' => 'How it works', 'route' => 'how-it-works'],
                 ['label' => 'Journeys', 'route' => 'journeys'],
                 ['label' => 'Frith+', 'route' => 'frith-plus'],
-                ['label' => 'Blog', 'route' => 'blog'],
+
+                /*
+                 * Blog was here and rendered as href="#" on every page of the
+                 * site, error pages included. There is no blog, no route and
+                 * no plan to write one before launch, and a dead link in the
+                 * footer of a site asking families to trust it is worse than
+                 * a column with four entries in it.
+                 *
+                 * Put it back when there is something to read, not before.
+                 */
             ],
         ],
         [

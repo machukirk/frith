@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Page;
+use App\Support\EditablePage;
 use App\Support\PageContent;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
@@ -24,7 +25,12 @@ class PagePreviewController extends Controller
     {
         $page = Page::query()->where('slug', $slug)->firstOrFail();
 
-        abort_unless(view()->exists("pages.{$slug}"), 404);
+        // Not every editable row is a page with a view of its own. See
+        // App\Support\EditablePage: three of them are copy that appears on a
+        // screen somewhere else, and one has no single screen at all.
+        $view = EditablePage::view($slug);
+
+        abort_if($view === null, 404);
 
         $draft = $request->session()->get(self::key($slug));
 
@@ -33,7 +39,7 @@ class PagePreviewController extends Controller
         }
 
         try {
-            $html = view("pages.{$slug}")->render();
+            $html = view($view)->render();
         } finally {
             // The override is static. Left in place it would outlive this
             // render and hand somebody's draft to the next read.

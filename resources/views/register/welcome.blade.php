@@ -5,14 +5,34 @@
     // The table, not the home page's copy. This used to read a typed-out
     // list that is now gone, which left the panel naming no Journeys at all.
     $journeys = \App\Models\Journey::query()->offered()->take(3)->pluck('title');
+
+    // This screen used to tell every family it was a First Frith Family and
+    // promise them Frith+ for good. Only the first hundred registrations get a
+    // founder number: after that assignFounderNumber() returns without writing
+    // one, so family 101 was told they held a status the database denies, and
+    // promised a membership hasPlus() would refuse. The very next screen in the
+    // same flow, register/verified.blade.php, has always guarded on this.
+    //
+    // isFounder() reads the column, which is the point. A count of rows would
+    // be wrong twice over: a family who leaves takes their number with them,
+    // so counting would issue a hundred and first, and a family reloading this
+    // screen a year later would be told something different from the number
+    // actually written against them.
+    //
+    // Null registration takes the quieter wording as well. Claiming a status
+    // we cannot check is the failure that is worth avoiding here.
+    $isFounder = (bool) $registration?->isFounder();
+    $title = $isFounder ? $w['title'] : $w['title_if_not_a_founder'];
+    $footnote = $isFounder ? $w['footnote'] : $w['footnote_if_not_a_founder'];
+    $metaTitle = $isFounder ? $c['meta']['title'] : $c['meta']['title_if_not_a_founder'];
 @endphp
 
-<x-layouts.site :title="$c['meta']['title']" :noindex="true">
+<x-layouts.site :title="$metaTitle" :noindex="true">
 
     <div class="wizard wizard--done">
         <p class="wizard__tick" aria-hidden="true">&#10003;</p>
 
-        <h1 class="heading wizard__heading">{{ $w['title'] }}</h1>
+        <h1 class="heading wizard__heading">{{ $title }}</h1>
 
         <p class="wizard__standfirst">{{ $w['standfirst'] }}</p>
 
@@ -66,7 +86,7 @@
             </div>
         @endif
 
-        <p class="wizard__hint wizard__footnote">{{ $w['footnote'] }}</p>
+        <p class="wizard__hint wizard__footnote">{{ $footnote }}</p>
     </div>
 
 </x-layouts.site>

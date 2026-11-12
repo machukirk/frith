@@ -1,4 +1,7 @@
-@props(['card', 'journey' => null])
+{{-- withdraw: the Requests screen passes it, because taking an ask back only
+     makes sense on the list of your own asks. Everywhere else the row is read
+     only. --}}
+@props(['card', 'journey' => null, 'withdraw' => false])
 
 @php $family = $card->family; @endphp
 
@@ -35,7 +38,20 @@
                 @break
 
             @case('waiting')
-                <p class="family-card__waiting">Asked &middot; waiting</p>
+                <div class="family-card__pair">
+                    <p class="family-card__waiting">Asked &middot; waiting</p>
+
+                    {{-- The only way out of an ask nobody has answered. The
+                         other family is told nothing, either way. --}}
+                    @if ($withdraw && $card->connection)
+                        <form method="POST" action="{{ route('connections.withdraw', $card->connection) }}">
+                            @csrf
+                            <button class="family-card__decline" type="submit">
+                                Withdraw<span class="visually-hidden"> the request to {{ $family->displayName() }}</span>
+                            </button>
+                        </form>
+                    @endif
+                </div>
                 @break
 
             @case('closed')

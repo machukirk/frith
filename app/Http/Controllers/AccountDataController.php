@@ -8,6 +8,8 @@ use App\Models\Registration;
 use App\Models\Report;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Message as MailMessage;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 /**
@@ -50,12 +52,50 @@ class AccountDataController extends Controller
         // Asked twice is asked once. Pressing it again should not reset the
         // clock on a request somebody is already working on.
         if ($family->data_requested_at === null) {
+            $this->tellTheTeam($family);
+
             $family->forceFill(['data_requested_at' => now()])->save();
         }
 
         return redirect()
             ->route('account.data')
             ->with('status', 'Asked for. We will email it to '.$family->email.', usually within the hour.');
+    }
+
+    /**
+     * The part that makes the promise true.
+     *
+     * The screen says the copy is usually ready within the hour. The
+     * timestamp on its own told nobody: there is no admin screen for data
+     * requests and nothing reads the column, so the request sat in a table
+     * while the hour went by. A person is emailed instead, the way the help
+     * page's form emails one.
+     *
+     * Sent before the timestamp is written, and sent rather than queued. If
+     * the mail fails, nothing is recorded, so pressing the button again is a
+     * real second try instead of a no-op on a request nobody received.
+     *
+     * Plain text rather than a Mailable: it lands in our own inbox, there is
+     * nothing to brand and nothing to unsubscribe from. If it ever needs a
+     * template, copy App\Mail\ContactMessage.
+     */
+    private function tellTheTeam(Registration $family): void
+    {
+        $name = $family->displayName() ?: $family->email;
+
+        Mail::raw(implode("\n", [
+            $name.' has asked for a copy of their data.',
+            '',
+            'Email: '.$family->email,
+            'Account: '.$family->public_id,
+            'Asked: '.now()->format('j F Y, H:i'),
+            '',
+            'The screen tells them it usually arrives within the hour.',
+            'Their messages have another family in them, so what goes in the file is a judgement somebody makes, not a query.',
+        ]), fn (MailMessage $message) => $message
+            ->to(config('frith.company.contact_email'))
+            ->replyTo($family->email)
+            ->subject('Frith: data request from '.$name));
     }
 
     /** The screen that says what leaving actually does, before it happens. */

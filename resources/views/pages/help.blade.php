@@ -77,7 +77,32 @@
 
                         <div class="link-cards__links">
                             @foreach ($topic['links'] as $link)
-                                <a class="link-cards__link" href="{{ \App\Support\SiteNavigation::url($link) }}">{{ $link['label'] }}</a>
+                                @continue(blank($link['label'] ?? null))
+
+                                {{-- A topic with no page of its own is answered here,
+                                     because help articles have no CMS behind them.
+                                     Native <details>, like the registration
+                                     accordions: it opens with no JavaScript, and a
+                                     screen reader already knows what a disclosure is.
+
+                                     The one a search result points at arrives open.
+                                     A fragment never reaches the server, so ?open=
+                                     is what says which, and CSS cannot open a closed
+                                     <details> from :target. --}}
+                                @if (filled($link['answer'] ?? null))
+                                    @php $anchor = \App\Support\HelpSearch::anchorFor($link); @endphp
+
+                                    <details class="link-cards__answer" id="{{ $anchor }}" {{ request('open') === $anchor ? 'open' : '' }}>
+                                        <summary class="link-cards__summary">
+                                            {{ $link['label'] }}
+                                            <span class="link-cards__mark" aria-hidden="true"></span>
+                                        </summary>
+
+                                        <p class="link-cards__answer-text">{{ $link['answer'] }}</p>
+                                    </details>
+                                @else
+                                    <a class="link-cards__link" href="{{ \App\Support\SiteNavigation::url($link) }}">{{ $link['label'] }}</a>
+                                @endif
                             @endforeach
                         </div>
                     </li>

@@ -33,6 +33,35 @@
             </ul>
         @endif
 
+        {{-- The way out, on the screen somebody is actually looking at. The
+             directory's "Joined" pill does the same thing, which is no help
+             to a family who has opened the Journey and found it is not for
+             them.
+
+             The panel is the confirmation: it says what leaving does before
+             anybody presses anything. Considered and rejected: hiding it
+             behind a <details>, which would tuck the one sentence that
+             matters out of sight to save a press. --}}
+        <div class="panel-stack__section">
+            <section class="panel">
+                <h2 class="panel__title">Not the right Journey?</h2>
+                <p class="panel__body">
+                    Leaving stops your profile being visible to the families in
+                    {{ $journey->title }}.
+                    Anyone you have already connected with stays connected,
+                    and your messages stay as they are.
+                    You can join again whenever you like.
+                </p>
+
+                <form class="action-row action-row--bare" method="POST" action="{{ route('journeys.leave', $journey) }}">
+                    @csrf
+                    <button class="button button--quiet button--small" type="submit">
+                        Leave {{ $journey->title }}
+                    </button>
+                </form>
+            </section>
+        </div>
+
         <p class="family-list__back">
             <a href="{{ route('journeys') }}">&larr; All Journeys</a>
         </p>

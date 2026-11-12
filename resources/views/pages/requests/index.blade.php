@@ -65,9 +65,24 @@
         @if ($youAsked->isEmpty())
             <p class="family-list__empty">You have not asked anybody yet.</p>
         @else
+            {{-- The limit, said where it bites. It is enforced in
+                 ConnectionController::store, and a family who hits it there
+                 is told the same thing in the same words.
+
+                 The count is always shown. The instruction is not, because a
+                 family with one ask waiting is not being stopped from asking
+                 anybody, and telling them to withdraw one first is simply
+                 untrue. Do not fold the second sentence back into the first. --}}
+            <p class="family-list__sort">
+                {{ $youAsked->count() }} of {{ $limit }} waiting for a reply.
+                @if ($youAsked->count() >= $limit)
+                    Withdraw one, or wait for an answer, before you ask somebody else.
+                @endif
+            </p>
+
             <ul class="family-list__items">
                 @foreach ($youAsked as $connection)
-                    <x-family.card :card="$cardFor($connection)" />
+                    <x-family.card :card="$cardFor($connection)" :withdraw="true" />
                 @endforeach
             </ul>
         @endif

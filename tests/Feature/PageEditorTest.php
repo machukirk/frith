@@ -80,8 +80,19 @@ class PageEditorTest extends TestCase
             "{$slug}'s editor does not have one tab per section",
         );
 
-        // And it is this page's sections, not another page's.
-        $this->assertStringContainsString('Search &amp; sharing', $html);
+        // And it is this page's sections, not another page's. Every control
+        // is named for the key it writes to, so a form built from somewhere
+        // else's shape is missing these. This used to look for the meta tab by
+        // its label, which held only while every row was a page in a search
+        // result. The footer is a row and is not one: four lines at the bottom
+        // of the site, no meta block, nothing to put in a result.
+        foreach (array_keys($page->content) as $key) {
+            $this->assertStringContainsString(
+                "content.{$key}",
+                $html,
+                "{$slug}'s editor has nothing for {$key}",
+            );
+        }
     }
 
     #[Test]

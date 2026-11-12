@@ -47,4 +47,53 @@
 
     &:hover { text-decoration: underline; }
   }
+
+  // A topic answered on the help page itself rather than on a page of its
+  // own. Sixteen of the twenty-five topics are these. A native <details>,
+  // the same pattern as the registration accordions, because the public
+  // site carries no JavaScript.
+  //
+  // It sits in the same column as the plain links and is drawn to match
+  // them, so a card reads as one list of topics whether or not the answer
+  // happens to live on another page. The mark on the right is the only
+  // thing that says which kind it is before you press it.
+  &__summary {
+    // 48px, not the 40 the links beside it take. Guidelines §08 is the
+    // floor for anything new, and the eight pixels do not show.
+    @include tap-target;
+    // tap-target is inline-flex, which shrinks the row to its text and puts
+    // the mark beside the label instead of out at the edge.
+    display: flex;
+    justify-content: space-between;
+    gap: $space-3;
+    color: $action;
+    @include type((13.5px, 13.5px), 1.45);
+    cursor: pointer;
+    // Both halves of hiding the default triangle. Safari needs the second.
+    list-style: none;
+    @include focus-ring;
+
+    &::-webkit-details-marker { display: none; }
+
+    &:hover { text-decoration: underline; }
+  }
+
+  &__mark {
+    flex: none;
+    color: $linen-700;
+    font-size: 16px;
+    line-height: 1;
+
+    &::after { content: '\FF0B'; }
+  }
+
+  &__answer[open] &__mark::after { content: '\2212'; }
+
+  // Bigger than the card's own small print: somebody reading this is stuck,
+  // often on a phone, often late.
+  &__answer-text {
+    padding-block: $space-1 $space-3;
+    color: $text-body;
+    @include type($type-small, 1.6);
+  }
 }

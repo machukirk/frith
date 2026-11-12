@@ -53,6 +53,19 @@ class Connection extends Model
         return $this->status === self::ACCEPTED;
     }
 
+    /**
+     * Whether anybody actually asked, or one family just closed the door.
+     *
+     * A declined row with closed_by set was never a request: it is "not for
+     * us" pressed on a profile. Anything reporting on who refused whom has to
+     * know the difference, because otherwise it counts a refusal that never
+     * happened.
+     */
+    public function wasEverAsked(): bool
+    {
+        return $this->closed_by === null;
+    }
+
     /** The family on the other end of this, whoever is asking. */
     public function otherThan(Registration $family): Registration
     {

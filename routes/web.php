@@ -44,6 +44,7 @@ foreach ([
     'terms',
     'privacy',
     'frith-plus',
+    'cookies',
 ] as $page) {
     Route::view("/{$page}", "pages.{$page}")->name($page);
 }
@@ -144,6 +145,12 @@ Route::middleware('auth:founder')->group(function () {
     Route::post('/requests/{connection}/decline', [ConnectionController::class, 'decline'])
         ->middleware('throttle:30,1')
         ->name('connections.decline');
+
+    // Taking back a request you sent, before it has been answered. The
+    // designs put it on the row; without it an unanswered ask is permanent.
+    Route::post('/requests/{connection}/withdraw', [ConnectionController::class, 'withdraw'])
+        ->middleware('throttle:30,1')
+        ->name('connections.withdraw');
 
     Route::get('/messages', [MessageController::class, 'index'])->name('messages');
     Route::get('/messages/{connection}', [MessageController::class, 'show'])->name('messages.show');

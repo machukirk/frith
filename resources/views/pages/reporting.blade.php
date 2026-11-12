@@ -1,6 +1,10 @@
 @php
     $c = \App\Support\PageContent::for('reporting');
     $contactEmail = config('frith.company.contact_email');
+
+    // Generated from this page's own row, never typed into the copy.
+    // See App\Support\PolicyPages::lastUpdated for why.
+    $updated = \App\Support\PolicyPages::lastUpdated('reporting');
 @endphp
 
 <x-layouts.site :title="$c['meta']['title']" :description="$c['meta']['description']" slug="reporting">
@@ -17,7 +21,13 @@
                 {{-- Head ------------------------------------------------------ --}}
                 <p class="eyebrow">{{ $c['head']['eyebrow'] }}</p>
                 <h1 class="heading page-head__title">{{ $c['head']['title'] }}</h1>
-                <p class="link-cards__body">{{ $c['head']['meta'] }}</p>
+                {{-- .doc-meta, like the other four policies. This line had
+                     picked up .link-cards__body from the card grid lower down
+                     the page, which is a different thing wearing the same
+                     clothes. The grid stays; this line is not part of it. --}}
+                @if ($updated)
+                    <p class="doc-meta">{{ $updated }}</p>
+                @endif
 
                 {{-- The short version ----------------------------------------- --}}
                 <div class="note note--panel">

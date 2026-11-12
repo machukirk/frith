@@ -1,6 +1,10 @@
 @php
     $c = \App\Support\PageContent::for('terms');
 
+    // Generated from this page's own row, never typed into the copy.
+    // See App\Support\PolicyPages::lastUpdated for why.
+    $updated = \App\Support\PolicyPages::lastUpdated('terms');
+
     $email = config('frith.company.contact_email');
 
     // ":email" in the copy becomes a real mailto link. The sentence is escaped
@@ -22,7 +26,9 @@
             <article>
                 <p class="eyebrow">{{ $c['head']['eyebrow'] }}</p>
                 <h1 class="heading page-head__title">{{ $c['head']['title'] }}</h1>
-                <p class="doc-meta">{{ $c['head']['doc_meta'] }}</p>
+                @if ($updated)
+                    <p class="doc-meta">{{ $updated }}</p>
+                @endif
 
                 <div class="prose">
 

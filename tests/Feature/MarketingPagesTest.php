@@ -25,9 +25,33 @@ class MarketingPagesTest extends TestCase
     /** @return array<string, array{0: string}> */
     public static function pages(): array
     {
+        return collect(self::routed())
+            ->mapWithKeys(fn (string $slug) => [$slug => [$slug]])
+            ->all();
+    }
+
+    /**
+     * The seeder's slugs that are a public page at a URL.
+     *
+     * Not every editable row is one. The log-in screens, the screen at the end
+     * of registration and the site footer all have copy an editor owns and no
+     * route of their own, and the footer is not even a page: it has no meta
+     * block, because nothing ever puts it in a search result. Everything in
+     * this file is about a public page, so it asks which of them are.
+     * SitemapController draws exactly the same line, for the same reason.
+     * Those three are covered in EditableCopyTest instead.
+     *
+     * Route::has() would say the same thing and cannot be used: a data
+     * provider runs before the application boots, and a facade there throws.
+     *
+     * @return array<int, string>
+     */
+    private static function routed(): array
+    {
         return collect(PageSeeder::pages())
             ->keys()
-            ->mapWithKeys(fn (string $slug) => [$slug => [$slug]])
+            ->reject(fn (string $slug) => in_array($slug, PageSeeder::WITHOUT_A_ROUTE, true))
+            ->values()
             ->all();
     }
 
@@ -90,7 +114,7 @@ class MarketingPagesTest extends TestCase
 
         $xml = $this->get(route('sitemap'))->assertOk()->getContent();
 
-        foreach (array_keys(PageSeeder::pages()) as $slug) {
+        foreach (self::routed() as $slug) {
             $this->assertStringContainsString('<loc>'.e(route($slug)).'</loc>', $xml, "{$slug} is missing from the sitemap");
         }
     }

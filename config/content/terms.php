@@ -7,10 +7,13 @@ return [
         'description' => 'The terms you agree to when you use Frith, written to be read rather than survived: who can join, what you agree to, how money works, and how to leave.',
     ],
 
+    // No date in here. The "Last updated" line is generated from this page's
+    // own pages.updated_at by App\Support\PolicyPages::lastUpdated, so saving
+    // the page in the admin panel moves it. A typed one went stale the first
+    // time anybody edited the page, and said so for two months.
     'head' => [
         'eyebrow' => 'Legal',
         'title' => 'Terms of Service',
-        'doc_meta' => 'Last updated 9 September 2026 · about 6 minutes to read',
     ],
 
     'short_version' => [

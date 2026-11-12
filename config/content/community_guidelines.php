@@ -18,10 +18,13 @@ return [
         'description' => 'What we expect of families on Frith, what is not allowed, and exactly what happens when you report someone. A person reads every report, usually within 24 hours.',
     ],
 
+    // No date in here. The "Last updated" line is generated from this page's
+    // own pages.updated_at by App\Support\PolicyPages::lastUpdated, so saving
+    // the page in the admin panel moves it. A typed one went stale the first
+    // time anybody edited the page, and said so for two months.
     'head' => [
         'eyebrow' => 'Community',
         'title' => 'Community Guidelines',
-        'updated' => 'Last updated 9 September 2026 · about 5 minutes to read',
     ],
 
     'summary' => [

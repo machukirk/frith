@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Pages\Tables;
 
 use App\Models\Page;
-use App\Support\SiteNavigation;
+use App\Support\EditablePage;
 use App\Support\SqlOrder;
 use Database\Seeders\PageSeeder;
 use Filament\Actions\Action;
@@ -28,7 +28,10 @@ class PagesTable
                 TextColumn::make('name')
                     ->label('Page')
                     ->weight('medium')
-                    ->description(fn (Page $record) => '/'.ltrim($record->slug === 'home' ? '' : $record->slug, '/'))
+                    // Not '/'.$slug: three of these rows are copy that shows
+                    // on a screen rather than a page of their own, and "/footer"
+                    // is not an address anybody can go to.
+                    ->description(fn (Page $record) => EditablePage::whereItShows($record->slug))
                     ->searchable(),
 
                 TextColumn::make('sections')
@@ -48,11 +51,18 @@ class PagesTable
             ->recordActions([
                 EditAction::make()->label('Edit content'),
 
+                // Three of these rows are copy that shows on a screen rather
+                // than a page of their own, so this goes to the screen that
+                // shows it. It used to resolve to '#' for all three, which is
+                // a button that looks like it works and does nothing.
                 Action::make('view')
-                    ->label('View')
+                    ->label(fn (Page $record) => in_array($record->slug, ['auth', 'join', 'footer'], true)
+                        ? 'See it in place'
+                        : 'View')
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->color('gray')
-                    ->url(fn (Page $record) => SiteNavigation::url($record->slug), shouldOpenInNewTab: true),
+                    ->url(fn (Page $record) => EditablePage::url($record->slug), shouldOpenInNewTab: true)
+                    ->visible(fn (Page $record) => EditablePage::url($record->slug) !== null),
             ])
             ->paginated(false)
             ->emptyStateHeading('No pages yet')

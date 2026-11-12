@@ -1,6 +1,14 @@
 @php
     $groups = \App\Support\SiteNavigation::footer();
     $company = config('frith.company');
+
+    // PageContent, not config(). The config file is only the floor, and a
+    // config() read never sees the stored row, so these four lines used to be
+    // the one piece of copy on the site that stayed developer-only even after
+    // somebody added a pages row for it. One of them is a promise with a
+    // number in it, the 24-hour safeguarding reply, and that is exactly the
+    // kind of sentence somebody needs to be able to change without a deploy.
+    $footer = \App\Support\PageContent::for('footer');
 @endphp
 
 <footer class="site-footer">
@@ -10,8 +18,8 @@
                  src="{{ \App\Support\BrandAsset::url('brand/logo/frith-logo-horizontal-reversed.svg') }}"
                  alt="Frith" width="1152" height="464">
 
-            <p class="site-footer__tagline">{{ config('frith-content.footer.tagline') }}</p>
-            <p class="site-footer__blurb">{{ config('frith-content.footer.blurb') }}</p>
+            <p class="site-footer__tagline">{{ $footer['tagline'] }}</p>
+            <p class="site-footer__blurb">{{ $footer['blurb'] }}</p>
             <p class="site-footer__contact">
                 <a href="mailto:{{ $company['contact_email'] }}">{{ $company['contact_email'] }}</a>
             </p>
@@ -30,7 +38,7 @@
     </div>
 
     <div class="site-footer__base">
-        <p>&copy; {{ now()->year }} {{ $company['name'] }} &middot; {{ config('frith-content.footer.registration') }}</p>
-        <p>{{ config('frith-content.footer.safeguarding') }}</p>
+        <p>&copy; {{ now()->year }} {{ $company['name'] }} &middot; {{ $footer['registration'] }}</p>
+        <p>{{ $footer['safeguarding'] }}</p>
     </div>
 </footer>

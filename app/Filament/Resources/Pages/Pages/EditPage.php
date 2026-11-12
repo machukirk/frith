@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Pages\Pages;
 
 use App\Filament\Resources\Pages\PageResource;
 use App\Http\Controllers\PagePreviewController;
-use App\Support\SiteNavigation;
+use App\Support\EditablePage;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Enums\Width;
@@ -115,7 +115,8 @@ class EditPage extends EditRecord
             Action::make('view')
                 ->label('Open the live page')
                 ->icon('heroicon-o-arrow-top-right-on-square')
-                ->url(fn () => SiteNavigation::url($this->record->slug), shouldOpenInNewTab: true)
+                ->url(fn () => EditablePage::url($this->record->slug), shouldOpenInNewTab: true)
+                ->visible(fn () => EditablePage::url($this->record->slug) !== null)
                 ->color('gray'),
         ];
     }

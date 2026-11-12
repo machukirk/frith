@@ -242,7 +242,11 @@ class AdminPanelTest extends TestCase
     #[Test]
     public function the_page_still_renders_with_no_content_row_at_all(): void
     {
-        $this->assertDatabaseCount('pages', 0);
+        // No row for this page, which is the thing being tested. Not an empty
+        // table: a migration now creates the rows for the log-in screens, the
+        // end of registration and the footer, because those three had no way
+        // of reaching an existing server otherwise.
+        $this->assertDatabaseMissing('pages', ['slug' => 'home']);
 
         $this->get(route('home'))
             ->assertOk()

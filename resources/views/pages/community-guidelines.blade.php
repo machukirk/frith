@@ -1,5 +1,9 @@
 @php
     $c = \App\Support\PageContent::for('community-guidelines');
+
+    // Generated from this page's own row, never typed into the copy.
+    // See App\Support\PolicyPages::lastUpdated for why.
+    $updated = \App\Support\PolicyPages::lastUpdated('community-guidelines');
 @endphp
 
 <x-layouts.site :title="$c['meta']['title']" :description="$c['meta']['description']" slug="community-guidelines">
@@ -14,7 +18,9 @@
             <div class="prose">
                 <p class="eyebrow">{{ $c['head']['eyebrow'] }}</p>
                 <h1 class="heading page-head__title">{{ $c['head']['title'] }}</h1>
-                <p class="doc-meta">{{ $c['head']['updated'] }}</p>
+                @if ($updated)
+                    <p class="doc-meta">{{ $updated }}</p>
+                @endif
 
                 <div class="note note--panel">
                     <span class="note__label">{{ $c['summary']['label'] }}</span>

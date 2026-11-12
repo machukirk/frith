@@ -7,10 +7,13 @@ return [
         'description' => 'What Frith holds about your family, why we hold it, who sees it, and how to get a copy or have it removed. We do not sell data, and we never will.',
     ],
 
+    // No date in here. The "Last updated" line is generated from this page's
+    // own pages.updated_at by App\Support\PolicyPages::lastUpdated, so saving
+    // the page in the admin panel moves it. A typed one went stale the first
+    // time anybody edited the page, and said so for two months.
     'head' => [
         'eyebrow' => 'Legal',
         'title' => 'Privacy Policy',
-        'doc_meta' => 'Last updated 9 September 2026 · about 7 minutes to read',
     ],
 
     // The address the policy points people at for data requests. Kept here

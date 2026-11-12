@@ -81,10 +81,20 @@ class JourneyController extends Controller
         return back()->with('status', 'You are in '.$journey->title.'.');
     }
 
+    /**
+     * Leaving.
+     *
+     * The directory and the Journey's own page both post here, so this sends
+     * everybody to the directory rather than back where they came from.
+     * Going back from the Journey page would land on a screen the family has
+     * just lost the right to see, and show() answers that with a 403.
+     */
     public function leave(Request $request, Journey $journey): RedirectResponse
     {
         $request->user('founder')->journeys()->detach($journey->id);
 
-        return back()->with('status', 'You have left '.$journey->title.'.');
+        return redirect()
+            ->route('journeys')
+            ->with('status', 'You have left '.$journey->title.'. Anyone you connected with there is still connected.');
     }
 }

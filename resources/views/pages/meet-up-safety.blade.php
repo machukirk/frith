@@ -1,5 +1,9 @@
 @php
     $c = \App\Support\PageContent::for('meet-up-safety');
+
+    // Generated from this page's own row, never typed into the copy.
+    // See App\Support\PolicyPages::lastUpdated for why.
+    $updated = \App\Support\PolicyPages::lastUpdated('meet-up-safety');
 @endphp
 
 <x-layouts.site :title="$c['meta']['title']" :description="$c['meta']['description']" slug="meet-up-safety">
@@ -13,7 +17,9 @@
                 <div class="section-head">
                     <p class="eyebrow">{{ $c['head']['eyebrow'] }}</p>
                     <h1 class="heading page-head__title">{{ $c['head']['title'] }}</h1>
-                    <p class="doc-meta">{{ $c['head']['updated'] }}</p>
+                    @if ($updated)
+                        <p class="doc-meta">{{ $updated }}</p>
+                    @endif
                 </div>
 
                 <div class="prose">

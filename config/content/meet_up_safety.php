@@ -7,10 +7,13 @@ return [
         'description' => 'Meet somewhere public, tell someone where you’ll be, and leave if it doesn’t feel right. Here is what Frith checks before an adult can message you.',
     ],
 
+    // No date in here. The "Last updated" line is generated from this page's
+    // own pages.updated_at by App\Support\PolicyPages::lastUpdated, so saving
+    // the page in the admin panel moves it. A typed one went stale the first
+    // time anybody edited the page, and said so for two months.
     'head' => [
         'eyebrow' => 'Safety',
         'title' => 'Meeting another family for the first time',
-        'updated' => 'Last updated 9 September 2026 · about 4 minutes to read',
     ],
 
     'short_version' => [
