@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SomebodyAsked;
 use App\Models\Connection;
 use App\Models\Journey;
 use App\Models\Registration;
 use App\Support\FamilyCard;
+use App\Support\NotificationSettings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 /**
@@ -97,7 +100,11 @@ class ConnectionController extends Controller
             'status' => Connection::PENDING,
         ]);
 
-        return back()->with('status', 'Asked. '.$other->displayName().' will see it when they next look.');
+        $told = $this->tell($other, $family);
+
+        return back()->with('status', $told
+            ? 'Asked. '.$other->displayName().' has been told.'
+            : 'Asked. '.$other->displayName().' will see it when they next look.');
     }
 
     public function accept(Request $request, Connection $connection): RedirectResponse
@@ -187,6 +194,35 @@ class ConnectionController extends Controller
         }
 
         return back()->with('status', 'Closed. '.$other->displayName().' will not be suggested again, and they are not told.');
+    }
+
+    /**
+     * Emails the family who has been asked, if the rules say so.
+     *
+     * The sender's plan decides, not the recipient's. A Frith+ member's ask
+     * always lands, because that is what their membership buys: their
+     * requests are seen. A free-plan ask lands only if the recipient pays for
+     * "any family asks to connect".
+     *
+     * This is the one place somebody else's membership changes what we send
+     * you, and it is in the asker's favour, so a paid request is never missed.
+     * Both halves live in App\Support\NotificationSettings; neither is
+     * decided here.
+     *
+     * Returns whether anything was sent, so the screen can say which it was
+     * rather than implying the other family has been told when they have not.
+     */
+    private function tell(Registration $recipient, Registration $asker): bool
+    {
+        $send = $asker->hasPlus() || NotificationSettings::sends($recipient, 'any_asks');
+
+        if (! $send) {
+            return false;
+        }
+
+        Mail::to($recipient->email)->queue(new SomebodyAsked($recipient, $asker));
+
+        return true;
     }
 
     /**

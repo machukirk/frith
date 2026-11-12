@@ -79,3 +79,168 @@
     }
   }
 }
+
+// The account menu behind the avatar, on anything wide enough to show the top
+// bar. A native <details>, like the phone menu: no JavaScript on this site, so
+// a scripted dropdown would be a menu some people could not open at all.
+.account-menu {
+  position: relative;
+
+  &__toggle {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    // The target is the avatar plus the chevron, and it has to clear the
+    // floor on its own rather than relying on the header's height.
+    min-height: $target-min;
+    list-style: none;
+    cursor: pointer;
+    @include focus-ring;
+
+    &::-webkit-details-marker { display: none; }
+  }
+
+  &__avatar {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    background: $euc-100;
+    border: 2px solid $euc-700;
+    border-radius: $radius-circle;
+    color: $euc-700;
+    @include type((12px, 12px), 1, 600);
+
+    &--large {
+      width: 34px;
+      height: 34px;
+      border-width: 1px;
+      border-color: $euc-200;
+      @include type((14px, 14px), 1, 600);
+    }
+  }
+
+  &__chevron {
+    color: $linen-700;
+    @include type((10px, 10px), 1);
+  }
+
+  &[open] &__chevron { rotate: 180deg; }
+
+  &__panel {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    z-index: 20;
+    width: 236px;
+    padding-block: $space-2;
+    background: $bg-surface;
+    border: 1px solid $border-hairline;
+    border-radius: $radius-xl;
+    // The one shadow on the site. A panel that floats over the page needs to
+    // read as above it, and a hairline alone does not do that on white.
+    box-shadow: 0 8px 26px rgba(27, 41, 64, 0.16);
+    text-align: start;
+  }
+
+  &__who {
+    display: flex;
+    gap: 11px;
+    align-items: center;
+    padding: $space-3 $space-4;
+    border-bottom: 1px solid $linen-100;
+  }
+
+  &__who-text { flex: 1; min-width: 0; }
+
+  &__name {
+    display: block;
+    color: $text-heading;
+    @include type((14px, 14px), 1.3, 600);
+  }
+
+  &__area {
+    display: block;
+    color: $linen-700;
+    @include type((12px, 12px), 1.3);
+  }
+
+  &__bell {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid $border-hairline;
+    border-radius: $radius-circle;
+    color: $euc-700;
+    @include focus-ring;
+
+    &:hover { background: $euc-050; }
+  }
+
+  &__nav { display: block; }
+
+  &__row {
+    display: block;
+    padding: 10px $space-4;
+    color: $text-heading;
+    text-decoration: none;
+    @include focus-ring;
+
+    &:hover { background: $linen-050; }
+
+    &--current { font-weight: 600; }
+  }
+
+  &__label {
+    display: block;
+    @include type((14px, 14px), 1.3);
+  }
+
+  &__meta {
+    display: block;
+    margin-top: 2px;
+    color: $linen-700;
+    @include type((12px, 12px), 1.4);
+  }
+
+  &__foot {
+    padding-top: $space-2;
+    margin-top: $space-2;
+    border-top: 1px solid $linen-100;
+  }
+
+  // Ink on coral is the brand rule, but this sits on the deep green, where
+  // coral-200 is the one that clears 4.5:1. The design's own #F58F78 is
+  // 4.2:1 and would fail at this size.
+  &__plus {
+    display: block;
+    padding: 10px $space-3;
+    margin: $space-1 10px;
+    background: $bg-inverse;
+    border-radius: 9px;
+    color: $coral-200;
+    @include type((14px, 14px), 1.3, 500);
+    text-decoration: none;
+    @include focus-ring;
+
+    &:hover { background: $euc-800; }
+  }
+
+  &__out {
+    display: block;
+    width: 100%;
+    padding: 10px $space-4;
+    background: none;
+    border: 0;
+    color: $text-body;
+    @include type((14px, 14px), 1.3);
+    text-align: start;
+    cursor: pointer;
+    @include focus-ring;
+
+    &:hover { background: $linen-050; color: $action; }
+  }
+}
