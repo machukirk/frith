@@ -45,7 +45,9 @@ class LoginLink
      */
     public static function claim(string $publicId, string $token): ?Registration
     {
-        $registration = Registration::query()->where('public_id', $publicId)->first();
+        // present(): a link emailed before somebody left must not let them
+        // back in afterwards. Their token survives until the purge runs.
+        $registration = Registration::query()->present()->where('public_id', $publicId)->first();
 
         if (! $registration || blank($registration->login_token)) {
             return null;

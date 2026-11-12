@@ -27,25 +27,28 @@
                         <label class="field__label" for="password">{{ $l['password'] }}</label>
                         <a class="auth__aside-link" href="{{ route('forgot') }}">{{ $l['forgotten'] }}</a>
                     </span>
+                    {{-- Not required: the same form sends the link, and
+                         somebody who only wants one has no password to give.
+                         Which button was pressed decides what is needed, and
+                         the controller validates accordingly. --}}
                     <input class="field__control" id="password" name="password" type="password"
-                           autocomplete="current-password" required
+                           autocomplete="current-password"
                            @error('password') aria-invalid="true" aria-describedby="password-error" @enderror>
                     @error('password')<p class="field__error" id="password-error">{{ $message }}</p>@enderror
                 </div>
 
-                <button class="button button--primary button--block" type="submit">{{ $l['button'] }}</button>
-            </form>
+                <button class="button button--primary button--block" type="submit"
+                        name="action" value="password">{{ $l['button'] }}</button>
 
-            <p class="auth__divider">{{ $l['divider'] }}</p>
+                <p class="auth__divider">{{ $l['divider'] }}</p>
 
-            {{-- Its own form, so the password field's "required" does not stop
-                 somebody who only wants a link. --}}
-            <form action="{{ route('login.send-link') }}" method="POST">
-                @csrf
-                <x-honeypot />
-                <input type="hidden" name="email" value="{{ old('email') }}">
-
-                <button class="button button--outline button--block" type="submit">{{ $l['link_button'] }}</button>
+                {{-- The same form, and the same email field. It used to be a
+                     second form carrying a hidden old('email'), which is empty
+                     until something has already failed, so the first press
+                     always posted a blank address and the main way in never
+                     worked first time. --}}
+                <button class="button button--outline button--block" type="submit"
+                        name="action" value="link">{{ $l['link_button'] }}</button>
             </form>
 
             <p class="auth__note">{{ $l['note'] }}</p>

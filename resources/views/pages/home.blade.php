@@ -86,10 +86,15 @@
                 <p class="section-head__standfirst">{{ $c['journeys']['standfirst'] }}</p>
             </div>
 
+            {{-- Live, not copy. The titles, the counts and how many there are
+                 all come from the journeys table, so a Journey renamed or
+                 archived in the admin changes the front page with it. --}}
+            @php $journeys = \App\Support\JourneyBoard::forHome(); @endphp
+
             <ul class="journeys">
-                @foreach ($c['journeys']['items'] as $journey)
+                @foreach ($journeys as $journey)
                     <li>
-                        <a class="journeys__item" href="{{ \App\Support\SiteNavigation::url('journeys') }}">
+                        <a class="journeys__item" href="{{ $journey['url'] }}">
                             <span class="journeys__title">{{ $journey['title'] }}</span>
                             <span class="journeys__meta">
                                 <span class="journeys__faces" aria-hidden="true"><span></span><span></span><span></span></span>
@@ -101,7 +106,9 @@
             </ul>
 
             <div class="journeys-footer">
-                <p class="section-note">{{ $c['journeys']['note'] }}</p>
+                <p class="section-note">
+                    {{ str_replace(':count', \App\Support\Words::count($journeys->count()), $c['journeys']['note']) }}
+                </p>
                 <a class="action-link" href="{{ \App\Support\SiteNavigation::url('journeys') }}">
                     {{ $c['journeys']['link'] }} <span aria-hidden="true">&rarr;</span>
                 </a>

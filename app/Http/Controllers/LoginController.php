@@ -33,6 +33,15 @@ class LoginController extends Controller
 
     public function attempt(Request $request): RedirectResponse
     {
+        // Two buttons, one form, one email field. The link used to live in a
+        // form of its own carrying a hidden old('email'), which is empty until
+        // something has already failed, so the first press always posted a
+        // blank address and the emailed link, the front door of this design,
+        // never worked first time.
+        if ($request->input('action') === 'link') {
+            return $this->sendLink($request);
+        }
+
         $data = $request->validate([
             'email' => ['required', 'string', 'email:rfc', 'max:254'],
             'password' => ['required', 'string'],
@@ -119,9 +128,19 @@ class LoginController extends Controller
         return redirect()->route('home');
     }
 
+    /**
+     * The account for an address, if there is still one to find.
+     *
+     * present() matters: a family who has pressed "Delete my account" is gone
+     * from every screen that shows one family to another, and their password
+     * and login token survive until the purge runs a month later. Without this
+     * they could sign straight back in and carry on using the site, which is
+     * not what the leaving screen told them would happen.
+     */
     private function find(string $email): ?Registration
     {
         return Registration::query()
+            ->present()
             ->where('email', Registration::normaliseEmail($email))
             ->first();
     }
