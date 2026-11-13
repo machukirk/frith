@@ -1,15 +1,18 @@
+@php
+    // Passed through the shell rather than emitted below it, so it sits in
+    // .account__head and picks up the 8px under the h1 and the 30px down to
+    // the first card. On its own it got the head's 30px above and nothing
+    // below, because the global reset zeroes p margins.
+    $standfirst = ($lastTouched ? 'You last updated this in '.$lastTouched->format('F').'. ' : '')
+        .'Things change: a diagnosis arrives, a placement settles, a new worry starts. '
+        .'Keeping this current is what keeps your matches useful.';
+@endphp
+
 <x-account.shell
     heading="Does this still sound like your family?"
+    :standfirst="$standfirst"
     current="experiences"
 >
-    <p class="account__standfirst account__standfirst--own">
-        @if ($lastTouched)
-            You last updated this in {{ $lastTouched->format('F') }}.
-        @endif
-        Things change: a diagnosis arrives, a placement settles, a new worry
-        starts. Keeping this current is what keeps your matches useful.
-    </p>
-
     @if ($areas->isEmpty())
         <p class="family-list__empty">
             You have not told us about any areas of family life yet. It is the part

@@ -29,7 +29,7 @@ return [
             'body' => 'Ask about an annual review and get an answer from someone who has filled in that form themselves.',
         ],
         [
-            'icon' => 'shield',
+            'icon' => 'heart',
             'title' => 'Checked before they can message',
             'body' => 'Every adult is verified, a real person reads every report, and you choose what you share.',
         ],

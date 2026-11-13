@@ -4,6 +4,25 @@
 .family-list {
   padding-bottom: $space-16;
 
+  // /requests sets the lists beside a 300px context column: how many asks
+  // you have open, what Frith+ changes about seeing them, and what "Not for
+  // us" means. That is supporting copy, so on a phone it reads under the
+  // lists rather than ahead of them.
+  //
+  // Held back to lg rather than md on purpose. A 300px rail beside a list of
+  // cards leaves the cards too narrow on a tablet, where the rail is better
+  // off still stacked.
+  &__columns {
+    display: grid;
+    gap: $space-8;
+
+    @include from(lg) {
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: $space-12;
+      align-items: start;
+    }
+  }
+
   // The heading and its sort order sit on a rule, which is what separates
   // the list from the standfirst above it. Not held back to a breakpoint: a
   // divider reads the same on a phone, and the row already wraps there.
@@ -119,6 +138,19 @@
     color: $text-heading;
     @include type((15px, 15px), 1.3, 600);
   }
+
+  // On the inbox a read row is quieter than an unread one, so the coral dot
+  // is not the only thing carrying the difference. Scoped to the inbox: the
+  // village and Journey lists draw every name at 600, which is what the
+  // design shows there.
+  //
+  // Weight is not the accessible signal and does not have to be. An unread
+  // row already carries a visually hidden "Unread messages from {name}".
+  &--conversation &__name { font-weight: 500; }
+
+  // Must follow --conversation. Both are one class plus one element, so
+  // they match on specificity and source order is what decides.
+  &--unread &__name { font-weight: 600; }
 
   &__meta {
     display: block;
@@ -237,6 +269,101 @@
     .family-card__name { @include type((16px, 16px), 1.3, 600); }
 
     .family-card__meta { @include type((13px, 13px), 1.5); }
+  }
+}
+
+// The context column on /requests. A block of its own, because it stands
+// beside the list rather than inside it, but it lives in this partial: this
+// is the only screen that draws it, and that screen belongs to .family-list.
+//
+// No breakpoints below. These are intrinsic card sizes and they hold at
+// 375px unchanged; the only thing that answers to width is the 300px track
+// in .family-list__columns, which does not exist until lg.
+.requests-rail {
+  &__card {
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    background: $bg-surface;
+    border: 1px solid $border-hairline;
+    border-radius: $radius-xl;
+
+    &:last-child { margin-bottom: 0; }
+  }
+
+  // The counter holds more than the other two, and the frame gives it room.
+  &__card--count { padding: 20px 22px; }
+
+  // The only card here offering something rather than stating something, so
+  // it is lifted with the accent rather than with a second border colour.
+  &__card--plus {
+    background: $linen-075;
+    box-shadow: 0 0 0 2px $action-accent;
+  }
+
+  &__eyebrow {
+    margin-bottom: $space-1;
+    color: $linen-700;
+    @include type($type-eyebrow, 1.3, 600);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  &__count {
+    margin-bottom: 14px;
+    color: $text-heading;
+    @include type((24px, 24px), 1.1, 600);
+    letter-spacing: -0.02em;
+  }
+
+  &__count-of {
+    color: $text-body;
+    @include type((14px, 14px), 1.1, 400);
+  }
+
+  // Ten segments, one for each ask you are allowed. A meter of the room
+  // left, not a count badge: the number beside it is already said in words,
+  // so this is decorative and carries aria-hidden in the markup.
+  &__meter {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 14px;
+  }
+
+  &__segment {
+    flex: 1;
+    height: 5px;
+    background: $border-hairline;
+    border-radius: 3px;
+
+    &--used { background: $action-accent; }
+  }
+
+  &__title {
+    margin-bottom: 7px;
+    color: $text-heading;
+    @include type((14.5px, 14.5px), 1.3, 600);
+  }
+
+  &__body {
+    margin-bottom: 10px;
+    color: $text-heading;
+    @include type((13.5px, 13.5px), 1.6);
+  }
+
+  // The small print closing the counter card.
+  &__fine {
+    color: $text-body;
+    @include type((12.5px, 12.5px), 1.6);
+  }
+
+  // The supporting line in the other two cards, which the frame sets half a
+  // step above the counter's small print.
+  &__copy {
+    margin-bottom: 12px;
+    color: $text-body;
+    @include type((13px, 13px), 1.6);
+
+    &:last-child { margin-bottom: 0; }
   }
 }
 

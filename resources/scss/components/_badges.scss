@@ -57,6 +57,14 @@
   list-style: none;
 
   &__item {
+    display: flex;
+    // The switches stay direct children of the item rather than going in the
+    // body, so they wrap onto a full-width line of their own. A held Helping
+    // hand renders two switches here where the design draws one, and side by
+    // side in the body column they collide.
+    flex-wrap: wrap;
+    gap: $space-4;
+    align-items: flex-start;
     padding: $space-4 $space-5;
     background: $bg-surface;
     border: 1px solid $border-hairline;
@@ -65,6 +73,46 @@
     // A badge nobody has yet is drawn down rather than greyed out: there is
     // no deadline on any of these and nothing is being withheld.
     &--not-yet { background: transparent; border-style: dashed; }
+  }
+
+  &__body {
+    flex: 1 1 240px;
+    min-width: 0;
+  }
+
+  // The icon medallion. Fixed sizes at every width, with no breakpoint: it is
+  // a decorative mark rather than a block of type, so it has no reason to
+  // grow with the viewport.
+  &__medal {
+    position: relative;
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    background: $euc-100;
+    border-radius: $radius-circle;
+    color: $euc-700;
+  }
+
+  // $linen-700 where the design draws #8F8C87: an existing token, darker, and
+  // no raw colour is allowed below _tokens.scss.
+  &__item--not-yet &__medal {
+    background: $linen-100;
+    color: $linen-700;
+  }
+
+  // The coral pip that says this one is held. Decorative only: the "Yours"
+  // chip beside the title is what actually carries the state.
+  &__dot {
+    position: absolute;
+    inset-block-end: -1px;
+    inset-inline-end: -1px;
+    width: 15px;
+    height: 15px;
+    background: $action-accent;
+    border: 2px solid $linen-050;
+    border-radius: $radius-circle;
   }
 
   &__head {
@@ -105,5 +153,23 @@
     @include type((12.5px, 13px), 1.55);
   }
 
-  .switch { margin-top: $space-3; }
+  // A full-width line of its own, so two switches never sit side by side and
+  // each toggle lands at the right edge of the card.
+  .switch {
+    flex: 1 1 100%;
+    margin-top: $space-3;
+  }
+}
+
+// The violet information panel at the top of the Badges screen. .nudge is
+// drawn for a question with a button beside it, so it centres its row and
+// carries a top margin; sitting still under a standfirst it wants neither.
+//
+// This rule belongs in _village.scss next to the block it modifies. It is
+// here because that file is owned by another pass, and it should move.
+.nudge--static {
+  gap: $space-3;
+  align-items: flex-start;
+  margin-top: 0;
+  margin-bottom: 28px;
 }

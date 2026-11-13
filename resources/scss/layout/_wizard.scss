@@ -96,6 +96,15 @@
     &--spaced { margin-top: $space-6; }
   }
 
+  // 34px above Continue on /join/family, where the hi-fi parts the button from
+  // the "+ Add another child" row rather than running it at the form's uniform
+  // 26px. Hooked off .child-rows because that list lives in one view and one
+  // view only, so no other step can pick this up: 26px form gap plus 8px.
+  // Not --spaced, which is 24px and would land at 50px, and not a positional
+  // hook such as :last-of-type, because /join/interests also ends on a
+  // &__group and its frame keeps the plain 26px the build already matches.
+  &__group:has(.child-rows) + &__actions { margin-top: $space-2; }
+
   // "Skip this section", beside Continue. A submit styled as a link: it is an
   // action with a consequence, so it is a button, but it must not compete
   // with the one most people want.

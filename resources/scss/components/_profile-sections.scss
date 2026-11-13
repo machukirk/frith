@@ -87,12 +87,18 @@
 // deal with.
 .section-list {
   display: block;
-  padding: 8px 22px;
-  margin: 0 0 14px;
   background: $bg-surface;
   border: 1px solid $border-hairline;
   border-radius: $radius-xl;
   list-style: none;
+
+  // The reset zeroes margin and padding on every ul that carries a class, at
+  // a specificity a single class cannot reach. The card takes them back on a
+  // compound selector, rather than by editing a reset the whole site leans on.
+  &[class] {
+    padding: 8px 22px;
+    margin: 0 0 14px;
+  }
 
   &__item {
     display: flex;

@@ -6,7 +6,7 @@
 <x-layouts.site :title="$c['meta']['title']" :description="$c['meta']['description']" slug="help">
 
     {{-- Page head ------------------------------------------------------------ --}}
-    <section class="page-head">
+    <section class="page-head page-head--run-on">
         <div class="page-head__inner">
             <p class="eyebrow">{{ $c['head']['eyebrow'] }}</p>
             <h1 class="heading page-head__title">{{ $c['head']['title'] }}</h1>
@@ -68,7 +68,10 @@
     @endif
 
     {{-- Topics --------------------------------------------------------------- --}}
-    <section class="band band--page band--tight" aria-label="Help topics">
+    {{-- One run-on band with the head: the design has no seam between the
+         title and the cards, so the band keeps its background and the wrap
+         carries the rhythm instead of a second block of padding. --}}
+    <section class="band band--page band--run-on" aria-label="Help topics">
         <div class="wrap">
             <ul class="link-cards">
                 @foreach ($c['topics'] as $topic)
@@ -142,7 +145,7 @@
                     @endforeach
                     </ul>
 
-                    <p class="note note--panel note--urgent note--standalone">
+                    <p class="note note--alert note--standalone">
                         {!! str_replace(
                             ':number',
                             '<strong>'.e($c['contact']['emergency']['number']).'</strong>',

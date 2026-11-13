@@ -45,7 +45,10 @@
     background: $coral-100;
     border-inline-start: 3px solid $coral-ink;
     border-radius: $radius-sm $radius-xl $radius-xl $radius-sm;
-    color: $coral-ink;
+    // The drawn ink, not $coral-ink: the rule and the type are different
+    // colours in the design, and the darker one is what makes a paragraph
+    // readable on the coral rather than just visible.
+    color: $coral-900;
     @include type((14px, 14.5px), 1.6);
   }
 

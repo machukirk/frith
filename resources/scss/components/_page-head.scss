@@ -68,6 +68,19 @@
 
     @include from(md) { padding-block: $space-10 $space-6; }
   }
+
+  // /help draws the head and the topic grid as a single linen band rather than
+  // two: 64px over the eyebrow, 34px under the search box, 56px under the last
+  // card. Closing the head at zero hands that 34px to .band--run-on below, so
+  // the two sections meet once instead of stacking their own padding.
+  //
+  // Repeated inside from(md) because .page-head sets the padding-block
+  // shorthand there, which would otherwise put the bottom padding back.
+  &--run-on {
+    padding-block-end: 0;
+
+    @include from(md) { padding-block-end: 0; }
+  }
 }
 
 // "Last updated 9 September 2026 · about 6 minutes to read"

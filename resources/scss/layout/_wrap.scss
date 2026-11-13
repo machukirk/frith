@@ -34,4 +34,17 @@
 
     @include from(md) { padding-block: 54px 58px; }
   }
+
+  // The second half of the /help run-on band, paired with .page-head--run-on,
+  // which closes the head at zero. The drawing measures 34px between the
+  // search box and the first card and 56px under the grid.
+  //
+  // The 34px is a desktop measurement and the hi-fi draws no phone frame for
+  // /help, so the base keeps the tighter 32px the rest of the mobile rhythm
+  // uses and the drawn value starts at md.
+  &--run-on {
+    padding-block: $space-8 $space-10;
+
+    @include from(md) { padding-block: 34px $space-14; }
+  }
 }

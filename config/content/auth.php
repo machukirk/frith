@@ -44,6 +44,7 @@ return [
         // :email is filled in with the address they gave.
         'standfirst' => 'We have sent a link to :email. It works once, and for the next hour.',
         'standfirst_generic' => 'If that address is registered with us, a link is on its way. It works once, and for the next hour.',
+        'resend' => 'Send it again',
         'trouble' => 'Nothing arrived? Check your spam folder, or write to :email and a person will help.',
         'back' => 'Back to log in',
     ],
@@ -53,6 +54,6 @@ return [
         'standfirst' => 'Your email is confirmed and you are logged in. No need to sign in again. We’ll let you know when there’s a connection worth seeing.',
         'unfinished' => 'Still need to complete the details in your profile?',
         'unfinished_link' => 'Pick up where you left off',
-        'button' => 'Back to the homepage',
+        'button' => 'Go to your village',
     ],
 ];

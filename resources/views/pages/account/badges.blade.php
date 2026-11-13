@@ -3,10 +3,27 @@
     standfirst="Small markers that tell another family something useful about you. There is no score, no leaderboard, and nothing expires."
     current="badges"
 >
-    <div class="note note--standalone">
-        You can hide any badge from your profile. Nobody is told what you have
-        or have not got, and we will never nudge you to collect one.
+    <div class="nudge nudge--static">
+        <span class="nudge__mark" aria-hidden="true">i</span>
+        <p class="nudge__text">
+            You can hide any badge from your profile. Nobody is told what you
+            have or have not got, and we will never nudge you to collect one.
+        </p>
     </div>
+
+    @php
+        // One icon per badge. Three of these are stand-ins: the design draws a
+        // clock, a tick and a pair of hands, and the icon set does not carry
+        // them yet. Calendar, shield and heart are the nearest things it does
+        // have, and the shield already has a tick inside it.
+        $icons = [
+            'first-frith-family' => 'star',
+            'one-year' => 'calendar',
+            'profile-complete' => 'shield',
+            'first-connection' => 'people',
+            'helping-hand' => 'heart',
+        ];
+    @endphp
 
     <form method="POST" action="{{ route('account.badges.update') }}">
         @csrf
@@ -22,22 +39,33 @@
                     <ul class="badge-list">
                         @foreach ($inGroup as $badge)
                             <li class="badge-list__item @unless ($badge['held']) badge-list__item--not-yet @endunless">
-                                <div class="badge-list__head">
-                                    <p class="badge-list__title">{{ $badge['title'] }}</p>
+                                {{-- Decorative. The "Yours" chip beside the
+                                     title is what says whether it is held. --}}
+                                <span class="badge-list__medal" aria-hidden="true">
+                                    <x-site.icon :name="$icons[$badge['slug']] ?? 'star'" width="26" height="26" />
+                                    @if ($badge['held'])<span class="badge-list__dot"></span>@endif
+                                </span>
 
-                                    @if ($badge['held'])
-                                        <span class="badge-list__state badge-list__state--held">Yours</span>
-                                    @else
-                                        <span class="badge-list__state">Not yet</span>
-                                    @endif
+                                <div class="badge-list__body">
+                                    <div class="badge-list__head">
+                                        <p class="badge-list__title">{{ $badge['title'] }}</p>
+
+                                        @if ($badge['held'])
+                                            <span class="badge-list__state badge-list__state--held">Yours</span>
+                                        @else
+                                            <span class="badge-list__state">Not yet</span>
+                                        @endif
+                                    </div>
+
+                                    <p class="badge-list__what">{{ $badge['what'] }}</p>
+                                    <p class="badge-list__note">{{ $badge['note'] }}</p>
                                 </div>
 
-                                <p class="badge-list__what">{{ $badge['what'] }}</p>
-                                <p class="badge-list__note">{{ $badge['note'] }}</p>
-
-                                {{-- The Helping hand is a choice rather than
-                                     something that happened, so it is the one
-                                     with a switch of its own. --}}
+                                {{-- The switches stay outside the body so they
+                                     wrap to a line of their own. The Helping
+                                     hand is a choice rather than something
+                                     that happened, so it is the one with a
+                                     switch of its own. --}}
                                 @if ($badge['choice'])
                                     <label class="switch">
                                         <input class="switch__input" type="checkbox" name="helping_hand" value="1"

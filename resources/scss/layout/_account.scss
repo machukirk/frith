@@ -6,6 +6,10 @@
 // nine links above every screen would push the screen itself off the fold.
 .account {
   display: grid;
+  // minmax(0, 1fr), not the implicit auto column. The rail's links are
+  // nowrap, so an auto column takes its min-content width and the whole page
+  // scrolls sideways on a phone. The rail scrolls on its own instead.
+  grid-template-columns: minmax(0, 1fr);
   gap: $space-6;
   padding-block: $space-8 $space-16;
 

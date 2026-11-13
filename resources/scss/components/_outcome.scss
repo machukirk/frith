@@ -90,3 +90,52 @@
     padding-inline: 28.5px;
   }
 }
+
+// The header the error and maintenance pages inline for themselves.
+//
+// It lives here rather than in layout/_site-header.scss because it is a
+// property of these pages, not of the header: they are the only screens that
+// render the bar without a component behind it, and the reason is their own.
+// They cannot call <x-site.header>, whose phone half is a <details> menu that
+// asks auth('founder') who is signed in, and a page that only renders because
+// something has already broken should not be asking the database anything.
+//
+// That leaves .site-header__inner as the only bar on the page, and
+// _site-header.scss keeps it display:none below md because .menu normally
+// covers phones. Without this block these pages have no header at all under
+// 768px, which is most of the people who will ever see one.
+.site-header--static {
+  .site-header__inner {
+    @include container;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-4;
+    // 64px is where .menu stands, so the bar is the same height here as on
+    // every other phone screen. 72px from md is the drawn desktop figure, and
+    // is what .site-header__inner sets for itself anyway.
+    min-height: 64px;
+
+    @include from(md) {
+      min-height: 72px;
+    }
+  }
+
+  // With no menu button beside it, the wordmark is the only control in this
+  // bar, so it carries the 48px floor rather than the 42px the logo happens
+  // to be at its drawn width.
+  .site-header__home {
+    @include tap-target;
+  }
+
+  // Five links will not sit beside the wordmark at 375px, and there is no
+  // phone menu here to fold them into. The page's own button is the action it
+  // wants; the wordmark is the way home.
+  .site-header__nav {
+    display: none;
+
+    @include from(md) {
+      display: flex;
+    }
+  }
+}

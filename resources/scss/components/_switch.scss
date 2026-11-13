@@ -6,9 +6,14 @@
 // the whole site works with no JavaScript, and a switch that needs a script
 // to move is a setting somebody cannot change.
 .switch {
+  // The label leads and the toggle sits at the end of the row. The order is
+  // set here rather than in the markup, because the mark has to stay directly
+  // after the input for the :checked and :focus-visible sibling rules to
+  // reach it. Base block: this is a row at every width.
   display: flex;
-  gap: $space-3;
-  align-items: flex-start;
+  gap: $space-4;
+  align-items: center;
+  justify-content: space-between;
   cursor: pointer;
 
   &__input {
@@ -17,10 +22,13 @@
 
   &__mark {
     position: relative;
+    order: 1;
     flex: none;
+    // 44x26 where the design draws 40x23. This is the only control in the
+    // row, so it is the thing being aimed at, and 44 is the floor. Target
+    // size beats fidelity.
     width: 44px;
     height: 26px;
-    margin-top: 1px;
     background: $linen-200;
     // 3:1 against the page, because this mark is the only thing saying
     // whether the setting is on. WCAG 1.4.11, and a release blocker.
@@ -53,9 +61,13 @@
     outline-offset: 2px;
   }
 
-  &__text { min-width: 0; }
+  &__text { order: -1; flex: 1; min-width: 0; }
 
   &__label {
+    // Badges has no __text wrapper: the label is a direct child of .switch
+    // there, so it needs an order of its own to lead the row. Inside __text
+    // on Notifications this is inert, and harmless.
+    order: -1;
     display: block;
     color: $text-heading;
     @include type((14px, 14.5px), 1.35, 500);
@@ -85,25 +97,44 @@
   }
 }
 
+// One card with hairline-divided rows, not a card per setting. Five bordered
+// boxes read as five separate decisions; one card reads as one set of
+// settings, which is what they are. Base block, no breakpoint, matching the
+// .section-list card.
 .switch-list {
-  display: grid;
-  gap: 10px;
-  padding: 0;
-  margin: $space-5 0 0;
+  display: block;
+  background: $bg-surface;
+  border: 1px solid $border-hairline;
+  border-radius: $radius-xl;
   list-style: none;
 
-  &--single { margin-top: $space-6; }
+  // The reset zeroes margin and padding on every ul that carries a class, at
+  // a specificity a single class cannot reach. The card takes them back on a
+  // compound selector, rather than by editing a reset the whole site leans on.
+  &[class] {
+    padding: 8px 22px;
+    margin: 0 0 14px;
+  }
+
+  // A lone row carries no bottom hairline, so the card takes the padding
+  // back to sit evenly around it.
+  &--single[class] { padding-bottom: 18px; }
 
   &__item {
     display: flex;
     flex-wrap: wrap;
-    gap: $space-3;
+    gap: $space-4;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 18px;
-    background: $bg-surface;
-    border: 1px solid $border-hairline;
-    border-radius: $radius-xl;
+    padding: 15px 0;
+    border-bottom: 1px solid $linen-100;
+
+    &:last-child { border-bottom: 0; }
+
+    // The label fills the row, so its toggle lands against the right edge
+    // the way the design draws it. Left to size itself, the label is only as
+    // wide as its text and the toggle sits stranded in the middle.
+    .switch { flex: 1; }
   }
 
   &__plus {
@@ -117,6 +148,12 @@
     text-transform: uppercase;
   }
 }
+
+// The air between the "what this means in practice" note and the first card.
+// It belongs on .note--standalone as a bottom margin, but that class is
+// shared and lives in _outcome.scss, so it is taken here instead, scoped to
+// the one place a note sits directly above a list of settings.
+.note + form .switch-list:first-of-type { margin-top: 22px; }
 
 // How many requests a family wants put in front of them.
 .pace {

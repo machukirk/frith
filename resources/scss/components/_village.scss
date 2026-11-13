@@ -11,6 +11,20 @@
 
     &--inline { margin-bottom: 0; }
     &--later { margin-top: $space-10; }
+
+    // The one that sits in the page head, under "Your village". The design
+    // draws it as a caption on the title rather than as a heading on the
+    // cards: body colour, regular weight, a third of the size. It stays an
+    // <h2> so the Journeys list still has a heading, which means undoing the
+    // browser's bold as well as the block's own size and margin. The gap down
+    // to the cards is the head's bottom padding, not a margin here.
+    //
+    // Flat, with no breakpoint: 13px is what the phone frame draws too.
+    &--caption {
+      margin-bottom: 0;
+      color: $text-body;
+      @include type((13px, 13px), 1.5, 400);
+    }
   }
 
   &__section-head {

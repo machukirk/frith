@@ -1,6 +1,6 @@
 <x-layouts.site title="Requests · Frith" :noindex="true">
 
-    <section class="page-head page-head--app">
+    <section class="page-head page-head--detail">
         <div class="page-head__inner">
             <h1 class="heading page-head__title">Requests</h1>
             <p class="page-head__standfirst">
@@ -14,6 +14,20 @@
         @if (session('status'))
             <p class="journey-list__status" role="status">{{ session('status') }}</p>
         @endif
+
+        {{-- The lists, then the context column beside them from lg.
+
+             The design puts the h1 and standfirst inside the left column, so
+             the rail's top edge lines up with the title. Keeping the shared
+             page-head component means the rail starts below the standfirst
+             instead. That is the cheaper trade: one screen's alignment
+             against a header every app screen shares.
+
+             Separately, the design draws "Asked you / You asked / Not for
+             us" as an underlined tab row rather than three stacked headings.
+             That is a structural difference, and not this change. --}}
+        <div class="family-list__columns">
+        <div>
 
         <h2 class="family-list__heading">Asked you <span class="family-list__tally">{{ $askedYou->count() }}</span></h2>
 
@@ -100,6 +114,69 @@
                 Closed, either way round. Nobody was told, and nothing more happens.
             </p>
         @endif
+
+        </div>
+
+        <aside class="requests-rail">
+            <div class="requests-rail__card requests-rail__card--count">
+                <p class="requests-rail__eyebrow">Requests you have made</p>
+
+                <p class="requests-rail__count">
+                    {{ $youAsked->count() }}<span class="requests-rail__count-of"> of {{ $limit }}</span>
+                </p>
+
+                {{-- One segment per ask you are allowed. The number is
+                     already said twice above and below in words, so the
+                     meter is decoration and is hidden. --}}
+                <div class="requests-rail__meter" aria-hidden="true">
+                    @for ($i = 1; $i <= $limit; $i++)
+                        <span class="requests-rail__segment @if ($i <= $youAsked->count()) requests-rail__segment--used @endif"></span>
+                    @endfor
+                </div>
+
+                {{-- Said in whole sentences, which means counting the
+                     singular properly. A family with one ask open should not
+                     be told "1 of yours are waiting", and a family nobody has
+                     asked should not be told "0 families are waiting on you"
+                     at all. --}}
+                <p class="requests-rail__body">
+                    {{ $youAsked->count() === 0 ? 'None' : $youAsked->count() }}
+                    of yours {{ $youAsked->count() === 1 ? 'is' : 'are' }} waiting for a reply.
+                    @if ($askedYou->count() === 1)
+                        One family is waiting on you, and that does not count towards your limit.
+                    @elseif ($askedYou->count() > 1)
+                        {{ $askedYou->count() }} families are waiting on you, and those do not count towards your limit.
+                    @endif
+                </p>
+
+                <p class="requests-rail__fine">
+                    You can have up to {{ $limit }} requests of your own open at a time,
+                    helping keep Frith focused on meaningful connections, rather than
+                    numbers. Requests other families send you are never limited.
+                </p>
+            </div>
+
+            <div class="requests-rail__card requests-rail__card--plus">
+                <p class="requests-rail__title">Seeing who asked</p>
+                <p class="requests-rail__copy">
+                    On the free plan, requests arrive one at a time as a private
+                    notification. Frith+ shows you everyone who has asked, so you can
+                    choose rather than answer in order.
+                </p>
+                <a class="button button--accent button--small" href="{{ route('frith-plus') }}">Explore Frith+</a>
+            </div>
+
+            <div class="requests-rail__card">
+                <p class="requests-rail__title">Saying no</p>
+                <p class="requests-rail__copy">
+                    &ldquo;Not for us&rdquo; needs no reason and sends no message. They
+                    are never told, and they cannot ask you again. You do not owe
+                    anyone an explanation.
+                </p>
+            </div>
+        </aside>
+
+        </div>
     </section>
 
 </x-layouts.site>

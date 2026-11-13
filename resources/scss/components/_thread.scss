@@ -84,6 +84,40 @@
 
   &__note { margin-bottom: $space-5; }
 
+  // Violet, as the hi-fi draws it here. The note in _tokens.scss reserving
+  // violet for the village nudge predates these frames; the design spends it
+  // wherever Frith speaks in its own voice inside somebody else's content,
+  // which is what a Journey name on /requests already does.
+  //
+  // Not eucalyptus: every bubble on this screen is eucalyptus already, and
+  // the note would read as a message from the other family rather than as
+  // Frith. $violet-900 on $violet-050 is 12.6:1.
+  //
+  // Base block, no breakpoint. The sizes are intrinsic and the flex row with
+  // its 17px mark holds at 375px.
+  &__note--meetup {
+    display: flex;
+    gap: 9px;
+    max-width: 86%;
+    padding: 11px 13px;
+    background: $violet-050;
+    border-radius: $radius-lg;
+    color: $violet-900;
+    @include type((12px, 12px), 1.5);
+  }
+
+  // $violet-050 on $violet-600 is 6:1.
+  &__note-mark {
+    flex: none;
+    width: 17px;
+    height: 17px;
+    background: $violet-600;
+    border-radius: $radius-circle;
+    color: $violet-050;
+    text-align: center;
+    @include type((11px, 11px), 17px, 700);
+  }
+
   &__form {
     display: grid;
     gap: $space-4;

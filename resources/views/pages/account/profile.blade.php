@@ -36,6 +36,15 @@
             The more you share, the more meaningful your connections can be.
             Nothing here is required.
         </p>
+
+        {{-- One segment per section, counted from the sections themselves so
+             the bar cannot drift from the tally above it. Decorative: the
+             tally says the same thing in words. --}}
+        <div class="account-progress__bar" aria-hidden="true">
+            @foreach ($sections as $section)
+                <span class="account-progress__seg @if ($section['complete']) account-progress__seg--done @endif"></span>
+            @endforeach
+        </div>
     </div>
 
     <ul class="section-list">

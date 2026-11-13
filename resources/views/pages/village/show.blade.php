@@ -3,6 +3,12 @@
     <section class="page-head page-head--app">
         <div class="page-head__inner">
             <h1 class="heading page-head__title">Your village</h1>
+
+            {{-- The design sets this line against the title rather than above
+                 the cards, so it reads as what the page is showing rather than
+                 as a section of its own. Still an <h2>, so the list below it
+                 keeps a heading in the outline. --}}
+            <h2 class="village__heading village__heading--caption">Journeys you have joined</h2>
         </div>
     </section>
 
@@ -10,8 +16,6 @@
         @if (session('status'))
             <p class="account__status" role="status">{{ session('status') }}</p>
         @endif
-
-        <h2 class="village__heading">Journeys you have joined</h2>
 
         @if ($joined->isEmpty())
             <div class="village__empty">

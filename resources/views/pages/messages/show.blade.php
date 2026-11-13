@@ -56,12 +56,19 @@
             </p>
         @endunless
 
-        {{-- Guidelines §07: said where the worry is. --}}
+        {{-- Guidelines §07: said where the worry is. The design draws it as a
+             quiet aside in the thread rather than a full-width panel, so it
+             reads as a note beside the conversation and not as a message in
+             it. Violet is the same colour the village nudge uses: a thing
+             Frith is saying, rather than a thing a family said. --}}
         @if ($canReply)
-        <p class="note thread__note">
-            Meeting in person? Choose somewhere public and tell somebody where you
-            are going. <a href="{{ \App\Support\SiteNavigation::url('meet-up-safety') }}">The meet-up safety guide</a>
-            is two minutes long.
+        <p class="thread__note thread__note--meetup">
+            <span class="thread__note-mark" aria-hidden="true">i</span>
+            <span>
+                Meeting in person? Choose somewhere public and tell somebody where you
+                are going. <a href="{{ \App\Support\SiteNavigation::url('meet-up-safety') }}">The meet-up safety guide</a>
+                is two minutes long.
+            </span>
         </p>
 
         <form class="thread__form" method="POST" action="{{ route('messages.send', $connection) }}">

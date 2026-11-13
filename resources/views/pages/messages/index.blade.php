@@ -46,7 +46,10 @@
                             ->count();
                     @endphp
 
-                    <li class="family-card">
+                    {{-- --conversation quietens the name to 500, --unread
+                         puts it back to 600. The inbox is the only list that
+                         draws its rows at two weights. --}}
+                    <li class="family-card family-card--conversation @if ($unread) family-card--unread @endif">
                         <a class="family-card__who" href="{{ route('messages.show', $connection) }}">
                             <span class="family-card__avatar" aria-hidden="true">{{ $other->initial() }}</span>
                             <span>

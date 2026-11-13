@@ -25,7 +25,10 @@
             @endunless
 
             <div class="auth__foot auth__foot--action">
-                <a class="button button--primary button--block" href="{{ route('home') }}">{{ $v['button'] }}</a>
+                {{-- Reached by following the emailed link, so they are signed in. The
+                     design sends them into the product rather than back to the
+                     marketing page they came from. --}}
+                <a class="button button--primary button--block" href="{{ route('village') }}">{{ $v['button'] }}</a>
             </div>
         </div>
     </section>

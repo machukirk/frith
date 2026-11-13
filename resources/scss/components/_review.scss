@@ -56,20 +56,25 @@
   &__tick {
     position: relative;
     flex: none;
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
     margin-top: 2px;
-    background: $euc-050;
-    border-radius: $radius-circle;
+    background: $euc-700;
+    // A raw radius, not a colour, so it needs no token.
+    border-radius: 5px;
 
+    // Two borders rather than the design's tick glyph, because a glyph
+    // depends on the shipped font carrying it. $linen-050 on $euc-700 is
+    // 11:1. The 4.5px insets keep the 8x4 check centred in the smaller
+    // square, sitting the same 2px above centre it sat at before.
     &::after {
       position: absolute;
-      inset-block-start: 5px;
-      inset-inline-start: 5px;
+      inset-block-start: 4.5px;
+      inset-inline-start: 4.5px;
       width: 8px;
       height: 4px;
-      border-inline-start: 2px solid $euc-700;
-      border-block-end: 2px solid $euc-700;
+      border-inline-start: 2px solid $linen-050;
+      border-block-end: 2px solid $linen-050;
       rotate: -45deg;
       content: '';
     }

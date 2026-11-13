@@ -45,12 +45,8 @@
                         @csrf
                         <x-honeypot />
                         <input type="hidden" name="email" value="{{ $email }}">
-                        {{-- The label belongs in config/content/auth.php with
-                             the rest of this screen's wording. That file is
-                             not this change's to write, so it falls back
-                             until the key lands. --}}
                         <button class="button button--outline button--block" type="submit">
-                            {{ $s['resend'] ?? 'Send it again' }}
+                            {{ $s['resend'] }}
                         </button>
                     </form>
                 @else

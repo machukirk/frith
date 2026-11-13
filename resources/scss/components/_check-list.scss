@@ -90,6 +90,18 @@
 
   // …and its box is a size down too: the hi-fi draws 18px against a question
   // of its own and 17px inside an area on the detail screen.
+  //
+  // The rhythm is deliberately looser than the drawing. The hi-fi stacks these
+  // rows at a 31px pitch: 14px over 1.5 is a 21px row, with 10px between. Here
+  // they inherit the 4px list gap and the 48px tap floor, so the pitch is 52px
+  // and an open area runs about 90px longer. The house rule puts the tap target
+  // above fidelity and these rows are tickboxes somebody presses, often on a
+  // phone, so the floor stays. Worth knowing if this is ever revisited: WCAG
+  // 2.2 AA asks for 24x24px under SC 2.5.8, and the drawing's own 31px pitch
+  // would clear that, so 48px is this project's stricter choice rather than
+  // the standard's. There is no middle setting. Taking the gap to 10px while
+  // the floor holds gives 58px, further from the drawing than what ships now,
+  // so it is the floor or the drawing, not a blend of the two.
   &--statements &__item { grid-template-columns: 17px minmax(0, 1fr); }
 
   &--statements &__mark {
