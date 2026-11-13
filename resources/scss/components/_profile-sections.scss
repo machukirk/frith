@@ -7,8 +7,8 @@
   flex-wrap: wrap;
   gap: $space-4;
   align-items: center;
-  padding: $space-4 $space-5;
-  margin-bottom: $space-5;
+  padding: 20px 22px;
+  margin-bottom: 14px;
   background: $bg-surface;
   border: 1px solid $border-hairline;
   border-radius: $radius-xl;
@@ -17,13 +17,13 @@
     display: grid;
     flex: none;
     place-items: center;
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     background: $euc-100;
     border: 1px solid $euc-200;
     border-radius: $radius-circle;
     color: $euc-700;
-    @include type((19px, 19px), 1, 600);
+    @include type((24px, 24px), 1, 600);
   }
 
   &__who { flex: 1 1 200px; min-width: 0; }
@@ -40,14 +40,14 @@
   }
 }
 
-// How far through, said once and without a bar. A progress bar here would
-// read as a task somebody is behind on; the screen's own words are that
-// nothing is required.
+// How far through. A white card like the two either side of it, rather than
+// the band it used to be: the designs give the whole column one surface.
 .account-progress {
-  padding: $space-4 $space-5;
-  margin-bottom: $space-5;
-  background: $linen-100;
-  border-radius: $radius-lg;
+  padding: 20px 22px;
+  margin-bottom: 14px;
+  background: $bg-surface;
+  border: 1px solid $border-hairline;
+  border-radius: $radius-xl;
 
   &__tally {
     color: $text-heading;
@@ -60,14 +60,38 @@
     color: $text-body;
     @include type((13px, 13.5px), 1.55);
   }
+
+  // One segment per section. Decorative: the tally above it already says
+  // how many are done in words, so the bar is hidden from assistive tech
+  // rather than read out a second time as six anonymous spans.
+  &__bar {
+    display: flex;
+    gap: $space-1;
+    margin-top: 14px;
+  }
+
+  &__seg {
+    flex: 1;
+    height: 4px;
+    background: $border-hairline;
+    border-radius: 2px;
+
+    &--done { background: $euc-700; }
+  }
 }
 
 // The six sections, each with what they answered and a way back in.
+//
+// One card with hairlines between the rows, not six cards: they are six parts
+// of a single profile, and six separate cards read as six separate things to
+// deal with.
 .section-list {
-  display: grid;
-  gap: 10px;
-  padding: 0;
-  margin: 0;
+  display: block;
+  padding: 8px 22px;
+  margin: 0 0 14px;
+  background: $bg-surface;
+  border: 1px solid $border-hairline;
+  border-radius: $radius-xl;
   list-style: none;
 
   &__item {
@@ -76,10 +100,10 @@
     gap: $space-4;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 18px;
-    background: $bg-surface;
-    border: 1px solid $border-hairline;
-    border-radius: $radius-xl;
+    padding: 15px 0;
+    border-bottom: 1px solid $linen-100;
+
+    &:last-child { border-bottom: 0; }
   }
 
   &__text { flex: 1 1 240px; min-width: 0; }

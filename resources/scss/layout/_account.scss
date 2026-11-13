@@ -78,7 +78,16 @@
     }
   }
 
-  &__head { margin-bottom: $space-5; }
+  // The cards stop at 660px, which the designs draw inside a container wide
+  // enough to carry more. Only from lg: below it there is no rail beside the
+  // body and the body is the whole page.
+  &__body {
+    @include from(lg) { max-width: 660px; }
+  }
+
+  // 30px to the first card. The badges screen is drawn at 20px, and keeps the
+  // shared value rather than gaining a prop nobody else would use.
+  &__head { margin-bottom: 30px; }
 
   &__title {
     display: flex;
@@ -90,13 +99,18 @@
     letter-spacing: -0.02em;
   }
 
-  // Ink on coral, never white (guidelines §02).
+  // Coral type on white, inside a coral ring, rather than type on a coral
+  // fill. The guidelines put a 16px floor on words set on coral and this is
+  // 11.5px, so the fill version was the non-compliant one. Coral 600 on white
+  // is 5.9:1. The account menu's Frith+ row is a different element and keeps
+  // its own settled treatment.
   &__tag {
-    padding: 4px 11px;
-    background: $action-accent;
+    padding: 5px 11px;
+    background: $bg-surface;
     border-radius: $radius-pill;
-    color: $ink-900;
-    @include type($type-eyebrow, 1.2, 600);
+    box-shadow: 0 0 0 1.5px $action-accent;
+    color: $coral-600;
+    @include type((11.5px, 11.5px), 1.2, 600);
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
@@ -105,10 +119,6 @@
     max-width: 62ch;
     color: $text-body;
     @include type((15px, 16px), 1.6);
-
-    // The same words when a screen sets them itself rather than through
-    // the shell, which happens where they carry a date.
-    &--own { margin-bottom: $space-6; }
   }
 
   &__status {

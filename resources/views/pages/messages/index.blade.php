@@ -1,30 +1,40 @@
 <x-layouts.site title="Messages · Frith" :noindex="true">
 
-    <section class="wrap page-head">
-        <div class="page-head__inner">
-            <h1 class="heading page-head__title">Messages</h1>
-        </div>
-    </section>
+    @if ($conversations->isEmpty())
+        {{-- With nothing to list, the empty state is the page. It used to be a
+             white card nested under a 40px "Messages" heading, which framed an
+             absence as though it were content. The design goes straight from
+             the header into a centred column, and so does this. --}}
+        <section class="wrap outcome">
+            <span class="outcome__mark" aria-hidden="true">
+                <x-site.icon name="speech" width="26" height="26" />
+            </span>
 
-    <section class="wrap family-list">
-        @if ($conversations->isEmpty())
-            <div class="village__empty">
-                <p class="village__empty-title">Nothing here yet</p>
-                <p>
-                    When you say hello to someone and they say hello back, your
-                    conversations will show up here. There is no rush, and nobody is
-                    waiting on you.
-                </p>
-                <p class="village__empty-action">
-                    <a class="button button--primary button--small" href="{{ route('village') }}">
-                        Find families near you
-                    </a>
-                    <a class="button button--quiet button--small" href="{{ route('journeys') }}">
-                        Browse Journeys
-                    </a>
-                </p>
+            <h1 class="heading outcome__title">Nothing here yet</h1>
+
+            <p class="outcome__body">
+                When you say hello to someone and they say hello back, your
+                conversations will show up here. There is no rush, and nobody is
+                waiting on you.
+            </p>
+
+            <div class="outcome__actions">
+                <a class="button button--primary" href="{{ route('village') }}">
+                    Find families near you
+                </a>
+                <a class="button button--outline" href="{{ route('journeys') }}">
+                    Browse Journeys
+                </a>
             </div>
-        @else
+        </section>
+    @else
+        <section class="page-head page-head--app">
+            <div class="page-head__inner">
+                <h1 class="heading page-head__title">Messages</h1>
+            </div>
+        </section>
+
+        <section class="wrap family-list">
             <ul class="family-list__items">
                 @foreach ($conversations as $connection)
                     @php
@@ -47,15 +57,17 @@
                             </span>
                         </a>
 
+                        {{-- A mark, not a number. Frith counts nothing back at
+                             anybody: the dot says there is something to read,
+                             and the row itself says who from. --}}
                         @if ($unread)
-                            <p class="family-card__unread">
-                                {{ $unread }} new<span class="visually-hidden"> from {{ $other->displayName() }}</span>
-                            </p>
+                            <span class="family-card__unread" aria-hidden="true"></span>
+                            <span class="visually-hidden">Unread messages from {{ $other->displayName() }}</span>
                         @endif
                     </li>
                 @endforeach
             </ul>
-        @endif
-    </section>
+        </section>
+    @endif
 
 </x-layouts.site>

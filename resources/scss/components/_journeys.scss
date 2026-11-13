@@ -2,15 +2,37 @@
 
 .journeys {
   display: grid;
-  gap: $space-3;
+  gap: 14px;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+
+  // Four across, with the first Journey standing two rows tall beside three
+  // others. That only composes once there is room for four columns, so it
+  // starts at lg and the auto-fill base carries everything narrower.
+  @include from(lg) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  // The span has to sit on the grid child, so the list item carries it and the
+  // card inside stretches to fill what it wins.
+  &__cell--featured {
+    @include from(lg) {
+      grid-row: span 2;
+      display: flex;
+    }
+  }
 
   &__item {
     display: flex;
     flex-direction: column;
     gap: $space-3;
-    padding: $space-5;
+    // The grid stretches the list item to the row's height, but the card is
+    // the thing carrying the border, so it has to take that height too. Left
+    // to itself a card showing family dots stands 7px taller than one beside
+    // it that has none, and the bottom edge of the row goes ragged.
+    height: 100%;
+    padding: 16px 18px;
     background: $bg-surface;
+    border: 1px solid $border-hairline;
     border-radius: $radius-xl;
     text-decoration: none;
     transition: transform 150ms ease, box-shadow 150ms ease;
@@ -22,42 +44,74 @@
     }
   }
 
+  &__item--featured {
+    @include from(lg) {
+      flex: 1;
+      padding: 26px 28px;
+    }
+  }
+
   &__title {
     color: $text-heading;
-    @include type($type-h3, 1.3, 600);
+    @include type($type-small, 1.3, 600);
     text-wrap: balance;
   }
 
+  // The featured card is the only one drawn at heading size. The rest take the
+  // small label above, so a one-line title stays one line in a quarter-width
+  // card. Four columns with the first card two rows tall seats seven; the
+  // other two land on a short third row, which is how the drawing has it.
+  &__item--featured &__title {
+    @include from(lg) {
+      @include type($type-h3, 1.3, 600);
+    }
+  }
+
   &__meta {
-    display: flex;
-    align-items: center;
-    gap: $space-2;
     margin-top: auto;
     color: $text-body;
     @include type($type-fine, 1.2);
   }
 
-  // Overlapping discs standing in for the families already there.
+  // One dot per family already in the Journey, up to six, then a count for
+  // the rest. Coral, because this is the one number on the front page that is
+  // evidence rather than copy.
   &__faces {
     display: flex;
+    align-items: center;
+    gap: $space-1;
+    margin-bottom: 7px;
+  }
 
-    & > * {
-      width: 20px;
-      height: 20px;
-      background: $euc-050;
-      border: 2px solid $bg-surface;
-      border-radius: $radius-circle;
+  &__face {
+    width: 7px;
+    height: 7px;
+    background: $action-accent;
+    border-radius: $radius-circle;
+  }
 
-      & + * { margin-inline-start: -8px; }
-    }
+  &__faces-more {
+    margin-inline-start: 3px;
+    color: $coral-600;
+    @include type((10.5px, 10.5px), 1, 600);
   }
 }
 
 .journeys-footer {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: $space-3;
+  gap: 22px;
   margin-top: $space-6;
+  padding-top: $space-5;
+  border-top: 1px solid $border-hairline;
+
+  // .section-note carries its own 24px above it for the places it stands alone
+  // under a block. Here the row's margin is already that gap, and leaving both
+  // starts the row 48px below the grid instead of 24.
+  .section-note {
+    flex: 1;
+    margin-top: 0;
+  }
 }

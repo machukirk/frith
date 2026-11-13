@@ -54,6 +54,27 @@
     outline-offset: 2px;
   }
 
+  // A radio, not a tickbox. /f/{id}/report asks what happened and takes one
+  // answer, so the hi-fi draws a 15px circle there and fills it with a thick
+  // ring instead of a tick. Keyed off the input type, so every tickbox in
+  // registration is left alone. The unchosen outline keeps $border-control:
+  // the hi-fi's $linen-400 is 1.8:1 against the page and that darkening is
+  // the settled deviation, not something to undo here.
+  &__item:has(input[type='radio']) { grid-template-columns: 15px minmax(0, 1fr); }
+
+  &__item:has(input[type='radio']) &__mark {
+    width: 15px;
+    height: 15px;
+    border-radius: $radius-circle;
+
+    &::after { content: none; }
+  }
+
+  &__item:has(input[type='radio']:checked) &__mark {
+    background: $bg-surface;
+    border: 4.5px solid $action;
+  }
+
   &__label {
     color: $ink-900;
     @include type((14px, 14.5px), 1.5);
@@ -76,4 +97,34 @@
     height: 17px;
     font-size: 11px;
   }
+
+  // Ticked, a statement darkens to the heading ink. The hi-fi leaves the
+  // unticked ones a shade back, so running an eye down an open area shows
+  // what was chosen without reading every line.
+  &--statements &__item:has(input:checked) &__label { color: $ink-900; }
+
+  // Cards. On /join/hopes the options are the question itself rather than
+  // detail under one, so the hi-fi gives each its own white card and turns
+  // the hairline green once it is ticked. 14px above and below a 21px line
+  // comes to 51px, so the row clears the tap floor on its own padding.
+  //
+  // Matched by name and by position, because the view cannot be reached from
+  // here. The one bare list sat straight on a wizard form is this screen:
+  // /join/experiences nests its lists inside .experience-groups, and /report
+  // and /account/delete are not wizard forms at all. Both hooks set the same
+  // thing, so adding variant="cards" to the view changes nothing.
+  &--cards,
+  .wizard__form > & { gap: $space-2; }
+
+  &--cards &__item,
+  .wizard__form > & &__item {
+    gap: $space-3;
+    padding: 14px $space-4;
+    background: $bg-surface;
+    border: 1px solid $border-hairline;
+    border-radius: $radius-lg;
+  }
+
+  &--cards &__item:has(input:checked),
+  .wizard__form > & &__item:has(input:checked) { border-color: $action; }
 }

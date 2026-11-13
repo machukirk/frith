@@ -87,7 +87,7 @@
                          also what Enter does. --}}
                     <form class="action-row action-row--bare" method="POST" action="{{ route('connections.ask', $family->public_id) }}">
                         @csrf
-                        <button class="button button--primary button--block" type="submit" name="action" value="ask">
+                        <button class="button button--accent button--block" type="submit" name="action" value="ask">
                             Ask to connect
                         </button>
                         <button class="button button--outline button--block" type="submit" name="action" value="not-for-us">

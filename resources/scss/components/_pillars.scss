@@ -12,11 +12,15 @@
 
   &__item {
     @include from(md) {
-      padding-inline: $space-8;
+      padding-inline: 36px;
 
       &:first-child { padding-inline-start: 0; }
       &:last-child { padding-inline-end: 0; }
-      & + & { border-inline-start: 1px solid rgba($linen-050, 0.14); }
+      // A flat token rather than linen at 14%, which composited to #44635C and
+      // was a shade brighter than the drawing's rule. With gap:0 a leading
+      // border on items 2 and 3 lands on the same pixel as the drawing's
+      // trailing border on items 1 and 2.
+      & + & { border-inline-start: 1px solid $euc-650; }
     }
   }
 
@@ -25,6 +29,18 @@
     height: 28px;
     margin-bottom: $space-4;
     color: $coral-200;
+
+    // 40px is the drawn size, and it only has the room once the three sit
+    // side by side. Stacked on a phone they keep the smaller mark.
+    @include from(md) {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 18px;
+      // Drawn a hair lighter than the 1.6 the icon component ships, because
+      // at 40px the same weight reads heavier than it does at 24. Set here
+      // rather than on the component, which everything else uses at 1.6.
+      stroke-width: 1.5;
+    }
   }
 
   &__title {

@@ -4,13 +4,18 @@
 .page-head {
   padding-block: $space-10 $space-8;
 
-  @include from(md) { padding-block: $space-14 $space-10; }
+  // 64px over the eyebrow is what every marketing page-head band is drawn at:
+  // /about, /how-it-works and /help all measure the same. The in-product
+  // screens are drawn far tighter and reset it through --app and --detail.
+  @include from(md) { padding-block: $space-16 $space-10; }
 
   &__inner { @include container; }
 
   &__title {
     margin-bottom: $space-4;
     @include type((30px, 40px), 1.12);
+    // The 40px h1 is tracked in on 8 of the 9 frames that draw one.
+    letter-spacing: -0.025em;
   }
 
   &__standfirst {
@@ -20,6 +25,49 @@
   }
 
   &--narrow &__inner { max-width: 820px; }
+
+  // Inside the product the head is a label on a working screen rather than the
+  // opening of something somebody is going to read, and the drawing shrinks it
+  // accordingly. Two steps down from the marketing scale above.
+  //
+  // --app is the index screens, /village and /journeys. --detail is a single
+  // journey, the request list and the conversation list.
+  &--app &__title {
+    margin-bottom: $space-1;
+    @include type((26px, 34px), 1.2);
+    letter-spacing: -0.02em;
+  }
+
+  &--app &__standfirst {
+    max-width: none;
+    @include type((13px, 13px), 1.5);
+  }
+
+  &--detail &__title {
+    margin-bottom: $space-2;
+    @include type((26px, 32px), 1.18);
+    letter-spacing: -0.022em;
+  }
+
+  &--detail &__standfirst {
+    @include type($type-body, 1.62);
+  }
+
+  // The gap to the section below. The drawing carries it on the standfirst's
+  // own margin, but /village and /messages have a title and nothing else, and
+  // a margin there would leave the title sitting on the content. So it lives
+  // on the head, where it holds with or without a standfirst.
+  &--app {
+    padding-block: $space-8 18px;
+
+    @include from(md) { padding-block: 34px 18px; }
+  }
+
+  &--detail {
+    padding-block: $space-8 $space-6;
+
+    @include from(md) { padding-block: $space-10 $space-6; }
+  }
 }
 
 // "Last updated 9 September 2026 · about 6 minutes to read"

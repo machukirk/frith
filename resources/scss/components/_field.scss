@@ -67,9 +67,11 @@
     font-family: $font-mono;
   }
 
-  // A textarea needs room, and only ever grows downwards.
+  // A textarea needs room, and only ever grows downwards. 108px is the drawn
+  // height; the rows attribute on the control sets the intrinsic one just
+  // under it, so this is what the box actually opens at.
   &__control--multiline {
-    min-height: 7em;
+    min-height: 108px;
     line-height: 1.6;
     resize: vertical;
   }
@@ -89,8 +91,8 @@
 .search {
   display: flex;
   align-items: center;
-  gap: $space-3;
-  max-width: 520px;
+  gap: 11px;
+  max-width: 560px;
   margin-top: $space-6;
   padding-inline: $space-5;
   background: $bg-surface;
@@ -156,22 +158,51 @@
   display: grid;
   gap: $space-5;
   margin-top: $space-5;
+
+  // The contact form is drawn tighter than the registration wizard, which
+  // shares .field. Scoped here rather than changed on .field itself, so the
+  // wizard keeps the 15px label it was built to.
+  .field { gap: 6px; }
+
+  .field__label {
+    // Written out rather than through the type mixin, which interpolates
+    // upwards and cannot express a label that is larger on a phone than on a
+    // desktop. 13px is the drawn value; the phone keeps 14px.
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.3;
+
+    @include from(md) { font-size: 13px; }
+  }
+
+  .field__control { padding: 12px 14px; }
+
+  // The drawing opens the message box at 108px. The control carries rows="5",
+  // which makes it 149, and a min-height cannot pull a box down, so the height
+  // is set outright here. It still drags: resize stays vertical.
+  .field__control--multiline { height: 108px; }
 }
 
 // The four "what is it about?" options.
 .topic-choices {
   display: flex;
   flex-wrap: wrap;
-  gap: $space-2;
+  gap: 7px;
 
+  // White, not page colour: these sit on the page, so an unchosen pill has to
+  // be lighter than what is behind it rather than the same.
+  //
+  // The drawing makes the pill about 34px tall. tap-target holds it at 40,
+  // because this is a radio button somebody has to hit, and 34px is below
+  // every floor this project works to.
   &__item {
     @include tap-target(40px);
-    padding-inline: $space-4;
-    background: $bg-page;
+    padding: 8px 15px;
+    background: $bg-surface;
     border: 1.5px solid $linen-300;
     border-radius: $radius-pill;
     color: $text-body;
-    @include type((14px, 14px), 1.3);
+    @include type((13px, 13px), 1.3);
     cursor: pointer;
 
     // The input is the control, so it keeps the focus ring rather than being

@@ -13,12 +13,12 @@
 
     <div class="wizard">
         @if ($step && $total)
+            {{-- The hi-fi draws no rail on any of the six steps: the count goes
+                 straight into the heading. The count is also the better thing
+                 to leave standing. "Step 2 of 6" is read out as written, where
+                 role="progressbar" would have replaced that sentence with a
+                 bare number and told nobody what the number was of. --}}
             <p class="wizard__count">Step {{ $step }} of {{ $total }}</p>
-            <div class="wizard__track" role="progressbar"
-                 aria-valuenow="{{ $step }}" aria-valuemin="1" aria-valuemax="{{ $total }}"
-                 aria-label="Registration progress">
-                <span class="wizard__bar" style="width: {{ round($step / $total * 100) }}%"></span>
-            </div>
         @endif
 
         <h1 class="heading wizard__heading">{{ $heading }}</h1>

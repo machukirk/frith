@@ -3,12 +3,21 @@
 // Month and year only. We never ask for a date of birth.
 .child-rows {
   display: grid;
-  gap: $space-3;
+  gap: 14px;
+
+  // The hi-fi hangs "Add another child" 14px under the last card, the same
+  // gap the cards keep between themselves. The group this list sits in has
+  // its own 8px gap, so the list makes up the other 6px beneath itself. The
+  // button carries no class of its own to hang this on.
+  margin-bottom: 6px;
 
   &__item {
     position: relative;
     padding: 26px $space-5 $space-5;
-    background: $bg-surface;
+    // No fill. The hi-fi draws the card as a border alone so the page shows
+    // through it, which is what makes the "CHILD N" chip work: the chip is
+    // the page colour too, so all that reads is the break it leaves in the
+    // border. A white card would put the chip on a seam and defeat it.
     border: 1px solid $border-hairline;
     border-radius: $radius-lg;
   }

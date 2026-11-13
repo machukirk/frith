@@ -11,7 +11,7 @@
 <body>
 
     <main id="main">
-        <section class="wrap outcome">
+        <section class="wrap outcome outcome--start">
             <h1 class="heading outcome__title">Back in a few minutes</h1>
 
             <p class="outcome__body">

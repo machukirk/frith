@@ -1,6 +1,6 @@
 <x-layouts.site title="Requests · Frith" :noindex="true">
 
-    <section class="wrap page-head">
+    <section class="page-head page-head--app">
         <div class="page-head__inner">
             <h1 class="heading page-head__title">Requests</h1>
             <p class="page-head__standfirst">
@@ -32,8 +32,13 @@
                                 <span class="family-card__meta">
                                     {{ $card->family->area() }}@if ($card->childSummary()) &middot; {{ $card->childSummary() }}@endif
                                 </span>
-                                <span class="family-card__common">
-                                    {{ $card->commonality() }}@if ($connection->journey) &middot; via {{ $connection->journey->title }}@endif
+                                <span class="family-card__chips">
+                                    <span class="family-card__chip">{{ $card->commonality() }}</span>
+                                    @if ($connection->journey)
+                                        <span class="family-card__chip family-card__chip--journey">via {{ $connection->journey->title }}</span>
+                                    @else
+                                        <span class="family-card__chip family-card__chip--suggested">Suggested by Frith</span>
+                                    @endif
                                 </span>
                             </span>
                         </a>
@@ -41,7 +46,7 @@
                         <div class="family-card__pair">
                             <form method="POST" action="{{ route('connections.accept', $connection) }}">
                                 @csrf
-                                <button class="button button--primary button--small" type="submit">
+                                <button class="button button--accent button--small" type="submit">
                                     Say hello back<span class="visually-hidden"> to {{ $card->family->displayName() }}</span>
                                 </button>
                             </form>

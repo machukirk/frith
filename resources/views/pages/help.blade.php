@@ -121,25 +121,38 @@
             </div>
 
             <div class="split split--wide split--lead">
-                <ul class="link-cards link-cards--tight">
-                @foreach ($c['contact']['cards'] as $card)
-                    @php $email = $card['email'] ?? config('frith.company.contact_email'); @endphp
+                {{-- The addresses and the 999 note are one column. The note is
+                     about which of them to write to when it cannot wait, so it
+                     reads as the last of them rather than as a line under the
+                     whole section. --}}
+                <div>
+                    <ul class="link-cards link-cards--stacked">
+                    @foreach ($c['contact']['cards'] as $card)
+                        @php $email = $card['email'] ?? config('frith.company.contact_email'); @endphp
 
-                    <li class="link-cards__item">
-                        <p class="link-cards__title">{{ $card['title'] }}</p>
+                        <li class="link-cards__item">
+                            <p class="link-cards__title">{{ $card['title'] }}</p>
 
-                        <div class="link-cards__links">
-                            <a class="link-cards__link" href="mailto:{{ $email }}">{{ $email }}</a>
-                        </div>
+                            <div class="link-cards__links">
+                                <a class="link-cards__link" href="mailto:{{ $email }}">{{ $email }}</a>
+                            </div>
 
-                        <p class="link-cards__body">{{ $card['detail'] }}</p>
-                    </li>
-                @endforeach
-                </ul>
+                            <p class="link-cards__body">{{ $card['detail'] }}</p>
+                        </li>
+                    @endforeach
+                    </ul>
 
-                <div class="panel" id="contact">
+                    <p class="note note--panel note--urgent note--standalone">
+                        {!! str_replace(
+                            ':number',
+                            '<strong>'.e($c['contact']['emergency']['number']).'</strong>',
+                            e($c['contact']['emergency']['body']),
+                        ) !!}
+                    </p>
+                </div>
+
+                <div class="panel panel--roomy" id="contact">
                     <p class="panel__title">{{ $f['title'] }}</p>
-                    <p class="panel__body">{{ $f['standfirst'] }}</p>
 
                     @if (session('contact.sent'))
                         <p class="note note--standalone" role="status">{{ $f['sent'] }}</p>
@@ -199,14 +212,6 @@
                     @endif
                 </div>
             </div>
-
-            <p class="note note--panel note--urgent note--standalone">
-                {!! str_replace(
-                    ':number',
-                    '<strong>'.e($c['contact']['emergency']['number']).'</strong>',
-                    e($c['contact']['emergency']['body']),
-                ) !!}
-            </p>
         </div>
     </section>
 

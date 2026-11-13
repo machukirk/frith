@@ -51,12 +51,11 @@
                         name="action" value="link">{{ $l['link_button'] }}</button>
             </form>
 
+            {{-- The design's column ends here. The hairline and the "Not
+                 registered yet?" line under it were 75px of extra column
+                 saying what the header already says: Register sits in the
+                 header on this screen, by decision. --}}
             <p class="auth__note">{{ $l['note'] }}</p>
-
-            <p class="auth__foot">
-                {{ $l['no_account'] }}
-                <a href="{{ route('register.start') }}">{{ $l['register'] }}</a>
-            </p>
         </div>
     </section>
 

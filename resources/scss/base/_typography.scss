@@ -7,11 +7,14 @@
 
   &--hero {
     @include type($type-hero, 1.08);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.025em;
   }
 
+  // Every 30px h2 in the hi-fi is tracked in, and consistently: -0.022em in 10
+  // of the 14 frames that draw one, and nothing else anywhere near it.
   &--section {
     @include type($type-h2, 1.2);
+    letter-spacing: -0.022em;
   }
 
   &--card {
@@ -24,7 +27,10 @@
   margin-bottom: $space-3;
   color: $text-eyebrow;
   @include type($type-eyebrow, 1.2, 600);
-  letter-spacing: 0.08em;
+  // The page eyebrow is drawn at 0.1em in 29 frames against 0.09em in two, and
+  // the phone frames agree with the desktop ones. Note labels and the footer
+  // column headings are a different mark at 0.09em and keep their own value.
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 
   &--on-inverse { color: $coral-200; }

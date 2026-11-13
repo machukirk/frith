@@ -8,31 +8,38 @@
                 explanation for not wanting to talk.
             </p>
 
-            <p class="auth__label">What blocking does</p>
-            {{-- Statements, not choices, so they do not borrow the tickbox
+            {{-- The four lines are one answer to one question, so they are
+                 drawn as a group rather than as loose copy on the page.
+
+                 Statements, not choices, so they do not borrow the tickbox
                  from the forms and look like something to press. --}}
-            <ul class="safety-list">
-                @foreach ([
-                    'They cannot see your profile, find you in a Journey, or message you.',
-                    'Your conversation disappears from both inboxes.',
-                    'They are never told that you blocked them.',
-                    'You can unblock from your account at any time.',
-                ] as $line)
-                    <li class="safety-list__item">
-                        <span class="safety-list__tick" aria-hidden="true">&#10003;</span>
-                        <span>{{ $line }}</span>
-                    </li>
-                @endforeach
-            </ul>
+            <div class="safety-card">
+                <p class="safety-card__title">What blocking does</p>
+                <ul class="safety-list">
+                    @foreach ([
+                        'They cannot see your profile, find you in a Journey, or message you.',
+                        'Your conversation disappears from both inboxes.',
+                        'They are never told that you blocked them.',
+                        'You can unblock from your account at any time.',
+                    ] as $line)
+                        <li class="safety-list__item">
+                            <span class="safety-list__tick" aria-hidden="true">&#10003;</span>
+                            <span>{{ $line }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
 
-            <form class="safety-actions" method="POST" action="{{ route('block.store', $other->public_id) }}">
-                @csrf
-                <button class="button button--primary button--block" type="submit">Block this family</button>
-            </form>
+            {{-- Blocking and changing your mind on one row. Cancel is not
+                 small print under a full-width button. --}}
+            <div class="safety-actions">
+                <form method="POST" action="{{ route('block.store', $other->public_id) }}">
+                    @csrf
+                    <button class="button button--primary" type="submit">Block this family</button>
+                </form>
 
-            <p class="safety-cancel">
-                <a href="{{ route('family', $other->public_id) }}">Cancel</a>
-            </p>
+                <a class="safety-cancel" href="{{ route('family', $other->public_id) }}">Cancel</a>
+            </div>
 
             <p class="auth__foot">
                 If something happened that we should know about,

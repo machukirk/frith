@@ -12,7 +12,14 @@
 
   // On a desktop the whole bar is already on screen and the links are laid
   // out along it, so there is nothing to reach for.
-  @include from(md) { position: static; }
+  //
+  // The hairline comes in at the same width. The desktop drawing wraps the bar
+  // in a box with a rule under it; the phone frames have no rule at all, where
+  // the bar is only the wordmark and the menu button over the page colour.
+  @include from(md) {
+    position: static;
+    border-bottom: 1px solid $border-hairline;
+  }
 
   // The phone menu slides in underneath this bar rather than over it, so the
   // bar has to be dark before the panel arrives. Otherwise the reversed
@@ -26,6 +33,10 @@
   &:has(.menu__disclosure[open]) {
     background: $bg-deep;
     transition-duration: 140ms;
+    // The page-coloured hairline would be a bright line across a dark bar if
+    // the panel is still open when the viewport crosses md. The menu's own
+    // rule colour instead.
+    border-bottom-color: $euc-750;
   }
 
   // Two headers, one shown at a time: the phone menu (layout/_menu.scss) up
@@ -61,22 +72,38 @@
   &__nav {
     display: flex;
     align-items: center;
-    gap: $space-6;
+    gap: $space-5;
   }
 
   &__link {
     @include tap-target(40px);
     color: $ink-900;
-    @include type($type-small, 1.2);
+    // Flat 13px. $type-small grows to 14px at xl, and the drawing holds the
+    // nav at 13px on every frame that shows it.
+    @include type((13px, 13px), 1.2);
     text-decoration: none;
     @include focus-ring;
 
     &:hover { color: $action; }
 
+    // Log in is an outlined pill beside the filled Register one, not a bare
+    // link. The drawing makes it about 34px tall; tap-target holds it at 40,
+    // which is this build's floor for anything in the header.
     &--strong {
+      padding: 8px $space-4;
+      border: 1.5px solid $action;
+      border-radius: $radius-pill;
       color: $action;
       font-weight: 500;
     }
+  }
+
+  // The Register pill is drawn tighter than the small button used everywhere
+  // else, and at the nav's own 13px. Scoped here rather than pushed into
+  // .button--small, which nine other places draw at 11px 22px / 13.5px.
+  .button--small {
+    padding: 9px 18px;
+    font-size: 13px;
   }
 }
 

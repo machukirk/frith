@@ -18,7 +18,7 @@
 <body>
 
     <main id="main">
-        <section class="wrap outcome">
+        <section class="wrap outcome outcome--start">
             <h1 class="heading outcome__title">Something has gone wrong at our end</h1>
 
             <p class="outcome__body">

@@ -1,7 +1,7 @@
 <x-layouts.site title="We cannot find that page · Frith" :noindex="true">
 
     <section class="wrap outcome">
-        <span class="outcome__mark outcome__mark--question" aria-hidden="true">?</span>
+        <span class="outcome__mark" aria-hidden="true">?</span>
 
         <h1 class="heading outcome__title">We cannot find that page</h1>
 
@@ -17,7 +17,7 @@
                 <a class="button button--primary" href="{{ route('home') }}">Back to the home page</a>
             @endauth
 
-            <a class="outcome__quiet" href="mailto:{{ config('frith.company.contact_email') }}?subject=A%20link%20that%20does%20not%20work">
+            <a class="button button--outline" href="mailto:{{ config('frith.company.contact_email') }}?subject=A%20link%20that%20does%20not%20work">
                 Email us about it
             </a>
         </div>

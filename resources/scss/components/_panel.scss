@@ -3,7 +3,10 @@
 // A white card with a hairline. The generic one: a title, some copy, sometimes
 // a small label above. Reach for this before borrowing another block's card.
 .panel {
-  padding: $space-5 $space-6;
+  // 22px, not 20. The hi-fi draws its cards at 22px 24px and never at
+  // 20px 24px, and the two pixels are the difference between a title that
+  // sits in the card and one that sits near the top of it.
+  padding: 22px $space-6;
   background: $bg-surface;
   border: 1px solid $border-hairline;
   border-radius: $radius-card;
@@ -13,6 +16,14 @@
   &--ringed {
     border-radius: $radius-xl;
     box-shadow: 0 0 0 2px $action-accent;
+  }
+
+  // The one panel somebody fills in rather than reads: /help's contact form.
+  // The hi-fi gives it 28px 30px, which is more air than any other panel on
+  // the site. Desktop only, because on a phone six more pixels each side come
+  // straight out of the width of the boxes they are typing in.
+  &--roomy {
+    @include from(md) { padding: 28px 30px; }
   }
 
   // The deep-green card that makes a case for Frith+. Dark so it reads as a
@@ -41,6 +52,9 @@
     color: $text-heading;
     @include type((15px, 16px), 1.3, 600);
   }
+
+  // A point larger, to match the extra air around it.
+  &--roomy &__title { @include type((16px, 17px), 1.3, 600); }
 
   &__body {
     color: $text-body;

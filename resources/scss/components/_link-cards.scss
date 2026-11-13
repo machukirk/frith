@@ -9,6 +9,13 @@
   // beside them.
   align-content: start;
 
+  // The hi-fi draws three across and stops. auto-fit on its own keeps going:
+  // on a 1440 page it finds room for a fourth 328px column. Three from lg,
+  // and the line above still runs below that, where it gives two. Not from
+  // md: at 768px three of these would be 224px wide, and a card of four
+  // links would wrap every one of them.
+  @include from(lg) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
   // For a narrower column: inside .prose, three across needs a lower floor
   // than the default or it breaks to 2 + 1.
   &--tight {
@@ -16,12 +23,26 @@
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
   }
 
+  // One per row, the full width of the column it is in. The three contact
+  // cards on /help are drawn this way: they are read as a list of addresses
+  // rather than compared with each other.
+  &--stacked {
+    gap: 14px;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   &__item {
-    padding: $space-5 $space-6;
+    padding: 22px $space-6;
     background: $bg-surface;
     border: 1px solid $linen-300;
-    border-radius: $radius-card;
+    // 14px, not 16. 14 is the hi-fi's card radius nearly everywhere; the
+    // handful drawn at 16 are all larger panels than this.
+    border-radius: $radius-xl;
   }
+
+  // A contact card is a smaller thing than a topic card, and the hi-fi gives
+  // it less inside.
+  &--stacked &__item { padding: 18px $space-5; }
 
   // The smaller line under a card's title: a response time, an address.
   &__body {

@@ -58,10 +58,13 @@
     @include type((14.5px, 14.5px), 1.55);
   }
 
+  // Filled in the brand green, so which side a line is on is never carried
+  // by a pale tint alone. $linen-050 on $euc-700 is 8.8:1.
   &__line--mine &__bubble {
-    background: $euc-050;
-    border-color: $euc-100;
+    background: $euc-700;
+    border-color: $euc-700;
     border-radius: $radius-xl $radius-xl $radius-sm $radius-xl;
+    color: $text-on-inverse;
   }
 
   &__when {
@@ -122,14 +125,47 @@
   }
 }
 
-.safety-actions { margin-top: $space-6; }
+// What blocking does: a group, so the four statements read as one answer
+// rather than as loose lines on the page.
+.safety-card {
+  padding: 20px 22px;
+  margin-bottom: $space-5;
+  background: $bg-surface;
+  border: 1px solid $border-hairline;
+  border-radius: $radius-xl;
 
-.safety-cancel {
-  margin-top: $space-3;
-  text-align: center;
-
-  a {
-    color: $text-body;
-    @include type((14px, 14px), 1.3);
+  &__title {
+    margin-bottom: $space-3;
+    color: $text-heading;
+    @include type((14px, 14px), 1.3, 600);
   }
+
+  .safety-list { margin-bottom: 0; }
+}
+
+// Doing it and not doing it on one row. Cancel is a sibling of the button,
+// not a line of small print underneath it.
+.safety-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-3;
+  align-items: center;
+  margin-top: $space-6;
+
+  // Inside the report form, where the grid above it sets the rhythm.
+  &--tight {
+    gap: 10px;
+    margin-top: 0;
+  }
+}
+
+// Drawn as plain text beside the button. Given the tap floor anyway, because
+// it is a link somebody presses on a phone.
+.safety-cancel {
+  @include tap-target;
+  margin: 0;
+  color: $action;
+  @include type((14.5px, 14.5px), 1.3, 500);
+
+  &--tight { @include type((13.5px, 13.5px), 1.3, 500); }
 }

@@ -1,14 +1,17 @@
 @use '../abstracts' as *;
 
 .button {
+  // The drawing's 12px padding on 14px type makes a 44px button. tap-target
+  // holds it at 48, which is this project's floor and is not negotiable, so
+  // the extra 4px arrives as height rather than as padding.
   @include tap-target;
   justify-content: center;
   gap: $space-2;
-  padding: 14px 34px;
+  padding: 12px $space-6;
   border: 1.5px solid transparent;
   border-radius: $radius-pill;
   font-weight: 500;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.2;
   text-align: center;
   text-decoration: none;
@@ -49,6 +52,17 @@
     color: $action;
 
     &:hover { background: rgba($action, 0.06); }
+  }
+
+  // Leaving Frith. The only filled red on the site, and the only place the
+  // design asks for one: everything else that deletes is quiet, because
+  // everything else that deletes can be undone.
+  &--danger {
+    background: $coral-ink;
+    border-color: transparent;
+    color: $linen-050;
+
+    &:hover { background: $coral-600; }
   }
 
   &--small {

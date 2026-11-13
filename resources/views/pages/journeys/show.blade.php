@@ -1,6 +1,6 @@
 <x-layouts.site :title="$journey->title.' · Frith'" :noindex="true">
 
-    <section class="wrap page-head">
+    <section class="page-head page-head--detail">
         <div class="page-head__inner">
             <p class="eyebrow">Journey</p>
             <h1 class="heading page-head__title">{{ $journey->title }}</h1>

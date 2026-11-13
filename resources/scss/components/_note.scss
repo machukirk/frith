@@ -18,11 +18,45 @@
   // Amber, with a rule down the side. This is the 999 box: it has to read as a
   // different kind of thing from the reassurance panel it usually sits under,
   // or the one line on the page that is urgent looks like all the calm ones.
+  //
+  // 12px on the trailing corners, which is what the drawing gives every
+  // inline one of these. At panel size it opens to 14px, below.
   &--urgent {
     background: $mustard-100;
     border-inline-start: 3px solid $mustard-700;
-    border-radius: $radius-sm $radius-xl $radius-xl $radius-sm;
+    border-radius: $radius-sm $radius-lg $radius-lg $radius-sm;
     color: $mustard-900;
+  }
+
+  &--panel#{&}--urgent {
+    border-radius: $radius-sm $radius-xl $radius-xl $radius-sm;
+  }
+
+  // Coral. Harder than amber, and used where something has actually gone
+  // wrong or a child may be at risk: the 500 page and the safeguarding line
+  // in the help centre. Amber stays the warning that is merely important.
+  //
+  // The drawing sets the type at #5F0F00, which has no token yet and
+  // abstracts/_tokens.scss is not this pass's to edit. $coral-ink is the
+  // nearest that exists and clears AA on this background at 5.4:1, so it
+  // carries both the rule and the type until the darker ink is added.
+  &--alert {
+    padding: 18px $space-5;
+    background: $coral-100;
+    border-inline-start: 3px solid $coral-ink;
+    border-radius: $radius-sm $radius-xl $radius-xl $radius-sm;
+    color: $coral-ink;
+    @include type((14px, 14.5px), 1.6);
+  }
+
+  // Quiet, and the only one of these that is not a warning at all: a prompt
+  // sitting under an auth screen's message. Linen rather than teal, so it
+  // does not borrow the reassurance box's voice.
+  &--aside {
+    background: $linen-075;
+    border-inline-start: 3px solid $action;
+    border-radius: $radius-sm $radius-lg $radius-lg $radius-sm;
+    color: $text-heading;
   }
 
   &__label {
@@ -35,6 +69,7 @@
   }
 
   &--urgent &__label { color: $mustard-700; }
+  &--alert &__label { color: $coral-ink; }
 
   // A note that follows a block rather than sitting inside one.
   &--standalone { margin-top: $space-5; }

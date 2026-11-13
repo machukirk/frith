@@ -38,12 +38,18 @@
                     @error('note')<p class="field__error">{{ $message }}</p>@enderror
                 </div>
 
-                <button class="button button--primary button--block" type="submit">Report and block</button>
-            </form>
+                {{-- Reporting and changing your mind on one row, inside the
+                     form, so Cancel is beside the button rather than small
+                     print under a full-width one.
 
-            <p class="safety-cancel">
-                <a href="{{ route('family', $other->public_id) }}">Cancel</a>
-            </p>
+                     The design fills this button with the deep red the brand
+                     calls $coral-ink. button--danger is that fill, and the
+                     label on it is 6.7:1. --}}
+                <div class="safety-actions safety-actions--tight">
+                    <button class="button button--danger" type="submit">Report and block</button>
+                    <a class="safety-cancel safety-cancel--tight" href="{{ route('family', $other->public_id) }}">Cancel</a>
+                </div>
+            </form>
         </div>
     </section>
 

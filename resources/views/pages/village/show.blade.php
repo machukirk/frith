@@ -1,6 +1,6 @@
 <x-layouts.site title="Your village · Frith" :noindex="true">
 
-    <section class="wrap page-head">
+    <section class="page-head page-head--app">
         <div class="page-head__inner">
             <h1 class="heading page-head__title">Your village</h1>
         </div>

@@ -34,13 +34,16 @@
                          src="{{ \App\Support\BrandAsset::url('brand/img/frith-hero-hillside.png') }}"
                          alt="{{ $c['hero']['image_alt'] }}" width="922" height="604">
                 </div>
+                {{-- Decorative, and over the photograph rather than beside it. --}}
+                <img class="hero__swoosh" src="{{ \App\Support\BrandAsset::url('brand/img/frith-swoosh-hero.svg') }}"
+                     alt="" aria-hidden="true">
                 <span class="hero__dot" aria-hidden="true"></span>
             </figure>
         </div>
     </section>
 
     {{-- The three reasons ------------------------------------------------ --}}
-    <section class="band band--inverse band--tight">
+    <section class="band band--inverse band--reasons">
         <div class="wrap">
             <ul class="pillars">
                 @foreach ($c['pillars'] as $pillar)
@@ -93,11 +96,24 @@
 
             <ul class="journeys">
                 @foreach ($journeys as $journey)
-                    <li>
-                        <a class="journeys__item" href="{{ $journey['url'] }}">
+                    @php
+                        // A dot each for the families in the Journey, up to six,
+                        // and a count for whatever is left over.
+                        $dots = min(6, $journey['families']);
+                        $more = $journey['families'] - $dots;
+                    @endphp
+                    <li @class(['journeys__cell', 'journeys__cell--featured' => $loop->first])>
+                        <a @class(['journeys__item', 'journeys__item--featured' => $loop->first]) href="{{ $journey['url'] }}">
                             <span class="journeys__title">{{ $journey['title'] }}</span>
                             <span class="journeys__meta">
-                                <span class="journeys__faces" aria-hidden="true"><span></span><span></span><span></span></span>
+                                <span class="journeys__faces" aria-hidden="true">
+                                    @for ($i = 0; $i < $dots; $i++)
+                                        <span class="journeys__face"></span>
+                                    @endfor
+                                    @if ($more > 0)
+                                        <span class="journeys__faces-more">+{{ $more }}</span>
+                                    @endif
+                                </span>
                                 {{ trans_choice(':count family|:count families', $journey['families'], ['count' => $journey['families']]) }}
                             </span>
                         </a>
@@ -119,7 +135,7 @@
     {{-- What others see -------------------------------------------------- --}}
     <section class="band band--inverse">
         <div class="wrap">
-            <div class="section-head section-head--on-inverse">
+            <div class="section-head section-head--tight section-head--on-inverse">
                 <p class="eyebrow eyebrow--on-inverse">{{ $c['visibility']['eyebrow'] }}</p>
                 <h2 class="heading heading--section section-head__title">{{ $c['visibility']['title'] }}</h2>
                 <p class="section-head__standfirst">{{ $c['visibility']['standfirst'] }}</p>

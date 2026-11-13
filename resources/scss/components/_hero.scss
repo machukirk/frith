@@ -4,7 +4,7 @@
   padding-block: $space-8 $space-12;
 
   @include from(lg) {
-    padding-block: $space-10 $space-14;
+    padding-block: 30px 44px;
   }
 
   &__inner {
@@ -25,40 +25,54 @@
   }
 
   &__headline {
-    margin-bottom: $space-5;
+    margin-bottom: $space-4;
   }
 
   // The full stop is the brand's, and it is coral.
   &__stop { color: $coral-600; }
 
+  // The standfirst holds a tighter measure than the small print under it, not
+  // the other way round: it is the one line somebody reads at a glance.
   &__standfirst {
-    max-width: 30em;
-    margin-bottom: $space-6;
+    max-width: 26em;
+    margin-bottom: 28px;
   }
 
   &__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: $space-3;
+    gap: 10px;
     margin-bottom: $space-4;
   }
 
   &__note {
-    max-width: 28em;
+    max-width: 30em;
     color: $text-body;
     @include type($type-fine, 1.55);
   }
 
+  // One box holding three things placed on it as percentages: the plate, the
+  // brushstroke over it and the dot above that. The drawing does this at both
+  // widths it shows, with the same ratio and the same percentages, so the
+  // three stay locked to each other wherever the column lands.
   &__figure {
     position: relative;
     margin: 0;
+    aspect-ratio: 529 / 407;
+    overflow: hidden;
   }
 
   &__plate {
+    position: absolute;
+    left: 1.89%;
+    top: 16.46%;
+    width: 98.11%;
+    height: 83.54%;
     overflow: hidden;
     background: $linen-200;
-    border-radius: $radius-xl;
-    aspect-ratio: 461 / 302;
+    // Fully round on the leading edge, square on the trailing one, where the
+    // drawing runs the plate off the side of the page.
+    border-radius: $radius-pill 0 0 $radius-pill;
   }
 
   &__image {
@@ -67,21 +81,24 @@
     object-fit: cover;
   }
 
-  // The coral dot that breaks the plate's corner.
+  // The brushstroke from the approved hero artwork, laid over the plate.
+  &__swoosh {
+    position: absolute;
+    left: 2.17%;
+    top: 3.69%;
+    width: 61.53%;
+    height: 95.58%;
+    display: block;
+  }
+
+  // The coral dot that breaks the plate's top edge.
   &__dot {
     position: absolute;
-    top: -14px;
-    right: -6px;
-    width: 33px;
-    height: 33px;
+    left: 71.4%;
+    top: 8.2%;
+    width: 7.1%;
+    aspect-ratio: 1 / 1;
     background: $action-accent;
     border-radius: $radius-circle;
-
-    @include from(md) {
-      top: -16px;
-      right: -12px;
-      width: 40px;
-      height: 40px;
-    }
   }
 }

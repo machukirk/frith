@@ -24,4 +24,14 @@
 
     @include from(md) { padding-block: $space-12; }
   }
+
+  // The three reasons under the hero, which the drawing gives its own rhythm:
+  // 54px over, 58px under. Not folded into --tight, because the four other
+  // bands using that modifier are drawn at 44px and 48px and would move with
+  // it. The phone frame stacks this band and keeps the tighter base.
+  &--reasons {
+    padding-block: $space-10;
+
+    @include from(md) { padding-block: 54px 58px; }
+  }
 }

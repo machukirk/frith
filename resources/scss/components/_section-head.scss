@@ -4,11 +4,22 @@
   max-width: 780px;
   margin-bottom: $space-8;
 
-  &__title { margin-bottom: $space-3; }
+  // 40px is the desktop drawing. The phone frames stack these sections much
+  // tighter, so the base keeps 32px and the wider gap starts at md.
+  @include from(md) { margin-bottom: $space-10; }
+
+  &__title { margin-bottom: 14px; }
 
   &__standfirst {
     color: $text-body;
-    @include type($type-lead, 1.68);
+    // $type-body, not $type-lead: every section standfirst in the drawing is
+    // 16px, and $type-lead reaches 18px at xl.
+    @include type($type-body, 1.68);
+  }
+
+  // "What others see" is drawn a notch tighter than the two heads before it.
+  &--tight {
+    @include from(md) { margin-bottom: 36px; }
   }
 
   &--on-inverse {

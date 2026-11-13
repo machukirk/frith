@@ -1,6 +1,6 @@
 <x-layouts.site title="Journeys · Frith" :noindex="true">
 
-    <section class="wrap page-head">
+    <section class="page-head page-head--app">
         <div class="page-head__inner">
             <h1 class="heading page-head__title">Journeys</h1>
             <p class="page-head__standfirst">
